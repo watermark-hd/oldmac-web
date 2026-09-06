@@ -48,12 +48,17 @@ APPS = [
         "tagline_en": "A file browser for turning a PowerPC Mac G4 into an SMB3-ready NAS-like file server.",
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "AquaLink.zip",
-        "version": "0.5.3",
+        "version": "0.5.4",
         "github_url": "https://github.com/watermark-hd/ppc-mac-modernization/tree/main/smb3/AquaLink",
         "category": "app",
         "comment": "PowerMac G4、iBook G4、iMac G5（未検証） そんなマシンたちにまだ活躍してもらうために作りました。昔のデータが入りっぱなし、元データを作った時の環境が知りたい。そんな事情で作りました。",
         "comment_en": "Made so PowerMac G4s, iBook G4s, and (untested) iMac G5s can keep earning their keep. Old data still sitting on them, and I wanted to see it in the environment it was actually made in — that's the real reason.",
         "changelog": [
+            {
+                "date": "2026-09-06",
+                "note": "ファイルブラウザ画面のUIをまとめて調整（見た目中心）。「上へ」ボタンを「▲ 上へ」表記に変更し(ブラウザの戻る/進むと紛らわしかったため)、Finderと同じ ⌘↑ ショートカットを追加。角丸ボタンの上辺が描画で欠けていた不具合を修正。一覧に .DS_Store 以外の隠しファイル(.lesshst 等)が出ていたのを、ドットファイル全般を非表示にして解消（表示上のフィルタのみ。ファイルは削除しません）",
+                "note_en": "A batch of file-browser UI tweaks (mostly cosmetic). The \"Up\" button now reads \"▲ Up\" (it was easily mistaken for browser back/forward) and takes Finder's ⌘↑ shortcut. Fixed the top edge of the rounded buttons being clipped. Dotfiles other than .DS_Store (.lesshst and the like) were showing in the list; now all dotfiles are hidden — a display filter only, nothing is deleted.",
+            },
             {
                 "date": "2026-09-01",
                 "note": "接続失敗時のエラーメッセージが2行目(詳細情報)を表示できていなかった不具合を修正（ステータス表示欄が1行専用だったため。ダイアログでも表示するよう変更）",
