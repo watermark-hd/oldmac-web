@@ -48,12 +48,17 @@ APPS = [
         "tagline_en": "A file browser for turning a PowerPC Mac G4 into an SMB3-ready NAS-like file server.",
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "AquaLink.zip",
-        "version": "0.5.4",
+        "version": "0.5.5",
         "github_url": "https://github.com/watermark-hd/ppc-mac-modernization/tree/main/smb3/AquaLink",
         "category": "app",
         "comment": "PowerMac G4、iBook G4、iMac G5（未検証） そんなマシンたちにまだ活躍してもらうために作りました。昔のデータが入りっぱなし、元データを作った時の環境が知りたい。そんな事情で作りました。",
         "comment_en": "Made so PowerMac G4s, iBook G4s, and (untested) iMac G5s can keep earning their keep. Old data still sitting on them, and I wanted to see it in the environment it was actually made in — that's the real reason.",
         "changelog": [
+            {
+                "date": "2026-09-06",
+                "note": "ファイルブラウザの一覧を Transmit / Cyberduck 風に刷新（見た目中心）。名前列の行頭にフォルダ/ファイルのアイコンを表示し、代わりに「種類」列を廃止。「更新日時」列を追加（ファイル本来の更新日時を「2026-09-06 | 14:32」形式で表示）。サイズ・更新日時は右寄せ＆固定幅で、ウィンドウを広げると名前列だけが伸びる。全列を標準システムフォントに統一",
+                "note_en": "Reworked the file list toward a Transmit/Cyberduck style (mostly cosmetic). The Name column now leads with a folder/file icon, so the text \"Kind\" column is gone. Added a \"Modified\" column showing each file's own timestamp as \"2026-09-06 | 14:32\". Size and Modified are right-aligned and fixed width; only the Name column grows when the window widens. All columns use the standard system font.",
+            },
             {
                 "date": "2026-09-06",
                 "note": "ファイルブラウザ画面のUIをまとめて調整（見た目中心）。「上へ」ボタンを「▲ 上へ」表記に変更し(ブラウザの戻る/進むと紛らわしかったため)、Finderと同じ ⌘↑ ショートカットを追加。角丸ボタンの上辺が描画で欠けていた不具合を修正。一覧に .DS_Store 以外の隠しファイル(.lesshst 等)が出ていたのを、ドットファイル全般を非表示にして解消（表示上のフィルタのみ。ファイルは削除しません）",
