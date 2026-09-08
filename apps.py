@@ -27,12 +27,17 @@ APPS = [
         "tagline_en": "A classic Finder-style file manager that recreates the Tiger-to-Snow Leopard experience on modern Macs.",
         "platform": "現行macOS (Catalina以降 / Intel・Apple Silicon) 向け",
         "filename": "AquaFinder.dmg",
-        "version": "0.2.4",
+        "version": "0.2.5",
         "github_url": "https://github.com/watermark-hd/AquaFinder",
         "category": "app",
         "comment": "現場を退いたおじさんが今のM2 Macを使って物足りなさの原因を探ってたどり着いた成果物。",
         "comment_en": "What an old-timer who left the field for good ended up building, after digging into why a brand-new M2 Mac still felt like something was missing.",
         "changelog": [
+            {
+                "date": "2026-09-09",
+                "note": "サイドバーの「共有」項目に接続先ホスト名を表示（例：「書類 (192.168.11.12)」）。Apple IDのファイル共有で他のMacの「書類」「ダウンロード」をSMBマウントすると、ローカルの同名フォルダと見分けがつかなかったため。「場所」「デバイス」の項目は変更なし",
+                "note_en": "SHARED sidebar items now show their source host — e.g. \"Documents (192.168.11.12)\". When you SMB-mount another Mac's own Documents/Downloads via Apple ID file sharing, they came out with the exact same name as your local folders under PLACES; the host suffix tells them apart. PLACES and DEVICES items are unchanged",
+            },
             {
                 "date": "2026-08-29",
                 "note": "Dropbox等の同期ツールや低速なネットワーク共有で、短時間に大量のファイル変更イベントが発生すると、リスト表示の行が一時的に重複・消失して見える不具合を修正。変更イベントが300ms静かになるまでまとめてから再読み込みするように変更",
