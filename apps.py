@@ -48,12 +48,17 @@ APPS = [
         "tagline_en": "A file browser for turning a PowerPC Mac G4 into an SMB3-ready NAS-like file server.",
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "AquaLink.zip",
-        "version": "0.5.5",
+        "version": "0.5.6",
         "github_url": "https://github.com/watermark-hd/ppc-mac-modernization/tree/main/smb3/AquaLink",
         "category": "app",
         "comment": "PowerMac G4、iBook G4、iMac G5（未検証） そんなマシンたちにまだ活躍してもらうために作りました。昔のデータが入りっぱなし、元データを作った時の環境が知りたい。そんな事情で作りました。",
         "comment_en": "Made so PowerMac G4s, iBook G4s, and (untested) iMac G5s can keep earning their keep. Old data still sitting on them, and I wanted to see it in the environment it was actually made in — that's the real reason.",
         "changelog": [
+            {
+                "date": "2026-09-06",
+                "note": "ファイルブラウザの列ヘッダ(名前・サイズ・更新日時)をクリックしてソートできるように。再クリックで昇順/降順を反転、▲▼で現在の並び順を表示。フォルダは常に先頭",
+                "note_en": "The file browser's column headers (Name, Size, Modified) are now clickable to sort. Click again to flip ascending/descending, with a ▲▼ indicator for the current order. Folders always stay on top.",
+            },
             {
                 "date": "2026-09-06",
                 "note": "ファイルブラウザの一覧を Transmit / Cyberduck 風に刷新（見た目中心）。名前列の行頭にフォルダ/ファイルのアイコンを表示し、代わりに「種類」列を廃止。「更新日時」列を追加（ファイル本来の更新日時を「2026-09-06 | 14:32」形式で表示）。サイズ・更新日時は右寄せ＆固定幅で、ウィンドウを広げると名前列だけが伸びる。全列を標準システムフォントに統一",
