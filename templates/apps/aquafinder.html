@@ -31,6 +31,23 @@
       {% if updated_at %}<div class="meta">Last updated: {{ updated_at }}{% if app.version %} (v{{ app.version }}){% endif %}</div>{% endif %}
     </div>
 
+    <div class="gatekeeper-notice">
+      <strong class="notice-title">⚠️ If you see "'AquaFinder' is not opened" when launching it</strong>
+      This app isn't signed with an Apple Developer Program certificate / notarized, so this warning
+      appears the first time you open a freshly downloaded copy. <strong>Restarting your Mac will not fix it.</strong>
+      Use one of the following:
+      <ol>
+        <li>Open System Settings → Privacy &amp; Security, scroll down, and click
+          <strong>Open Anyway</strong> next to the AquaFinder message, then launch AquaFinder again</li>
+        <li>Or right-click (Control-click) <code>AquaFinder.app</code> and choose "Open," then click "Open"
+          in the dialog that appears (this option doesn't show up on every macOS version — if it's missing, use method 1 instead)</li>
+        <li>If neither works, run this in Terminal, then launch it normally:
+          <br><code>xattr -cr /Applications/AquaFinder.app</code></li>
+      </ol>
+      Once approved, it opens normally with a regular double-click from then on.
+      Note: the "Full Disk Access" setting is unrelated to this issue.
+    </div>
+
     {% if app.changelog %}
     <h2>Changelog</h2>
     <ul>
@@ -63,7 +80,7 @@
       <li>Download <code>AquaFinder.dmg</code> from the button above.</li>
       <li>Open the DMG and drag <code>AquaFinder.app</code> into the <code>Applications</code> folder.</li>
       <li>
-        On first launch, you may see a warning saying the app is from an unidentified developer.
+        <span class="critical-warning">On first launch, you will see a warning saying the app is from an unidentified developer — this is expected, not a bug.</span>
         To open it, choose either of the following methods:
         <ul>
           <li>Right-click (or Control-click) <code>AquaFinder.app</code> and choose <strong>Open</strong>, then click <strong>Open</strong> in the dialog.</li>
@@ -169,6 +186,24 @@
       {% if updated_at %}<div class="meta">最終更新日: {{ updated_at }}{% if app.version %}（v{{ app.version }}）{% endif %}</div>{% endif %}
     </div>
 
+    <div class="gatekeeper-notice">
+      <strong class="notice-title">⚠️ 起動しようとすると「"AquaFinder"は開いていません」と出る場合</strong>
+      Apple Developer Programでの正式な署名（Notarization）をしていないアプリのため、
+      ダウンロードしたばかりの状態ではこの警告が出ます。<strong>再起動しても直りません。</strong>
+      次のいずれかの方法で開けます。
+      <ol>
+        <li>「システム設定」→「プライバシーとセキュリティ」を開き、下の方にある
+          <strong>「このまま開く」</strong>をクリックしてから、もう一度AquaFinderを起動する</li>
+        <li>または、<code>AquaFinder.app</code>を右クリック（Control+クリック）→
+          「開く」を選び、表示されるダイアログで「開く」を選ぶ
+          （macOSのバージョンによってはこの方法が出てこないことがあります。その場合は方法1へ）</li>
+        <li>それでも解決しない場合は、ターミナルで次のコマンドを実行してから起動する:
+          <br><code>xattr -cr /Applications/AquaFinder.app</code></li>
+      </ol>
+      一度許可すれば、以降は通常どおりダブルクリックで起動できます。
+      ※「フルディスクアクセス」の設定は、この問題とは無関係です。
+    </div>
+
     {% if app.changelog %}
     <h2>更新履歴</h2>
     <ul>
@@ -201,8 +236,8 @@
       <li>上のボタンから <code>AquaFinder.dmg</code> をダウンロードします。</li>
       <li>DMGを開き、<code>AquaFinder.app</code> を <code>Applications</code> フォルダにドラッグします。</li>
       <li>
-        初回起動時、Appleに登録された開発者による署名ではないため「開発元が未確認のため開けません」
-        という警告が出ます。その場合は次のいずれかの方法で開いてください。
+        <span class="critical-warning">初回起動時、Appleに登録された開発者による署名ではないため「開発元が未確認のため開けません」という警告が必ず出ます（これは不具合ではありません）。</span>
+        その場合は次のいずれかの方法で開いてください。
         <ul>
           <li><code>AquaFinder.app</code> を右クリック（またはControl+クリック）→「開く」を選択し、表示されるダイアログで「開く」を選ぶ</li>
           <li>もしくは、システム設定 →「プライバシーとセキュリティ」を開き、AquaFinderに関するメッセージの横にある「このまま開く」をクリックする</li>
