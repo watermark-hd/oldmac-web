@@ -36,6 +36,7 @@
       <div class="meta">Downloads so far: {{ download_count }}</div>
       {% if updated_at %}<div class="meta">Last updated: {{ updated_at }}{% if app.version %} (v{{ app.version }}){% endif %}</div>{% endif %}
       <div class="meta"><a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">Source code on GitHub</a></div>
+      <div class="meta">Note: this was revised several times on launch day (2026-09-09) as bugs turned up right after release and got fixed the same day. If you grabbed an earlier build that day, sorry &mdash; please replace it with this one.</div>
       <div class="meta">Note: Tiger's stock Safari/curl can't verify today's HTTPS certificates and may fail to download this directly &mdash; use a modern curl via Tigerbrew/MacPorts instead.</div>
     </div>
 
@@ -187,6 +188,7 @@
       <div class="meta">これまでのダウンロード数: {{ download_count }}</div>
       {% if updated_at %}<div class="meta">最終更新日: {{ updated_at }}{% if app.version %}（v{{ app.version }}）{% endif %}</div>{% endif %}
       <div class="meta"><a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHubでソースコードを見る</a></div>
+      <div class="meta">※ 公開初日（2026-09-09）は、リリース直後に見つかった不具合をその日のうちに直して何度か差し替えています。初日に旧ビルドをダウンロードされた方は、お手数ですが最新版に入れ替えてください。申し訳ありません。</div>
       <div class="meta">※ Tiger標準のSafari/curlは現代のHTTPS証明書を検証できず、ここから直接ダウンロードできない場合があります。TigerbrewやMacPorts経由の新しいcurlをご利用ください。</div>
     </div>
 
