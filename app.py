@@ -175,6 +175,7 @@ def sitemap():
         "/ja/apps/ppc-claude-agent/", "/en/apps/ppc-claude-agent/",
         "/ja/apps/exfat-tiger-ppc/", "/en/apps/exfat-tiger-ppc/",
         "/ja/apps/kodama/", "/en/apps/kodama/",
+        "/ja/apps/tiger-quicklook/", "/en/apps/tiger-quicklook/",
         "/ja/articles/why-old-macs/", "/en/articles/why-old-macs/",
     ]
     entries = "".join(f"  <url><loc>{SITE_URL}{path}</loc></url>\n" for path in paths)

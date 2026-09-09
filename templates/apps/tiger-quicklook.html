@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+
+{% block title %}Tiger QuickLook{% endblock %}
+
+{% block content %}
+
+  <a class="back-link" href="{{ url_for('top', lang=lang) }}">
+    &laquo; {% if lang == 'en' %}Back to Applications{% else %}アプリ一覧に戻る{% endif %}
+  </a>
+
+  <h1>Tiger QuickLook</h1>
+  <div>
+    <span class="platform-badge">{{ app.platform }}</span>
+    <span class="app-card-status source-status">{% if lang == 'en' %}Source Available{% else %}ソース公開中{% endif %}</span>
+  </div>
+
+  {% if lang == 'en' %}
+  <div class="tabs">
+    <input type="radio" name="tabset" id="tab-overview" class="tab-input" checked>
+    <label for="tab-overview" class="tab-label">Overview</label>
+    <input type="radio" name="tabset" id="tab-tech" class="tab-input">
+    <label for="tab-tech" class="tab-label">Technical Info</label>
+
+    <div id="panel-overview" class="tab-panel">
+    <p>
+      A lightweight Quick Look substitute that runs natively on Mac OS X 10.4 Tiger. Quick Look itself only
+      arrived in Leopard (10.5), so Tiger never had it. This brings back the Leopard-style gesture &mdash;
+      select a file in the Finder, press <strong>Space</strong>, and a preview window appears &mdash; on a real
+      Tiger machine. Supported formats are deliberately kept to just four: <strong>JPG / PNG / PDF / TXT</strong>.
+      This is an early <strong>v0.1</strong> release and features are still being added.
+    </p>
+
+    <div class="download-box">
+      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">Download TigerQuickLook.dmg</a>
+      <div class="meta">Downloads so far: {{ download_count }}</div>
+      {% if updated_at %}<div class="meta">Last updated: {{ updated_at }}{% if app.version %} (v{{ app.version }}){% endif %}</div>{% endif %}
+      <div class="meta"><a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">Source code on GitHub</a></div>
+      <div class="meta">Note: Tiger's stock Safari/curl can't verify today's HTTPS certificates and may fail to download this directly &mdash; use a modern curl via Tigerbrew/MacPorts instead.</div>
+    </div>
+
+    <div class="gatekeeper-notice">
+      <strong class="notice-title">⚠️ Required setup: turn on "Enable access for assistive devices"</strong>
+      The Space-bar preview works by intercepting an unmodified Space key, which on Tiger needs an
+      <strong>event tap</strong>, and Tiger only allows those when assistive-device access is enabled.
+      <strong>System Preferences → Universal Access → check "Enable access for assistive devices" at the
+      bottom of the panel.</strong> If you launch the app without this, it shows a dialog telling you so and quits.
+      <br>This is <em>not</em> needed if you only ever use the one-shot mode (<code>open -a TigerQuickLook.app /path/to/file</code>).
+    </div>
+
+    <h2>Supported Formats</h2>
+    <p>JPG / PNG / PDF / TXT only. Selecting anything else and pressing Space does nothing. This is intentional &mdash; broadening it would make the app too heavy for the target hardware.</p>
+
+    <h2>How to Use</h2>
+    <p>
+      Bring the Finder to the front, select one file, and press <strong>Space</strong>. Press Space again
+      (or <strong>Esc</strong> in the window) to close it. When the app is running as a resident agent, a
+      <strong>"QL"</strong> item appears at the right end of the menu bar &mdash; quit it from there (or
+      <code>killall TigerQuickLook</code> in Terminal). When something other than the Finder is frontmost,
+      Space behaves normally and is not intercepted.
+    </p>
+
+    <h2>Installation</h2>
+    <ol>
+      <li>Open <code>TigerQuickLook.dmg</code> (from the button above).</li>
+      <li><strong class="critical-warning">Enable "access for assistive devices"</strong> &mdash; see the yellow box above. Without it the Space-bar feature cannot start.</li>
+      <li>Launch <code>TigerQuickLook.app</code> with <strong>Finder double-click</strong>, <code>open TigerQuickLook.app</code>, or a Login Item. <strong>Do not run the executable by path</strong> (<code>.../MacOS/TigerQuickLook</code>) &mdash; that skips LaunchServices, so the menu bar item, the Finder queries, and the preview window all go dead (only the event tap keeps working, which makes it easy to misdiagnose).</li>
+      <li>To keep it always available, add <code>TigerQuickLook.app</code> to <strong>System Preferences → Accounts → Login Items</strong>.</li>
+    </ol>
+
+    <h2>Limitations</h2>
+    <ul>
+      <li>Pressing Space while renaming a file inline in the Finder types no space and opens a preview instead &mdash; there's no way for an outside process to tell the Finder is in text-edit mode. Press Esc to recover.</li>
+      <li>For up to ~0.3&nbsp;s right after switching to the Finder, Space may not take effect (the frontmost-app check is a poll, since Tiger has no activation notification). Selecting a file gives it enough time.</li>
+    </ul>
+
+    <h2>Supported Environment</h2>
+    <table>
+      <tr><th>Verified</th><td>iBook G4 (PowerBook6,5) / Mac OS X 10.4.11 (Tiger)</td></tr>
+      <tr><th>Requirement</th><td>PowerPC Mac, Mac OS X 10.4 (Tiger)</td></tr>
+    </table>
+
+    <p class="credit">
+      A personal hobby project provided with no warranty. MIT licensed. Full source, license, and development
+      notes are in the <a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub repository</a>.
+    </p>
+    </div>
+
+    <div id="panel-tech" class="tab-panel">
+    <p>
+      The whole app is a single <code>src/main.m</code>, built with a plain <code>gcc</code> invocation from
+      <code>build.sh</code> &mdash; <code>xcodebuild</code> is broken on this machine (<code>DevToolsSupport.framework</code>
+      is missing), so the <code>.app</code> bundle is assembled by hand in a shell script.
+    </p>
+
+    <h3>"Don't make it heavy" drove every decision</h3>
+    <p>
+      The target is a 2005 iBook G4 (1.2&nbsp;GHz, 1.25&nbsp;GB RAM). Images are shrink-decoded from the start
+      via <code>CGImageSourceCreateThumbnailAtIndex</code> with <code>kCGImageSourceThumbnailMaxPixelSize</code>,
+      never decoded at full resolution. PDFs use <code>CGPDFDocumentCreateWithURL</code> and draw only page 1
+      with <code>CGContextDrawPDFPage</code> (PDFKit doesn't exist on Tiger) &mdash; because pages are parsed
+      lazily, even a 250-page PDF opens instantly; only the complexity of page 1 matters, not the file size.
+      TXT reads just the first 64&nbsp;KB via <code>NSFileHandle</code> into a read-only <code>NSTextView</code>.
+      No prefetch, no cache, the window is disposable. A 5.4&nbsp;MB PDF with a 2550&times;3300 scanned image on
+      page 1 opens after a brief pause with slightly sluggish drag-resize &mdash; judged good enough that an
+      offscreen bitmap cache wasn't worth adding.
+    </p>
+
+    <h3>Getting "one Space press" to work</h3>
+    <p>
+      The hard part. A Services-menu approach doesn't work: Tiger's Finder doesn't put the selected file on the
+      Services pasteboard, so the item is always greyed out (fixed in 10.5). A modified shortcut like
+      <code>&#8984;Y</code> would be easy with Carbon's <code>RegisterEventHotKey</code> and needs no system
+      setting, but "the key is too far away." That leaves <code>CGEventTap</code> as the only way to
+      conditionally intercept an unmodified single key &mdash; and on Tiger a <code>CGEventTap</code> can't be
+      created at all unless "Enable access for assistive devices" is on. That requirement is unavoidable, so
+      it's called out loudly in the docs as a one-time setup step.
+    </p>
+
+    <h3>Bugs and lessons along the way</h3>
+    <div class="tech-note">
+      <strong>An active event tap turns Space into a full-width space in Terminal.</strong> With the agent running, typing Space in Terminal produced U+3000 (full-width) instead of a normal space; TextEdit was fine. Cause: when a key event passes through an <em>active</em> event tap, the WindowServer commits it using the current input source &mdash; so with a Japanese IME on, Space gets converted, and apps that read <code>[event characters]</code> directly (like Terminal) receive the full-width character. The fix: never leave the tap enabled all the time. A 0.3&nbsp;s <code>NSTimer</code> poll enables <code>CGEventTapEnable</code> only while the Finder is frontmost or a preview is showing (Tiger has no <code>NSWorkspaceDidActivateApplicationNotification</code> &mdash; that's 10.6+). The side effect is the ~0.3&nbsp;s dead window after switching to the Finder.
+    </div>
+    <div class="tech-note">
+      <strong>Running the executable by path leaves the app unregistered with the GUI session.</strong> Not just over SSH &mdash; even from Terminal on the machine itself, calling <code>.../MacOS/TigerQuickLook</code> directly skips LaunchServices, so <code>LSUIElement</code> never applies and the status-bar item, the <code>NSAppleScript</code> calls to the Finder, and the preview window are all unresponsive. Only the low-level <code>CGEventTap</code> still fires, which makes it easy to chase the wrong bug. Always start it via <code>open</code>, a double-click, or a Login Item.
+    </div>
+    <div class="tech-note">
+      <strong>Tiger SDK / GCC 4.0 landmines.</strong> <code>CGFloat</code> doesn't exist (it came with the 64-bit move in Leopard) &mdash; use plain <code>float</code>. A <code>CGPDFPageRef</code> does <em>not</em> keep its parent <code>CGPDFDocumentRef</code> alive: retain only the page, release the document, and the next access to the page hits freed memory and crashes with <code>EXC_BAD_ACCESS</code> &mdash; hold the document and re-fetch the page with <code>CGPDFDocumentGetPage</code> each time. And <code>@"..."</code> literals with non-ASCII bytes get mangled by GCC 4.0, so every user-visible string goes through <code>[NSString stringWithUTF8String:]</code>.
+    </div>
+    <div class="tech-note">
+      <strong>Modern <code>.icns</code> files render as a blank white icon on Tiger.</strong> Today's <code>iconutil</code> produces PNG-based icon types (<code>ic07</code>/<code>ic08</code>/…, 256&ndash;1024&nbsp;px) that Tiger's Finder can't parse. Tiger only reads the classic types (<code>is32</code>/<code>il32</code>/<code>ih32</code>/<code>it32</code> plus 8-bit masks, 16&ndash;128&nbsp;px, uncompressed or PackBits). libicns' <code>png2icns</code> produces a correct one: <code>png2icns out.icns 16.png 32.png 48.png 128.png</code>.
+    </div>
+    <div class="tech-note">
+      <strong>No way to screenshot the machine remotely.</strong> Development is done by editing locally, <code>scp</code>-ing the changed file to the iBook, and running <code>build.sh</code> over <code>ssh</code> &mdash; but <code>screencapture</code> run from an SSH session produces nothing (the process has no WindowServer connection), so every UI check has to happen standing in front of the iBook's own screen.
+    </div>
+
+    <p class="credit">
+      Full source code is on <a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>.
+    </p>
+    </div>
+  </div>
+  {% else %}
+  <div class="tabs">
+    <input type="radio" name="tabset" id="tab-overview" class="tab-input" checked>
+    <label for="tab-overview" class="tab-label">概要</label>
+    <input type="radio" name="tabset" id="tab-tech" class="tab-input">
+    <label for="tab-tech" class="tab-label">技術情報</label>
+
+    <div id="panel-overview" class="tab-panel">
+    <p>
+      Mac OS X 10.4 Tiger 実機の上でネイティブに動く、軽量な Quick Look 代替アプリです。Quick Look 自体は Leopard (10.5) からの機能なので、Tiger には存在しません。「Finder でファイルを選んで <strong>Space</strong> キーを押すとプレビューが出る」という Leopard 以降の操作感を、Tiger 機で再現します。対応形式は <strong>JPG / PNG / PDF / TXT</strong> の4つだけに意図的に絞っています。現在は <strong>v0.1</strong> の初期リリースで、機能は追加中です。
+    </p>
+
+    <div class="download-box">
+      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">TigerQuickLook.dmg をダウンロード</a>
+      <div class="meta">これまでのダウンロード数: {{ download_count }}</div>
+      {% if updated_at %}<div class="meta">最終更新日: {{ updated_at }}{% if app.version %}（v{{ app.version }}）{% endif %}</div>{% endif %}
+      <div class="meta"><a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHubでソースコードを見る</a></div>
+      <div class="meta">※ Tiger標準のSafari/curlは現代のHTTPS証明書を検証できず、ここから直接ダウンロードできない場合があります。TigerbrewやMacPorts経由の新しいcurlをご利用ください。</div>
+    </div>
+
+    <div class="gatekeeper-notice">
+      <strong class="notice-title">⚠️ 導入時に必須の設定：「補助装置にアクセスできるようにする」を有効化</strong>
+      Space キー方式は、修飾キーなしの Space を横取りするために「イベントタップ」という仕組みを使います。Tiger ではこれにシステム側の許可が必須です。<strong>システム環境設定 →「ユニバーサルアクセス」→ 画面いちばん下の「補助装置にアクセスできるようにする」にチェックを入れてください。</strong>チェックを入れずに起動すると、その旨のダイアログが出て終了します。
+      <br>ファイルを指定して単発で開くだけ（<code>open -a TigerQuickLook.app /パス/ファイル</code>）なら、この設定は不要です。
+    </div>
+
+    <h2>対応形式</h2>
+    <p>JPG / PNG / PDF / TXT のみです。それ以外を選んで Space を押しても何も起きません。対応を広げると非力な実機で重くなるため、意図的に絞っています。</p>
+
+    <h2>使い方</h2>
+    <p>
+      Finder を最前面にしてファイルを1つ選び、<strong>Space</strong> を押します。もう一度 <strong>Space</strong>（またはウィンドウで <strong>Esc</strong>）で閉じます。常駐させると <strong>メニューバー右側に「QL」</strong> が表示され、終了はそこから行います（またはターミナルで <code>killall TigerQuickLook</code>）。Finder 以外が最前面のときは、Space は横取りされず通常どおり動きます。
+    </p>
+
+    <h2>インストール手順</h2>
+    <ol>
+      <li>上のボタンから <code>TigerQuickLook.dmg</code> を開きます。</li>
+      <li><strong class="critical-warning">「補助装置にアクセスできるようにする」を有効化します</strong>（上の黄色い枠を参照）。これを入れないと Space キー方式が起動できません。</li>
+      <li><code>TigerQuickLook.app</code> を <strong>Finder でダブルクリック</strong>、<code>open TigerQuickLook.app</code>、またはログイン項目から起動します。<strong>実行ファイルをパスで直接叩かないでください</strong>（<code>.../MacOS/TigerQuickLook</code>）。LaunchServices を通らないため、メニューバー項目・Finder への問い合わせ・プレビュー表示がすべて無反応になります（イベントタップだけは動くので気づきにくいです）。</li>
+      <li>常用するなら、<strong>システム環境設定 →「アカウント」→「ログイン項目」</strong>に <code>TigerQuickLook.app</code> を追加します。</li>
+    </ol>
+
+    <h2>制限</h2>
+    <ul>
+      <li>Finder でファイル名をインラインでリネーム中に Space を押すと、スペースが入力されずプレビューが出てしまいます。編集中かどうかを外部プロセスから判定できないためです。Esc で戻せます。</li>
+      <li>Finder に切り替えた直後の約0.3秒間は、Space が効かないことがあります（前面アプリの監視がポーリングのため。Tiger には最前面アプリの変化を知らせる通知がありません）。ファイルを選ぶ動作で十分間が空きます。</li>
+    </ul>
+
+    <h2>対応環境</h2>
+    <table>
+      <tr><th>動作確認</th><td>iBook G4 (PowerBook6,5) / Mac OS X 10.4.11 (Tiger)</td></tr>
+      <tr><th>要件</th><td>PowerPC Mac / Mac OS X 10.4 (Tiger)</td></tr>
+    </table>
+
+    <p class="credit">
+      個人の趣味プロジェクトにつき無保証です。MITライセンス。ソースコード・ライセンス・開発ノートは上記のGitHubリポジトリにあります。
+    </p>
+    </div>
+
+    <div id="panel-tech" class="tab-panel">
+    <p>
+      アプリは <code>src/main.m</code> 1ファイルで完結し、<code>build.sh</code> の <code>gcc</code> 直接呼び出しでビルドします。<code>xcodebuild</code> はこの実機では <code>DevToolsSupport.framework</code> が見つからず壊れているため使わず、<code>.app</code> バンドルはシェルスクリプトで手組みします。
+    </p>
+
+    <h3>「重くしない」を最優先に設計した</h3>
+    <p>
+      実機は2005年の iBook G4（1.2GHz・1.25GB RAM）。画像はフル解像度でデコードしてから縮小するのではなく、<code>CGImageSourceCreateThumbnailAtIndex</code> に <code>kCGImageSourceThumbnailMaxPixelSize</code> を渡して最初から縮小デコードします。PDF は <code>CGPDFDocumentCreateWithURL</code> で開き、1ページ目だけを <code>CGContextDrawPDFPage</code> でその場描画します（PDFKit は Tiger に存在しません）。ページは遅延パースされるので、200ページの PDF でも開くのは一瞬で、効いてくるのは「1ページ目の中身の複雑さ」だけです。TXT は <code>NSFileHandle</code> で先頭64KBだけ読み、編集不可の <code>NSTextView</code> に流します。先読みなし・キャッシュなし・ウィンドウは使い捨て。1ページに2550×3300のスキャン画像を貼った5.4MBの PDF で、開くのにひと呼吸、ドラッグリサイズの追従が少しもたつく程度で、オフスクリーンのビットマップキャッシュなどの作り込みはやらないと判断しました。
+    </p>
+
+    <h3>「Space キー一発」をどう実現するか</h3>
+    <p>
+      いちばん悩んだところです。Services メニュー案は不成立でした。Tiger の Finder は選択中のファイルを Services のペーストボードに載せないため、項目が常にグレーアウトします（10.5 で改善された挙動）。<code>&#8984;Y</code> などの修飾キー付きなら Carbon の <code>RegisterEventHotKey</code> で実装でき、システム設定も不要ですが「キーが遠い」ため不採用。結局、修飾なし単キーを条件付きで横取りする手段は <code>CGEventTap</code> しかなく、そして Tiger の <code>CGEventTap</code> は「補助装置にアクセスできるようにする」を有効化しないと生成できません。ここは避けられないので、一度きりの設定として配布ドキュメントで強く周知する方針にしました。
+    </p>
+
+    <h3>ハマった点</h3>
+    <div class="tech-note">
+      <strong>Terminal で Space が全角になる。</strong> エージェントを動かした状態だと、Terminal で Space を打つと半角スペースではなく全角スペース（U+3000）が入りました。TextEdit では正常。原因は、アクティブなイベントタップをキーイベントが通過すると、WindowServer がそのイベントを「現在の入力ソース」で確定してしまうことです。日本語入力が有効だと Space が全角に変換され、<code>[event characters]</code> を直接読むタイプのアプリ（Terminal など）がその全角を受け取ります。対策はタップを常時有効にしないこと。0.3秒ごとの <code>NSTimer</code> ポーリングで「Finder が最前面、またはプレビュー表示中」のときだけ <code>CGEventTapEnable</code> します（Tiger には <code>NSWorkspaceDidActivateApplicationNotification</code> がなく、10.6以降の機能です）。副作用として、Finder に切り替えた直後の最大0.3秒は Space が効きません。
+    </div>
+    <div class="tech-note">
+      <strong>実行ファイルをパスで直接 exec すると GUI セッションに登録されない。</strong> SSH 越しはもちろん、実機の Terminal から <code>.../MacOS/TigerQuickLook</code> と叩いても、LaunchServices を通らないため <code>LSUIElement</code> が適用されず、メニューバー項目・Finder への <code>NSAppleScript</code>・プレビューウィンドウがすべて無反応になります。<code>CGEventTap</code> だけは低レベルなので動いてしまい、切り分けを誤りやすいです。必ず <code>open</code>・ダブルクリック・ログイン項目から起動します。
+    </div>
+    <div class="tech-note">
+      <strong>Tiger SDK / GCC 4.0 の地雷。</strong> <code>CGFloat</code> が存在しません（64ビット移行＝Leopard 以降で入った型なので、Tiger では素直に <code>float</code> を使う）。<code>CGPDFPageRef</code> は親の <code>CGPDFDocumentRef</code> を延命してくれません。ページだけ retain して document を release すると、後からページにアクセスした瞬間に解放済みメモリを踏んで <code>EXC_BAD_ACCESS</code> でクラッシュします。document ごと保持し、描画のたびに <code>CGPDFDocumentGetPage</code> で取り直します。<code>@"日本語"</code> リテラルは GCC 4.0 が実行時エンコーディングで解釈して化けるため、ユーザーに見える文字列は <code>[NSString stringWithUTF8String:]</code> を通します。
+    </div>
+    <div class="tech-note">
+      <strong>現行の <code>.icns</code> は Tiger だとアイコンが真っ白になる。</strong> 現行の <code>iconutil</code> が作る <code>.icns</code> は PNG ベースの新しいアイコンタイプ（<code>ic07</code>/<code>ic08</code>/…、256〜1024px）で、Tiger の Finder はこれを解釈できません。Tiger が読めるのは「クラシック」タイプ（<code>is32</code>/<code>il32</code>/<code>ih32</code>/<code>it32</code> ＋ 8bit マスク、16〜128px、非圧縮または PackBits）だけです。libicns の <code>png2icns</code> で <code>png2icns out.icns 16.png 32.png 48.png 128.png</code> と作れば正しく出ます。
+    </div>
+    <div class="tech-note">
+      <strong>実機のスクリーンショットをこちらから撮れない。</strong> 開発は、手元でコードを直して <code>scp</code> で iBook に転送し、<code>ssh</code> 越しに <code>build.sh</code> を回す形で進めています。ただし <code>screencapture</code> を SSH セッションから実行しても何も生成されません（プロセスが WindowServer に繋がっていないため）。UI の確認は結局いつも iBook の画面を直接見る必要があります。
+    </div>
+
+    <p class="credit">
+      ソースコードは<a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>にあります。
+    </p>
+    </div>
+  </div>
+  {% endif %}
+
+{% endblock %}
