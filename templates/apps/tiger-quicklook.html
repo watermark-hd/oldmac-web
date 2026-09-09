@@ -26,8 +26,9 @@
       A lightweight Quick Look substitute that runs natively on Mac OS X 10.4 Tiger. Quick Look itself only
       arrived in Leopard (10.5), so Tiger never had it. This brings back the Leopard-style gesture &mdash;
       select a file in the Finder, press <strong>Space</strong>, and a preview window appears &mdash; on a real
-      Tiger machine. Supported formats are deliberately kept to just four: <strong>JPG / PNG / PDF / TXT</strong>.
-      This is an early <strong>v0.1</strong> release and features are still being added.
+      Tiger machine. The aim is to see what a file <em>is</em> when the name doesn't tell you: it covers
+      images, PDF, plain text, and even Office documents (see the table below), using nothing but tools Tiger
+      already ships. Still an early release (<strong>v0.3</strong>), with more being added.
     </p>
 
     <div class="download-box">
@@ -47,16 +48,34 @@
       <br>This is <em>not</em> needed if you only ever use the one-shot mode (<code>open -a TigerQuickLook.app /path/to/file</code>).
     </div>
 
+    {% if app.changelog %}
+    <h2>Changelog</h2>
+    <ul>
+      {% for entry in app.changelog %}
+      <li><strong>{{ entry.date }}</strong> &mdash; {{ entry.note_en }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
     <h2>Supported Formats</h2>
-    <p>JPG / PNG / PDF / TXT only. Selecting anything else and pressing Space does nothing. This is intentional &mdash; broadening it would make the app too heavy for the target hardware.</p>
+    <p>The goal is identifying a file you can't place by name, not faithful rendering &mdash; if the text inside comes through, that's enough.</p>
+    <table>
+      <tr><th>Images</th><td>JPG / PNG / PDF / TIFF / GIF / BMP &mdash; drawn directly via ImageIO / Quartz. PDF shows page 1 only.</td></tr>
+      <tr><th>Text</th><td>TXT / MD / CSV / JSON / XML and many source types &mdash; first 64&nbsp;KB, shown raw in a monospace window. Extension-less files are previewed too if the content looks like text.</td></tr>
+      <tr><th>Legacy Office</th><td>DOC (Word 2004 etc.) / RTF / HTML &mdash; run through Tiger's own <code>textutil -convert txt</code>.</td></tr>
+      <tr><th>Modern Office</th><td>DOCX / PPTX / XLSX / ODT / ODS / ODP &mdash; <code>unzip -p</code> the body XML, then strip tags.</td></tr>
+    </table>
+    <p>Not covered: RAW, faithful layout, every page/sheet of a multi-page document. No extra libraries &mdash; the only external dependencies are Tiger's bundled <code>textutil</code> and <code>unzip</code>.</p>
 
     <h2>How to Use</h2>
     <p>
       Bring the Finder to the front, select one file, and press <strong>Space</strong>. Press Space again
-      (or <strong>Esc</strong> in the window) to close it. When the app is running as a resident agent, a
-      <strong>"QL"</strong> item appears at the right end of the menu bar &mdash; quit it from there (or
-      <code>killall TigerQuickLook</code> in Terminal). When something other than the Finder is frontmost,
-      Space behaves normally and is not intercepted.
+      (or <strong>Esc</strong> in the window) to close it. While a preview is open, <strong>&larr; / &rarr; / &uarr; / &darr;</strong>
+      move to the previous/next previewable file in the same folder, in name order &mdash; the same feel as
+      Leopard's Quick Look, so you can flip between images without pressing Space again. When the app is
+      running as a resident agent, a <strong>"QL"</strong> item appears at the right end of the menu bar
+      &mdash; quit it from there (or <code>killall TigerQuickLook</code> in Terminal). When something other
+      than the Finder is frontmost, Space behaves normally and is not intercepted.
     </p>
 
     <h2>Installation</h2>
@@ -116,6 +135,18 @@
       it's called out loudly in the docs as a one-time setup step.
     </p>
 
+    <h3>Widening the formats without adding a single library</h3>
+    <p>
+      v0.2 grew the format list from four to a couple of dozen, and the rule was: no new dependencies. A
+      small classifier dispatches by extension (with a content sniff, so an extension-less file that's really
+      text still previews). Images just gain the rest of what ImageIO already reads (TIFF/GIF/BMP). Legacy
+      <code>.doc</code>, <code>.rtf</code> and <code>.html</code> are piped through <code>/usr/bin/textutil</code>,
+      which Tiger ships &mdash; Japanese survives the round trip. The modern Office formats are zip archives,
+      so <code>/usr/bin/unzip -p</code> pulls out the body part (<code>word/document.xml</code>,
+      <code>ppt/slides/slide*.xml</code>, <code>xl/sharedStrings.xml</code>, <code>content.xml</code>) and the
+      tags get stripped in code. It's identification-grade, not layout, which is exactly the goal.
+    </p>
+
     <h3>Bugs and lessons along the way</h3>
     <div class="tech-note">
       <strong>An active event tap turns Space into a full-width space in Terminal.</strong> With the agent running, typing Space in Terminal produced U+3000 (full-width) instead of a normal space; TextEdit was fine. Cause: when a key event passes through an <em>active</em> event tap, the WindowServer commits it using the current input source &mdash; so with a Japanese IME on, Space gets converted, and apps that read <code>[event characters]</code> directly (like Terminal) receive the full-width character. The fix: never leave the tap enabled all the time. A 0.3&nbsp;s <code>NSTimer</code> poll enables <code>CGEventTapEnable</code> only while the Finder is frontmost or a preview is showing (Tiger has no <code>NSWorkspaceDidActivateApplicationNotification</code> &mdash; that's 10.6+). The side effect is the ~0.3&nbsp;s dead window after switching to the Finder.
@@ -147,7 +178,7 @@
 
     <div id="panel-overview" class="tab-panel">
     <p>
-      Mac OS X 10.4 Tiger 実機の上でネイティブに動く、軽量な Quick Look 代替アプリです。Quick Look 自体は Leopard (10.5) からの機能なので、Tiger には存在しません。「Finder でファイルを選んで <strong>Space</strong> キーを押すとプレビューが出る」という Leopard 以降の操作感を、Tiger 機で再現します。対応形式は <strong>JPG / PNG / PDF / TXT</strong> の4つだけに意図的に絞っています。現在は <strong>v0.1</strong> の初期リリースで、機能は追加中です。
+      Mac OS X 10.4 Tiger 実機の上でネイティブに動く、軽量な Quick Look 代替アプリです。Quick Look 自体は Leopard (10.5) からの機能なので、Tiger には存在しません。「Finder でファイルを選んで <strong>Space</strong> キーを押すとプレビューが出る」という Leopard 以降の操作感を、Tiger 機で再現します。目的は「タイトルだけでは思い出せないファイルの中身確認」で、画像・PDF・テキスト・Office 文書（下の表を参照）まで、Tiger に最初から入っているものだけで対応しています。現在は <strong>v0.3</strong>、まだ機能を追加中です。
     </p>
 
     <div class="download-box">
@@ -164,12 +195,28 @@
       <br>ファイルを指定して単発で開くだけ（<code>open -a TigerQuickLook.app /パス/ファイル</code>）なら、この設定は不要です。
     </div>
 
+    {% if app.changelog %}
+    <h2>変更履歴</h2>
+    <ul>
+      {% for entry in app.changelog %}
+      <li><strong>{{ entry.date }}</strong> &mdash; {{ entry.note }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
     <h2>対応形式</h2>
-    <p>JPG / PNG / PDF / TXT のみです。それ以外を選んで Space を押しても何も起きません。対応を広げると非力な実機で重くなるため、意図的に絞っています。</p>
+    <p>目的は「整形して表示する」ことではなく「名前だけでは思い出せないファイルの中身確認」です。中身の文字列さえ出れば十分、という割り切りです。</p>
+    <table>
+      <tr><th>画像</th><td>JPG / PNG / PDF / TIFF / GIF / BMP &mdash; ImageIO・Quartz で直接描画。PDF は1ページ目のみ。</td></tr>
+      <tr><th>テキスト</th><td>TXT / MD / CSV / JSON / XML と各種ソース等、拡張子を広く &mdash; 先頭64KBを等幅でそのまま表示。拡張子なしでも中身がテキストっぽければプレビューします。</td></tr>
+      <tr><th>旧 Office</th><td>DOC（Word 2004 等）/ RTF / HTML &mdash; Tiger 標準の <code>textutil -convert txt</code> を経由。</td></tr>
+      <tr><th>新 Office</th><td>DOCX / PPTX / XLSX / ODT / ODS / ODP &mdash; ZIP から本文XMLを <code>unzip -p</code> で取り出してタグ除去。</td></tr>
+    </table>
+    <p>対応しないもの: RAW、レイアウトの再現、複数ページ・複数シートの網羅。追加ライブラリは使いません（外部依存は Tiger 同梱の <code>textutil</code> / <code>unzip</code> のみ）。</p>
 
     <h2>使い方</h2>
     <p>
-      Finder を最前面にしてファイルを1つ選び、<strong>Space</strong> を押します。もう一度 <strong>Space</strong>（またはウィンドウで <strong>Esc</strong>）で閉じます。常駐させると <strong>メニューバー右側に「QL」</strong> が表示され、終了はそこから行います（またはターミナルで <code>killall TigerQuickLook</code>）。Finder 以外が最前面のときは、Space は横取りされず通常どおり動きます。
+      Finder を最前面にしてファイルを1つ選び、<strong>Space</strong> を押します。もう一度 <strong>Space</strong>（またはウィンドウで <strong>Esc</strong>）で閉じます。プレビュー表示中に <strong>← / → / ↑ / ↓</strong> を押すと、同じフォルダ内の「プレビューできるファイル」を名前順で前後に移動します（Leopard の Quick Look と同じ操作感。Space を押し直さずに隣の画像を続けて見比べられます）。常駐させると <strong>メニューバー右側に「QL」</strong> が表示され、終了はそこから行います（またはターミナルで <code>killall TigerQuickLook</code>）。Finder 以外が最前面のときは、Space は横取りされず通常どおり動きます。
     </p>
 
     <h2>インストール手順</h2>
@@ -210,6 +257,11 @@
     <h3>「Space キー一発」をどう実現するか</h3>
     <p>
       いちばん悩んだところです。Services メニュー案は不成立でした。Tiger の Finder は選択中のファイルを Services のペーストボードに載せないため、項目が常にグレーアウトします（10.5 で改善された挙動）。<code>&#8984;Y</code> などの修飾キー付きなら Carbon の <code>RegisterEventHotKey</code> で実装でき、システム設定も不要ですが「キーが遠い」ため不採用。結局、修飾なし単キーを条件付きで横取りする手段は <code>CGEventTap</code> しかなく、そして Tiger の <code>CGEventTap</code> は「補助装置にアクセスできるようにする」を有効化しないと生成できません。ここは避けられないので、一度きりの設定として配布ドキュメントで強く周知する方針にしました。
+    </p>
+
+    <h3>ライブラリを1つも足さずに対応形式を広げる</h3>
+    <p>
+      v0.2 で対応形式を4つから20種類ほどに増やしましたが、ルールは「新しい依存を足さない」。小さな判定関数が拡張子で振り分け（中身のスニフも併用するので、拡張子のないテキストファイルもプレビューされます）。画像は ImageIO が元々読める範囲を足しただけ（TIFF/GIF/BMP）。旧 <code>.doc</code>・<code>.rtf</code>・<code>.html</code> は Tiger 同梱の <code>/usr/bin/textutil</code> に通します（日本語も往復で保持されます）。新しい Office 形式は ZIP なので、<code>/usr/bin/unzip -p</code> で本文パート（<code>word/document.xml</code>・<code>ppt/slides/slide*.xml</code>・<code>xl/sharedStrings.xml</code>・<code>content.xml</code>）を取り出し、タグはコード側で除去します。レイアウトの再現ではなく識別のためのもので、それがまさに狙いです。
     </p>
 
     <h3>ハマった点</h3>
