@@ -253,7 +253,7 @@ APPS = [
         "github_url": "https://github.com/watermark-hd/tiger-quicklook",
         "category": "app",
         "version": "0.1",
-        "comment": "軽いからという理由でTigerを使い続けるためにも、この便利すぎる機能はぜひ欲しかった。パッチを当ててLeopardにしようかとも考えましたが、非力なマシンで、Tigerのまま実装したかったんです。まだまだアップデート予定ですが、ある程度のフォーマットには対応しています。",
+        "comment": "軽いからという理由でTigerを使い続けるためにも便利すぎるこの機能はぜひ欲しかった。パッチを当ててLeopardにしようかとも考えましたが、非力なマシンで、Tigerのまま実装したかったんです。まだまだアップデート予定ですが、ある程度のフォーマットには対応しています。",
         "comment_en": "I keep using Tiger because it's light, and I really wanted this far-too-convenient feature while I'm at it. I thought about patching my way up to Leopard, but I wanted to build it on Tiger, on the underpowered machine as it is. Plenty of updates still to come, but it already handles a decent set of formats.",
     },
     {
