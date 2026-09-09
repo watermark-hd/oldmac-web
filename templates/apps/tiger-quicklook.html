@@ -28,7 +28,7 @@
       select a file in the Finder, press <strong>Space</strong>, and a preview window appears &mdash; on a real
       Tiger machine. The aim is to see what a file <em>is</em> when the name doesn't tell you: it covers
       images, PDF, plain text, and even Office documents (see the table below), using nothing but tools Tiger
-      already ships. Still an early release (<strong>v0.3</strong>), with more being added.
+      already ships. Still an early release (<strong>v0.4</strong>), with more being added.
     </p>
 
     <div class="download-box">
@@ -71,8 +71,9 @@
     <p>
       Bring the Finder to the front, select one file, and press <strong>Space</strong>. Press Space again
       (or <strong>Esc</strong> in the window) to close it. While a preview is open, <strong>&larr; / &rarr; / &uarr; / &darr;</strong>
-      move to the previous/next previewable file in the same folder, in name order &mdash; the same feel as
-      Leopard's Quick Look, so you can flip between images without pressing Space again. When the app is
+      move to the previous/next file in the same folder, in name order &mdash; files it can't display are
+      skipped over, and a beep marks the end of the run. It's the same feel as Leopard's Quick Look, so you
+      can flip between images without pressing Space again. When the app is
       running as a resident agent, a <strong>"QL"</strong> item appears at the right end of the menu bar
       &mdash; quit it from there (or <code>killall TigerQuickLook</code> in Terminal). When something other
       than the Finder is frontmost, Space behaves normally and is not intercepted.
@@ -80,7 +81,7 @@
 
     <h2>Installation</h2>
     <ol>
-      <li>Open <code>TigerQuickLook.dmg</code> (from the button above).</li>
+      <li>Open <code>TigerQuickLook.dmg</code> (from the button above) and drag <code>TigerQuickLook.app</code> into your <code>Applications</code> folder.</li>
       <li><strong class="critical-warning">Enable "access for assistive devices"</strong> &mdash; see the yellow box above. Without it the Space-bar feature cannot start.</li>
       <li>Launch <code>TigerQuickLook.app</code> with <strong>Finder double-click</strong>, <code>open TigerQuickLook.app</code>, or a Login Item. <strong>Do not run the executable by path</strong> (<code>.../MacOS/TigerQuickLook</code>) &mdash; that skips LaunchServices, so the menu bar item, the Finder queries, and the preview window all go dead (only the event tap keeps working, which makes it easy to misdiagnose).</li>
       <li>To keep it always available, add <code>TigerQuickLook.app</code> to <strong>System Preferences → Accounts → Login Items</strong>.</li>
@@ -178,7 +179,7 @@
 
     <div id="panel-overview" class="tab-panel">
     <p>
-      Mac OS X 10.4 Tiger 実機の上でネイティブに動く、軽量な Quick Look 代替アプリです。Quick Look 自体は Leopard (10.5) からの機能なので、Tiger には存在しません。「Finder でファイルを選んで <strong>Space</strong> キーを押すとプレビューが出る」という Leopard 以降の操作感を、Tiger 機で再現します。目的は「タイトルだけでは思い出せないファイルの中身確認」で、画像・PDF・テキスト・Office 文書（下の表を参照）まで、Tiger に最初から入っているものだけで対応しています。現在は <strong>v0.3</strong>、まだ機能を追加中です。
+      Mac OS X 10.4 Tiger 実機の上でネイティブに動く、軽量な Quick Look 代替アプリです。Quick Look 自体は Leopard (10.5) からの機能なので、Tiger には存在しません。「Finder でファイルを選んで <strong>Space</strong> キーを押すとプレビューが出る」という Leopard 以降の操作感を、Tiger 機で再現します。目的は「タイトルだけでは思い出せないファイルの中身確認」で、画像・PDF・テキスト・Office 文書（下の表を参照）まで、Tiger に最初から入っているものだけで対応しています。現在は <strong>v0.4</strong>、まだ機能を追加中です。
     </p>
 
     <div class="download-box">
@@ -216,12 +217,12 @@
 
     <h2>使い方</h2>
     <p>
-      Finder を最前面にしてファイルを1つ選び、<strong>Space</strong> を押します。もう一度 <strong>Space</strong>（またはウィンドウで <strong>Esc</strong>）で閉じます。プレビュー表示中に <strong>← / → / ↑ / ↓</strong> を押すと、同じフォルダ内の「プレビューできるファイル」を名前順で前後に移動します（Leopard の Quick Look と同じ操作感。Space を押し直さずに隣の画像を続けて見比べられます）。常駐させると <strong>メニューバー右側に「QL」</strong> が表示され、終了はそこから行います（またはターミナルで <code>killall TigerQuickLook</code>）。Finder 以外が最前面のときは、Space は横取りされず通常どおり動きます。
+      Finder を最前面にしてファイルを1つ選び、<strong>Space</strong> を押します。もう一度 <strong>Space</strong>（またはウィンドウで <strong>Esc</strong>）で閉じます。プレビュー表示中に <strong>← / → / ↑ / ↓</strong> を押すと、同じフォルダ内のファイルを名前順で前後に移動します（表示できないファイルは飛ばし、行き止まりでは音で知らせます）。Leopard の Quick Look と同じ操作感で、Space を押し直さずに隣の画像を続けて見比べられます。常駐させると <strong>メニューバー右側に「QL」</strong> が表示され、終了はそこから行います（またはターミナルで <code>killall TigerQuickLook</code>）。Finder 以外が最前面のときは、Space は横取りされず通常どおり動きます。
     </p>
 
     <h2>インストール手順</h2>
     <ol>
-      <li>上のボタンから <code>TigerQuickLook.dmg</code> を開きます。</li>
+      <li>上のボタンから <code>TigerQuickLook.dmg</code> を開き、<code>TigerQuickLook.app</code> を <code>アプリケーション</code> フォルダに入れます。</li>
       <li><strong class="critical-warning">「補助装置にアクセスできるようにする」を有効化します</strong>（上の黄色い枠を参照）。これを入れないと Space キー方式が起動できません。</li>
       <li><code>TigerQuickLook.app</code> を <strong>Finder でダブルクリック</strong>、<code>open TigerQuickLook.app</code>、またはログイン項目から起動します。<strong>実行ファイルをパスで直接叩かないでください</strong>（<code>.../MacOS/TigerQuickLook</code>）。LaunchServices を通らないため、メニューバー項目・Finder への問い合わせ・プレビュー表示がすべて無反応になります（イベントタップだけは動くので気づきにくいです）。</li>
       <li>常用するなら、<strong>システム環境設定 →「アカウント」→「ログイン項目」</strong>に <code>TigerQuickLook.app</code> を追加します。</li>

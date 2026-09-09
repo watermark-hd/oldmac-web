@@ -252,10 +252,15 @@ APPS = [
         "filename": "TigerQuickLook.dmg",
         "github_url": "https://github.com/watermark-hd/tiger-quicklook",
         "category": "app",
-        "version": "0.3",
+        "version": "0.4",
         "comment": "軽いからという理由でTigerを使い続けるためにも便利すぎるこの機能はぜひ欲しかった。パッチを当ててLeopardにしようかとも考えましたが、非力なマシンで、Tigerのまま実装したかったんです。まだまだアップデート予定ですが、ある程度のフォーマットには対応しています。",
         "comment_en": "I keep using Tiger because it's light, and I really wanted this far-too-convenient feature while I'm at it. I thought about patching my way up to Leopard, but I wanted to build it on Tiger, on the underpowered machine as it is. Plenty of updates still to come, but it already handles a decent set of formats.",
         "changelog": [
+            {
+                "date": "2026-09-09",
+                "note": "v0.4: プレビュー中の矢印キー移動が、表示できないファイル（壊れた xlsx や本文を取り出せない Office ファイルなど）で止まらず、次の表示できるファイルまで飛ぶように変更（止まると前のプレビューが残って別ファイルに見えるため）。行き止まりでは音で知らせます。あわせて、アプリ内の文言（メニュー・警告・ツールチップ）を日本語と英語の併記にしました",
+                "note_en": "v0.4: arrow-key navigation now skips files it can't preview (a broken xlsx, an Office file whose text can't be extracted) and continues to the next one that displays, instead of stopping with the previous file's preview still on screen. A beep marks the end of the run. The app's own text (menu, alerts, tooltip) is now shown in both English and Japanese.",
+            },
             {
                 "date": "2026-09-09",
                 "note": "v0.3: プレビュー中の矢印キー移動で、ウィンドウを作り直さず中身だけ差し替えるように変更（ちらつきが減り、ウィンドウの位置とサイズを保持）",
