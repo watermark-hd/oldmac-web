@@ -124,13 +124,28 @@ APPS = [
         "tagline_en": "A self-contained Perl agent that lets you talk to an AI from the Terminal on a PowerPC Mac (Tiger) — supports Claude and Gemini.",
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "ppc-claude-agent.zip",
-        "version": "1.2.1",
+        "version": "1.4.1",
         "github_url": "https://github.com/watermark-hd/ppc_claude_cli",
         "category": "app",
         "comment": "どんな古いマシンでもAIを使いたい。そんな思いから作りました。エピソードは概要欄で。",
         "comment_en": "Wanted AI to run on even the oldest machine I own. That's the whole reason this exists. The story's in the overview tab.",
         "comment_featured": True,
         "changelog": [
+            {
+                "date": "2026-09-10",
+                "note": "Gemini APIキーの取得を、初回起動時に手順を追って案内するようにした（多くの人がここで挫折していたため）。番号付きチェックリスト → その場でページを開く → 貼り付けたキーを実際に API に投げて有効か検証（「キーが違う」「APIが未有効」「接続できない」を切り分け）→ OKなら ~/.claude-agent-env に保存。案内は英語→日本語の順で併記（共有元のフォーラムが英語のため）",
+                "note_en": "First-run Gemini API key setup is now a guided, step-by-step walkthrough — this was the point most people gave up at. A numbered checklist, an offer to open the page in your browser, then the pasted key is actually sent to the API to verify it (telling \"wrong key\" / \"API not enabled\" / \"no connection\" apart) before it's accepted and saved to ~/.claude-agent-env. Shown in English then Japanese, since the forum it's shared from is English.",
+            },
+            {
+                "date": "2026-09-10",
+                "note": "AIの返答を一気に表示せず、1文字ずつタイプライター風に流すようにした（速いターミナルだと長い返答が読む前に流れてしまうため。PowerBook G4 からの要望）。既定は1文字6ms、改行で少し長めの間。CLAUDE_TYPE_DELAY で速度調整、0 で従来どおり即表示",
+                "note_en": "The assistant's replies now print character by character, typewriter-style, instead of all at once — on a fast terminal a long answer scrolled past before you could read it (a PowerBook G4 request). Default is 6 ms per character with a longer pause at line breaks; tune with CLAUDE_TYPE_DELAY, or set it to 0 for the old instant printing.",
+            },
+            {
+                "date": "2026-09-10",
+                "note": "PowerBook G4 実機での入力まわりを改善：（1）1文字打つたびに行全体が再描画されてチラついていたのを、末尾に足すだけの通常時は1文字だけ出す方式に変更（60桁で15文字入力が 584バイト→16バイト）。（2）ターミナルのカーソル位置報告の断片（`;59R` 等）が入力中の行に紛れ込む不具合を修正。（3）日本語入力（IME）で変換確定の Return が、まれに文の途中で送信扱いになる不具合を修正。あわせて CLAUDE_DEBUG_INPUT 設定時に起動直後クラッシュしてターミナルが操作不能になる不具合も修正",
+                "note_en": "Input handling on real PowerBook G4 hardware: (1) typing no longer repaints the whole line on every keystroke — the common \"append at the end\" case now prints just the one character (typing 15 chars on a 60-column terminal went from 584 bytes to 16). (2) Fixed stray terminal cursor-position fragments (like `;59R`) landing in the line you're typing. (3) Fixed an IME conversion-confirm Return sometimes counting as \"send\" mid-sentence. Also fixed a startup crash when CLAUDE_DEBUG_INPUT was set that left the terminal stuck.",
+            },
             {
                 "date": "2026-08-28",
                 "note": "Anthropic (Claude) に加えて、クレジットカード不要の無料枠があるGemini (Google) にも対応。セットアップ時にどちらを使うか選べる",
