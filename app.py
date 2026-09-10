@@ -1,3 +1,4 @@
+import re
 import smtplib
 import sqlite3
 import time
@@ -38,6 +39,33 @@ def load_feedback_config():
 
 FEEDBACK_CFG = load_feedback_config()
 APP_LIST = [a for a in APPS if a["category"] == "app"]
+
+# When Japanese prose is hand-wrapped across source lines in a template, the
+# browser collapses that newline (+ indentation) to a single space — visible and
+# wrong mid-sentence in Japanese, which has no inter-word spaces. Rather than
+# joining hundreds of lines by hand, strip the whitespace only where a source
+# newline sits directly between two CJK characters. ASCII/English is never
+# touched (it has no CJK chars), so bilingual pages stay correct.
+_CJK = r"　-ヿ㐀-䶿一-鿿＀-￯"
+_CJK_LINEBREAK = re.compile(rf"(?<=[{_CJK}])[ \t]*\r?\n[ \t]*(?=[{_CJK}])")
+
+
+@app.after_request
+def collapse_cjk_linebreaks(response):
+    if (
+        response.direct_passthrough
+        or response.mimetype != "text/html"
+        or request.endpoint == "admin_feedback"  # user messages there may hold real newlines
+    ):
+        return response
+    try:
+        body = response.get_data(as_text=True)
+    except (UnicodeDecodeError, RuntimeError):
+        return response
+    collapsed = _CJK_LINEBREAK.sub("", body)
+    if collapsed != body:
+        response.set_data(collapsed)
+    return response
 
 
 def _lang_path(lang, endpoint, view_args):
