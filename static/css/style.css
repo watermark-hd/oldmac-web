@@ -524,3 +524,126 @@ footer {
   color: #d49a38;
   border: 1px solid #f0e6d2;
 }
+
+/* ============ フィードバックフォーム ============ */
+.feedback-form {
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 24px;
+  margin: 32px 0 20px;
+  box-shadow: 0 2px 10px rgba(20, 60, 90, 0.05);
+}
+.feedback-form--mini {
+  margin-top: 40px;
+  background: var(--bg);
+  box-shadow: none;
+}
+.feedback-form h2 {
+  margin-top: 0;
+}
+.feedback-intro {
+  color: var(--ink-soft);
+  font-size: 14px;
+  margin: 0 0 16px;
+}
+.feedback-thanks {
+  background: #e9f7ec;
+  border: 1px solid #a8ddb5;
+  border-left: 4px solid #43a047;
+  border-radius: 4px 10px 10px 4px;
+  padding: 12px 16px;
+  margin: 0 0 16px;
+  font-size: 14px;
+}
+
+.fb-form .fb-field {
+  margin: 0 0 14px;
+}
+.fb-form label,
+.fb-form .fb-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin-bottom: 5px;
+}
+.fb-form textarea,
+.fb-form input[type="email"],
+.fb-form select {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+}
+.fb-form textarea {
+  resize: vertical;
+  min-height: 64px;
+}
+.fb-form textarea:focus,
+.fb-form input[type="email"]:focus,
+.fb-form select:focus {
+  outline: none;
+  border-color: var(--aqua);
+  box-shadow: 0 0 0 3px rgba(10, 132, 196, 0.15);
+}
+
+/* CSS-only star rating: radios reversed so `~` fills to the left.
+   Degrades on very old browsers to five clickable stars that just
+   don't turn yellow — the radio still submits. */
+.fb-stars {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+.fb-stars input {
+  position: absolute;
+  left: -9999px;
+}
+.fb-stars label {
+  font-size: 30px;
+  line-height: 1;
+  color: #d4d9de;
+  cursor: pointer;
+  padding: 0 3px;
+  margin: 0;
+  transition: color 0.1s;
+}
+.fb-stars label:hover,
+.fb-stars label:hover ~ label,
+.fb-stars input:checked ~ label {
+  color: #f5b301;
+}
+.fb-stars input:focus ~ label {
+  text-shadow: 0 0 0 transparent;
+}
+
+.fb-submit {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--aqua), var(--aqua-dark));
+  color: #fff;
+  border: 0;
+  cursor: pointer;
+  padding: 11px 32px;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(10, 132, 196, 0.3);
+}
+.fb-submit:hover {
+  filter: brightness(1.05);
+}
+
+/* honeypot: kept in the DOM + focusable-order neutral, but off-screen */
+.fb-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

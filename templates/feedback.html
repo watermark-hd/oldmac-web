@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}{% if lang == 'en' %}Send Feedback{% else %}フィードバック{% endif %}{% endblock %}
+{% block meta_description %}{% if lang == 'en' %}Send a private bug report or request straight to the developer.{% else %}不具合報告・要望を、非公開で開発者に直接送れます。{% endif %}{% endblock %}
+
+{% block content %}
+
+  <a class="back-link" href="{{ url_for('top', lang=lang) }}">
+    &laquo; {% if lang == 'en' %}Back to Applications{% else %}アプリ一覧に戻る{% endif %}
+  </a>
+
+  <h1>{% if lang == 'en' %}Send Feedback{% else %}フィードバックを送る{% endif %}</h1>
+  <p>
+    {% if lang == 'en' %}
+      A lot of these apps shipped with rough edges. If something didn't work, or you want it to do
+      something it doesn't, this is the low-effort way to tell me &mdash; no email to compose, and it
+      stays between us.
+    {% else %}
+      粗いままリリースしたアプリが多々あります。うまく動かなかった、こうしてほしい、といったことを
+      メールを書かずにサッと送れる窓口です。内容は私にだけ届きます。
+    {% endif %}
+  </p>
+
+  {% include "partials/feedback_form.html" %}
+
+{% endblock %}

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<title>feedback ({{ rows|length }})</title>
+<style>
+  body { font: 14px/1.65 -apple-system, "Hiragino Kaku Gothic ProN", sans-serif; margin: 24px; color: #1c2733; }
+  h1 { font-size: 18px; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid #cdd6de; padding: 6px 9px; text-align: left; vertical-align: top; }
+  th { background: #eef4f8; position: sticky; top: 0; }
+  tr:nth-child(even) td { background: #f7fafc; }
+  .msg { white-space: pre-wrap; max-width: 44em; }
+  .meta { color: #5b6b79; font-size: 12px; }
+  .stars { color: #e0a800; white-space: nowrap; }
+  a { color: #086a9e; }
+</style>
+</head>
+<body>
+<h1>Feedback &mdash; {{ rows|length }} shown (newest first, capped at 500)</h1>
+{% if not rows %}
+<p>None yet.</p>
+{% else %}
+<table>
+  <tr>
+    <th>#</th><th>when (UTC)</th><th>app</th><th>rating</th><th>message</th>
+    <th>contact</th><th>lang</th><th>client</th>
+  </tr>
+  {% for r in rows %}
+  <tr>
+    <td>{{ r[0] }}</td>
+    <td class="meta">{{ r[1] }}</td>
+    <td>{{ r[2] or '—' }}</td>
+    <td class="stars">{{ ('★' * r[3]) ~ ('☆' * (5 - r[3])) if r[3] else '—' }}</td>
+    <td class="msg">{{ r[4] }}</td>
+    <td>{% if r[5] %}<a href="mailto:{{ r[5] }}">{{ r[5] }}</a>{% else %}—{% endif %}</td>
+    <td>{{ r[6] or '—' }}</td>
+    <td class="meta">{{ (r[7] or '—')[:70] }}<br>{{ r[8] or '—' }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+</body>
+</html>

@@ -89,12 +89,15 @@
     <div class="footer-content">
       <p>
         {% if lang == 'en' %}
-          Published as a personal project. Bug reports and improvement suggestions are welcome.
+          Published as a personal project.
+          <a href="{{ url_for('feedback', lang=lang) }}">Bug reports and improvement suggestions</a> are welcome.
         {% else %}
-          個人プロジェクトとして公開しています。不具合報告・改善提案は歓迎します。
+          個人プロジェクトとして公開しています。<a href="{{ url_for('feedback', lang=lang) }}">不具合報告・改善提案</a>は歓迎します。
         {% endif %}
       </p>
       <p>
+        <a href="{{ url_for('feedback', lang=lang) }}">{% if lang == 'en' %}Send feedback{% else %}フィードバック{% endif %}</a>
+        &nbsp;|
         <a href="mailto:tomo820@gmail.com">tomo820@gmail.com</a>
         &nbsp;|
         <a href="{{ url_for('about', lang=lang) }}">

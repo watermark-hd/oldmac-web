@@ -1,8 +1,14 @@
+import smtplib
 import sqlite3
-from datetime import datetime
+import time
+from datetime import datetime, timedelta
+from email.message import EmailMessage
 from pathlib import Path
 
-from flask import Flask, Response, render_template, send_from_directory, g, abort, request, url_for
+from flask import (
+    Flask, Response, render_template, send_from_directory, g, abort, request,
+    url_for, redirect,
+)
 
 from apps import APPS, APPS_BY_SLUG
 
@@ -13,6 +19,25 @@ XPI_DIR = BASE_DIR / "static" / "downloads"
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 SITE_URL = "https://oldmac.policy-log.jp"
+
+
+def load_feedback_config():
+    """Read instance/feedback.env (KEY=VALUE lines) if present. Missing file just
+    means email + the admin page stay disabled; feedback is still saved to the DB."""
+    cfg = {}
+    path = BASE_DIR / "instance" / "feedback.env"
+    if path.exists():
+        for line in path.read_text().splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, _, val = line.partition("=")
+            cfg[key.strip()] = val.strip().strip('"').strip("'")
+    return cfg
+
+
+FEEDBACK_CFG = load_feedback_config()
+APP_LIST = [a for a in APPS if a["category"] == "app"]
 
 
 def _lang_path(lang, endpoint, view_args):
@@ -32,6 +57,7 @@ def inject_site_metadata():
         "canonical_url": ja_url if current_lang == "ja" else en_url,
         "alternate_ja_url": ja_url,
         "alternate_en_url": en_url,
+        "form_ts": int(time.time()),
     }
 
 
@@ -56,6 +82,22 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             app_slug TEXT NOT NULL,
             downloaded_at TEXT NOT NULL
+        )
+        """
+    )
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS feedback (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            submitted_at TEXT NOT NULL,
+            app_slug TEXT,
+            rating INTEGER,
+            message TEXT NOT NULL,
+            contact_email TEXT,
+            lang TEXT,
+            user_agent TEXT,
+            ip TEXT,
+            handled INTEGER NOT NULL DEFAULT 0
         )
         """
     )
@@ -151,6 +193,137 @@ def article_why_old_macs(lang="ja"):
     return render_template("articles/why-old-macs.html", lang=lang)
 
 
+@app.route("/<lang>/feedback", strict_slashes=False)
+@app.route("/feedback", defaults={"lang": "ja"}, strict_slashes=False)
+def feedback(lang="ja"):
+    if lang not in SUPPORTED_LANGS:
+        abort(404)
+    return render_template(
+        "feedback.html",
+        lang=lang,
+        apps=APP_LIST,
+        preset_app=request.args.get("app", ""),
+        sent=request.args.get("sent") == "1",
+    )
+
+
+def _send_feedback_email(app_slug, rating, message, contact_email, lang, ua, ip):
+    """Best-effort notification via Gmail SMTP. The row is already saved before
+    this runs, so a failure here only means no push notification."""
+    addr = FEEDBACK_CFG.get("GMAIL_ADDRESS")
+    pw = FEEDBACK_CFG.get("GMAIL_APP_PASSWORD")
+    to = FEEDBACK_CFG.get("FEEDBACK_TO", addr)
+    if not (addr and pw and to):
+        return
+    stars = ("★" * rating + "☆" * (5 - rating)) if rating else "(no rating)"
+    subject_app = app_slug or "site (general)"
+    msg = EmailMessage()
+    msg["Subject"] = f"[oldmac feedback] {subject_app} {stars}"
+    msg["From"] = addr
+    msg["To"] = to
+    if contact_email:
+        msg["Reply-To"] = contact_email
+    msg.set_content(
+        f"App:     {subject_app}\n"
+        f"Rating:  {rating if rating else '-'} / 5\n"
+        f"Lang:    {lang}\n"
+        f"Contact: {contact_email or '-'}\n"
+        f"IP:      {ip or '-'}\n"
+        f"UA:      {ua or '-'}\n"
+        f"Time:    {datetime.utcnow().isoformat()}Z\n"
+        f"\n----- message -----\n{message}\n\n"
+        f"Admin: {SITE_URL}/admin/feedback?key=(your key)\n"
+    )
+    with smtplib.SMTP("smtp.gmail.com", 587, timeout=12) as server:
+        server.starttls()
+        server.login(addr, pw)
+        server.send_message(msg)
+
+
+@app.route("/feedback/submit", methods=["POST"])
+def feedback_submit():
+    lang = request.form.get("lang", "ja")
+    if lang not in SUPPORTED_LANGS:
+        lang = "ja"
+
+    next_url = request.form.get("next", "")
+    safe_next = next_url if (next_url.startswith("/") and not next_url.startswith("//")) else ""
+
+    def done():
+        if safe_next:
+            sep = "&" if "?" in safe_next else "?"
+            return redirect(f"{safe_next}{sep}fb=thanks#feedback")
+        return redirect(url_for("feedback", lang=lang, sent="1"))
+
+    # Honeypot: a real browser leaves this empty. Pretend success, save nothing.
+    if request.form.get("website", "").strip():
+        return done()
+
+    try:
+        form_ts = int(request.form.get("t", "0"))
+    except ValueError:
+        form_ts = 0
+    now = int(time.time())
+    too_fast = bool(form_ts) and (now - form_ts) < 2
+    too_old = bool(form_ts) and (now - form_ts) > 86400
+
+    message = (request.form.get("message") or "").strip()
+    app_slug = (request.form.get("app") or "").strip() or None
+    if app_slug and app_slug not in APPS_BY_SLUG:
+        app_slug = None
+    contact_email = (request.form.get("contact_email") or "").strip() or None
+    if contact_email and ("@" not in contact_email or len(contact_email) > 200):
+        contact_email = None
+    try:
+        rating = int(request.form.get("rating", ""))
+        if not 1 <= rating <= 5:
+            rating = None
+    except (ValueError, TypeError):
+        rating = None
+
+    ip = (request.headers.get("X-Forwarded-For", request.remote_addr or "")
+          .split(",")[0].strip())
+    ua = request.headers.get("User-Agent", "")[:500]
+
+    if not message or len(message) > 4000 or too_fast or too_old:
+        return done()
+
+    db = get_db()
+    if ip:
+        cutoff = (datetime.utcnow() - timedelta(hours=1)).isoformat()
+        recent = db.execute(
+            "SELECT COUNT(*) FROM feedback WHERE ip = ? AND submitted_at > ?",
+            (ip, cutoff),
+        ).fetchone()[0]
+        if recent >= 5:
+            return done()
+
+    db.execute(
+        "INSERT INTO feedback (submitted_at, app_slug, rating, message, contact_email, lang, user_agent, ip) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        (datetime.utcnow().isoformat(), app_slug, rating, message, contact_email, lang, ua, ip),
+    )
+    db.commit()
+    try:
+        _send_feedback_email(app_slug, rating, message, contact_email, lang, ua, ip)
+    except Exception as exc:  # noqa: BLE001 - never let email break the response
+        app.logger.warning("feedback email failed: %s", exc)
+    return done()
+
+
+@app.route("/admin/feedback", strict_slashes=False)
+def admin_feedback():
+    key = FEEDBACK_CFG.get("ADMIN_KEY")
+    if not key or request.args.get("key") != key:
+        abort(404)
+    db = get_db()
+    rows = db.execute(
+        "SELECT id, submitted_at, app_slug, rating, message, contact_email, lang, user_agent, ip "
+        "FROM feedback ORDER BY id DESC LIMIT 500"
+    ).fetchall()
+    return render_template("admin_feedback.html", rows=rows)
+
+
 @app.route("/robots.txt")
 def robots():
     return Response(
@@ -177,6 +350,7 @@ def sitemap():
         "/ja/apps/kodama/", "/en/apps/kodama/",
         "/ja/apps/tiger-quicklook/", "/en/apps/tiger-quicklook/",
         "/ja/articles/why-old-macs/", "/en/articles/why-old-macs/",
+        "/ja/feedback/", "/en/feedback/",
     ]
     entries = "".join(f"  <url><loc>{SITE_URL}{path}</loc></url>\n" for path in paths)
     xml = f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{entries}</urlset>\n'

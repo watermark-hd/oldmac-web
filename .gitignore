@@ -3,3 +3,4 @@ __pycache__/
 database.db
 venv/
 .DS_Store
+instance/

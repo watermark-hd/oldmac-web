@@ -1,0 +1,73 @@
+{#
+  Shared feedback form. Included two ways:
+   - from an app page: `app` is in context  -> compact "about this app" mode
+   - from /feedback     : `apps` + `preset_app` in context -> full mode with a picker
+  `form_ts` is injected globally by a context processor.
+#}
+{% set fb_compact = (app is defined and app) %}
+{% set fb_thanks = (request.args.get('fb') == 'thanks') or (sent is defined and sent) %}
+
+<section class="feedback-form{% if fb_compact %} feedback-form--mini{% endif %}" id="feedback">
+  {% if fb_thanks %}
+  <p class="feedback-thanks">
+    {% if lang == 'en' %}Thanks &mdash; this went straight to the developer, privately. It won't be shown on the site.
+    {% else %}ありがとうございます。開発者に直接、非公開で届きました。サイト上に表示されることはありません。{% endif %}
+  </p>
+  {% endif %}
+
+  {% if fb_compact %}
+  <h2>{% if lang == 'en' %}Feedback on this app{% else %}このアプリへのひとこと{% endif %}</h2>
+  {% endif %}
+  <p class="feedback-intro">
+    {% if lang == 'en' %}Bug reports and requests go straight to the developer, privately &mdash; a personal project, so replies aren't guaranteed.
+    {% else %}不具合報告・要望は、非公開で開発者に直接届きます。個人プロジェクトのため、返信できないことがあります。{% endif %}
+  </p>
+
+  <form method="post" action="{{ url_for('feedback_submit') }}" class="fb-form">
+    <input type="hidden" name="lang" value="{{ lang }}">
+    <input type="hidden" name="t" value="{{ form_ts }}">
+    <input type="hidden" name="next" value="{{ request.path }}">
+    <div class="fb-hp" aria-hidden="true">
+      <label>Leave this field empty
+        <input type="text" name="website" tabindex="-1" autocomplete="off">
+      </label>
+    </div>
+
+    {% if fb_compact %}
+    <input type="hidden" name="app" value="{{ app.slug }}">
+    {% else %}
+    <p class="fb-field">
+      <label for="fb-app">{% if lang == 'en' %}About{% else %}対象{% endif %}</label>
+      <select id="fb-app" name="app">
+        <option value="">{% if lang == 'en' %}The site in general{% else %}サイト全般{% endif %}</option>
+        {% for a in apps %}
+        <option value="{{ a.slug }}" {% if preset_app is defined and preset_app == a.slug %}selected{% endif %}>{% if lang == 'en' %}{{ a.name_en }}{% else %}{{ a.name }}{% endif %}</option>
+        {% endfor %}
+      </select>
+    </p>
+    {% endif %}
+
+    <p class="fb-field">
+      <span class="fb-label">{% if lang == 'en' %}Rating (optional){% else %}評価（任意）{% endif %}</span>
+      <span class="fb-stars">
+        {% for n in [5, 4, 3, 2, 1] %}
+        <input type="radio" id="fb-star-{{ n }}" name="rating" value="{{ n }}">
+        <label for="fb-star-{{ n }}" title="{{ n }} / 5"><span aria-hidden="true">&#9733;</span></label>
+        {% endfor %}
+      </span>
+    </p>
+
+    <p class="fb-field">
+      <label for="fb-message">{% if lang == 'en' %}Message{% else %}内容{% endif %}</label>
+      <textarea id="fb-message" name="message" rows="{{ 3 if fb_compact else 6 }}" maxlength="4000" required
+        placeholder="{% if lang == 'en' %}What broke, what you'd like, which machine you're on&hellip;{% else %}動かなかった点、ほしい機能、お使いの機種など{% endif %}"></textarea>
+    </p>
+
+    <p class="fb-field">
+      <label for="fb-email">{% if lang == 'en' %}Your email (optional &mdash; only if you want a reply){% else %}メールアドレス（任意・返信がほしい場合のみ）{% endif %}</label>
+      <input type="email" id="fb-email" name="contact_email" maxlength="200" autocomplete="email">
+    </p>
+
+    <p><button type="submit" class="fb-submit">{% if lang == 'en' %}Send{% else %}送信{% endif %}</button></p>
+  </form>
+</section>
