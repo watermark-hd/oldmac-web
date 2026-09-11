@@ -53,12 +53,27 @@ APPS = [
         "tagline_en": "A file browser for turning a PowerPC Mac G4 into an SMB3-ready NAS-like file server.",
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "AquaLink.zip",
-        "version": "0.5.6",
+        "version": "0.5.11",
         "github_url": "https://github.com/watermark-hd/ppc-mac-modernization/tree/main/smb3/AquaLink",
         "category": "app",
         "comment": "PowerMac G4、iBook G4、iMac G5（未検証） そんなマシンたちにまだ活躍してもらうために作りました。昔のデータが入りっぱなし、元データを作った時の環境が知りたい。そんな事情で作りました。",
         "comment_en": "Made so PowerMac G4s, iBook G4s, and (untested) iMac G5s can keep earning their keep. Old data still sitting on them, and I wanted to see it in the environment it was actually made in — that's the real reason.",
         "changelog": [
+            {
+                "date": "2026-09-10",
+                "note": "メニューバーに「編集」メニュー(コピー/ペースト/全選択など)を追加。これまで手組みメニューだったため ⌘C / ⌘V がどのテキスト欄でも効かなかったのを解消。また「Finderに接続」でマウントに成功したら、そのフォルダをFinderで自動的に開くように(何がどこにマウントされたか分かりにくかったため。マウント先はAquaLinkを動かしているマシン側です)",
+                "note_en": "Added a standard Edit menu (Copy/Paste/Select All, etc.) to the menu bar \u2014 the hand-built menu had none, so \u2318C / \u2318V did nothing in any text field. Also, a successful \"Connect in Finder\" mount now opens that folder in Finder, since it wasn't obvious what got mounted where (it mounts on the machine running AquaLink).",
+            },
+            {
+                "date": "2026-09-10",
+                "note": "「Finderに接続」(WebDAVマウント)の失敗が、ウィンドウ下部に小さく出るだけで気づきにくかったのをダイアログでも表示するように。また、mount_webdav コマンドの管理者権限(setuid)がOSアップデート等で外れているとマウントが必ず失敗するため、事前に検知して復旧コマンドを案内するように",
+                "note_en": "\"Connect in Finder\" (WebDAV mount) failures were only shown as a small line at the bottom of the window; they now also raise a dialog. AquaLink also checks whether mount_webdav still has its setuid (admin) bit \u2014 OS updates can strip it, which makes every mount fail \u2014 and points you at the one-line fix if it's gone.",
+            },
+            {
+                "date": "2026-09-10",
+                "note": "アドレス欄のプルダウンに、LAN上のSMBサーバー(NASや共有中のMac)をBonjourで自動発見して表示するように。IPアドレスを知らなくても、一覧から選ぶだけで繋げます(選ぶとIPアドレスが自動で入ります)。共有名・パスワードは従来通り入力してください",
+                "note_en": "The address drop-down now discovers SMB servers on your LAN (NAS boxes, Macs with sharing on) via Bonjour, so you can connect without knowing the IP — just pick it from the list and the IP is filled in. Enter the share name and password as before.",
+            },
             {
                 "date": "2026-09-06",
                 "note": "ファイルブラウザの列ヘッダ(名前・サイズ・更新日時)をクリックしてソートできるように。再クリックで昇順/降順を反転、▲▼で現在の並び順を表示。フォルダは常に先頭",
