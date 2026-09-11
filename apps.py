@@ -53,12 +53,17 @@ APPS = [
         "tagline_en": "A file browser for turning a PowerPC Mac G4 into an SMB3-ready NAS-like file server.",
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "AquaLink.zip",
-        "version": "0.5.11",
+        "version": "0.5.15",
         "github_url": "https://github.com/watermark-hd/ppc-mac-modernization/tree/main/smb3/AquaLink",
         "category": "app",
         "comment": "PowerMac G4、iBook G4、iMac G5（未検証） そんなマシンたちにまだ活躍してもらうために作りました。昔のデータが入りっぱなし、元データを作った時の環境が知りたい。そんな事情で作りました。",
         "comment_en": "Made so PowerMac G4s, iBook G4s, and (untested) iMac G5s can keep earning their keep. Old data still sitting on them, and I wanted to see it in the environment it was actually made in — that's the real reason.",
         "changelog": [
+            {
+                "date": "2026-09-11",
+                "note": "一部の環境で「取り外す」が、管理者パスワードを入力しても「Operation not permitted」で失敗し続ける不具合を修正。mount_webdav自身と同じ方式(setuid rootの専用の小さなプログラムをアプリに同梱)で取り外すようにし、パスワードダイアログもターミナルも使わずに確実に外せるように(初回だけ準備のためのパスワード入力が必要)。あわせて、「取り外す」ボタンの表示がFinderから直接取り出した後などに古いまま残る不具合と、取り外し後にデスクトップのアイコンが残ってしまうことがある不具合も修正",
+                "note_en": "Fixed \"Unmount\" repeatedly failing with \"Operation not permitted\" on some setups, even after entering an admin password. It now unmounts the same way /sbin/mount_webdav itself does — a small setuid-root helper bundled with the app — so it works reliably without a password dialog or Terminal (a one-time admin password is still needed to set the helper up). Also fixed the \"Unmount\" button sometimes getting stuck after the volume was ejected directly from Finder, and a leftover desktop icon that could linger after unmounting.",
+            },
             {
                 "date": "2026-09-10",
                 "note": "メニューバーに「編集」メニュー(コピー/ペースト/全選択など)を追加。これまで手組みメニューだったため ⌘C / ⌘V がどのテキスト欄でも効かなかったのを解消。また「Finderに接続」でマウントに成功したら、そのフォルダをFinderで自動的に開くように(何がどこにマウントされたか分かりにくかったため。マウント先はAquaLinkを動かしているマシン側です)",
