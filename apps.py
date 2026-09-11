@@ -149,13 +149,18 @@ APPS = [
         "tagline_en": "A self-contained Perl agent that lets you talk to an AI from the Terminal on a PowerPC Mac (Tiger) — supports Claude, Gemini, and local LLMs.",
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "ppc-claude-agent.zip",
-        "version": "1.5.0",
+        "version": "1.5.1",
         "github_url": "https://github.com/watermark-hd/ppc_claude_cli",
         "category": "app",
         "comment": "どんな古いマシンでもAIを使いたい。そんな思いから作りました。エピソードは概要欄で。",
         "comment_en": "Wanted AI to run on even the oldest machine I own. That's the whole reason this exists. The story's in the overview tab.",
         "comment_featured": True,
         "changelog": [
+            {
+                "date": "2026-09-11",
+                "note": "アプリ本体の画面表示を英語対応(英語→日本語の順で併記)。ダウンロードの約7割が海外からだと分かったのに、バナー・プロンプト・確認ダイアログ・プロバイダ切り替え・APIキーのエラーメッセージなどが日本語のみだったため(初回のGeminiキー案内だけは既に英語対応済みだった)。会話内容そのものやツールの実行結果は対象外(AIは元々ユーザーが使った言語で返す仕様のため)。あわせて、2日前に入れたIME確定と送信を取り違える不具合の修正を、実機のPowerBook G4で確認(変換候補を選ぶ際に数秒静止しても誤送信なし)",
+                "note_en": "The app's own on-screen text is now bilingual (English first, then Japanese). About 70% of downloads turn out to be from outside Japan, but the banner, prompt, confirmation dialogs, provider-switch messages, and API-key error messages were Japanese only (only the first-run Gemini key walkthrough had been made bilingual before this). Conversation replies and tool-result text are unaffected (the AI already replies in whichever language you write in). Also confirmed on real PowerBook G4 hardware: the IME-commit-vs-submit fix from two days ago holds up (several-second pauses while picking a conversion candidate, no stray submits).",
+            },
             {
                 "date": "2026-09-11",
                 "note": "CLAUDE_PROVIDER=openai を追加。LAN上の速いマシンで動かしているローカルLLM(llama.cpp / Ollama / LM Studio等)に、PowerPC Mac から薄いフロントエンドとして接続できるように(フォーラムで複数回要望あり)。設定は OPENAI_BASE_URL(例: http://192.168.1.50:8080/v1)と、任意の OPENAI_API_KEY(大半のローカルサーバーは無視するのでダミー既定値)、モデル名は既存の CLAUDE_MODEL を流用。http:// のLAN内エンドポイントには証明書検証を要求しない。会話中に /openai でも切り替え可能。ツール呼び出しの対応はローカルモデル側の対応次第だが、普通の会話はどのモデルでも動く",
