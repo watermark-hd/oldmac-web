@@ -53,12 +53,17 @@ APPS = [
         "tagline_en": "A file browser for turning a PowerPC Mac G4 into an SMB3-ready NAS-like file server.",
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "AquaLink.zip",
-        "version": "0.5.15",
+        "version": "0.5.16",
         "github_url": "https://github.com/watermark-hd/ppc-mac-modernization/tree/main/smb3/AquaLink",
         "category": "app",
         "comment": "PowerMac G4、iBook G4、iMac G5（未検証） そんなマシンたちにまだ活躍してもらうために作りました。昔のデータが入りっぱなし、元データを作った時の環境が知りたい。そんな事情で作りました。",
         "comment_en": "Made so PowerMac G4s, iBook G4s, and (untested) iMac G5s can keep earning their keep. Old data still sitting on them, and I wanted to see it in the environment it was actually made in — that's the real reason.",
         "changelog": [
+            {
+                "date": "2026-09-11",
+                "note": "アドレス欄のプルダウンで、発見したサーバーの表示を「名前 — IPアドレス」から名前だけに短縮(選ぶと今まで通りIPが自動で入る)。また、接続に成功したらウィンドウのタイトルバーに接続先(アドレス/共有名)を表示するように(小さなラベルだけでは見落とされていたため)",
+                "note_en": "The discovered-server dropdown now shows just the name instead of \"name — IP address\" (too long to read in the popup); picking one still fills in the IP automatically. Also, a successful connection now shows the target (address/share) in the window's title bar, since the small path label alone was easy to miss.",
+            },
             {
                 "date": "2026-09-11",
                 "note": "一部の環境で「取り外す」が、管理者パスワードを入力しても「Operation not permitted」で失敗し続ける不具合を修正。mount_webdav自身と同じ方式(setuid rootの専用の小さなプログラムをアプリに同梱)で取り外すようにし、パスワードダイアログもターミナルも使わずに確実に外せるように(初回だけ準備のためのパスワード入力が必要)。あわせて、「取り外す」ボタンの表示がFinderから直接取り出した後などに古いまま残る不具合と、取り外し後にデスクトップのアイコンが残ってしまうことがある不具合も修正",
