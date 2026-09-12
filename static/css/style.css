@@ -478,8 +478,8 @@ footer {
 }
 
 .support-box {
-  background: var(--card-bg);
-  border: 1px solid var(--line);
+  background: var(--aqua-light);
+  border: 2px solid var(--aqua);
   border-radius: 12px;
   padding: 28px 32px;
   text-align: center;
