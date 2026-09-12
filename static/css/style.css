@@ -472,41 +472,40 @@ footer {
 /* セクション */
 .apps-section,
 .projects-section,
-.ad-section {
-  margin-top: 40px;
-}
-
-/* 広告枠 */
-.ad-section {
+/* 支援 (Ko-fi) */
+.support-section {
   margin-top: 60px;
 }
 
-.ad-placeholder {
-  background: linear-gradient(135deg, #f9f9f9, #f0f0f0);
-  border: 2px dashed var(--line);
+.support-box {
+  background: var(--card-bg);
+  border: 1px solid var(--line);
   border-radius: 12px;
-  padding: 48px 32px;
+  padding: 28px 32px;
   text-align: center;
-  min-height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.ad-placeholder-text {
+.support-text {
   color: var(--ink-soft);
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0;
-  letter-spacing: 0.5px;
+  font-size: 14px;
+  line-height: 1.8;
+  margin: 0 0 16px;
 }
 
-.ad-placeholder-small {
-  display: block;
+.support-button {
+  display: inline-block;
+  color: var(--aqua-dark);
+  text-decoration: none;
+  border: 1.5px solid var(--aqua);
+  padding: 9px 26px;
   font-size: 14px;
-  font-weight: 400;
-  margin-top: 8px;
-  color: #bbb;
+  font-weight: 700;
+  border-radius: 999px;
+  transition: background 0.15s, color 0.15s;
+}
+.support-button:hover {
+  background: var(--aqua);
+  color: #fff;
 }
 
 /* ステータスバッジ */

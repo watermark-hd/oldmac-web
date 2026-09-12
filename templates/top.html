@@ -68,19 +68,20 @@
     </ul>
   </section>
 
-  <!-- Advertisement Section -->
-  <section class="ad-section">
-    <h2>{% if lang == 'en' %}Advertising Space{% else %}広告枠{% endif %}</h2>
-    <div class="ad-placeholder">
-      <p class="ad-placeholder-text">
+  <!-- Support -->
+  <section class="support-section">
+    <h2>{% if lang == 'en' %}Support This Site{% else %}このサイトを支援する{% endif %}</h2>
+    <div class="support-box">
+      <p class="support-text">
         {% if lang == 'en' %}
-          Advertisement space available<br>
-          <span class="ad-placeholder-small">(Coming soon)</span>
+          A personal, non-commercial project &mdash; server and AI costs come out of my own pocket. If something here has been useful, a small tip helps keep it running.
         {% else %}
-          広告掲載予定地<br>
-          <span class="ad-placeholder-small">（近日公開）</span>
+          個人の非営利プロジェクトです。サーバー代やAI利用料は自分で負担して運営しています。何か役に立ったら、少しだけ支援していただけると励みになります。
         {% endif %}
       </p>
+      <a class="support-button" href="https://ko-fi.com/watermark_hd" target="_blank" rel="noopener noreferrer">
+        {% if lang == 'en' %}Support on Ko-fi{% else %}Ko-fi で支援する{% endif %}
+      </a>
     </div>
   </section>
 
