@@ -53,12 +53,17 @@ APPS = [
         "tagline_en": "A file browser for turning a PowerPC Mac G4 into an SMB3-ready NAS-like file server.",
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "AquaLink.zip",
-        "version": "0.5.16",
+        "version": "0.5.17",
         "github_url": "https://github.com/watermark-hd/ppc-mac-modernization/tree/main/smb3/AquaLink",
         "category": "app",
         "comment": "PowerMac G4、iBook G4、iMac G5（未検証） そんなマシンたちにまだ活躍してもらうために作りました。昔のデータが入りっぱなし、元データを作った時の環境が知りたい。そんな事情で作りました。",
         "comment_en": "Made so PowerMac G4s, iBook G4s, and (untested) iMac G5s can keep earning their keep. Old data still sitting on them, and I wanted to see it in the environment it was actually made in — that's the real reason.",
         "changelog": [
+            {
+                "date": "2026-09-12",
+                "note": "PowerMac G4実機で見つかった、ファイル一覧で行をクリック後にスクロールすると落ちることがある不具合を修正。ファイル名のアイコン表示に使っていた仕組みを、AppleのNSCellが標準で保証する方式に作り直し、機種によって起きる可能性のあるクラッシュの原因を根本から断った",
+                "note_en": "Fixed a crash in the file list found on a real PowerMac G4, most reliably triggered by clicking a row and then scrolling. The icon-display mechanism for filenames was rebuilt on Apple's own standard NSCell facility, removing the underlying cause of a hardware-dependent crash.",
+            },
             {
                 "date": "2026-09-11",
                 "note": "アドレス欄のプルダウンで、発見したサーバーの表示を「名前 — IPアドレス」から名前だけに短縮(選ぶと今まで通りIPが自動で入る)。また、接続に成功したらウィンドウのタイトルバーに接続先(アドレス/共有名)を表示するように(小さなラベルだけでは見落とされていたため)",
