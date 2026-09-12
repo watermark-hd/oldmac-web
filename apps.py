@@ -329,6 +329,27 @@ APPS = [
         ],
     },
     {
+        "slug": "retrocert",
+        "name": "RetroCert",
+        "name_en": "RetroCert",
+        "tagline": "古いMacの証明書ストアを、署名検証つきで安全に更新するツール。ただし効果は限定的です（詳細は概要欄で）",
+        "tagline_en": "Refreshes an old Mac's root certificate store, with signature verification even over plain HTTP — though the real-world payoff turned out limited (details in the overview).",
+        "platform": "PowerPC Mac (Tiger以降) 向け",
+        "filename": "RetroCert.zip",
+        "version": "1.0",
+        "github_url": "https://github.com/watermark-hd/RetroCert",
+        "category": "app",
+        "comment": "「証明書が古くて繋がらないなら、証明書を直せばいいのでは」と思って作りました。実際やってみたら、思ったほどの魔法にはなりませんでした。それでも仕組みは残しておく価値があると思い、部品として使ってもらえればと公開しました。",
+        "comment_en": "Started from \"if it's just an expired certificate, why not fix the certificate.\" Turned out not to be the magic fix I hoped for. Still thought the mechanism underneath was worth keeping around, so I'm publishing it as something others might reuse as a part.",
+        "changelog": [
+            {
+                "date": "2026-09-12",
+                "note": "初版公開。実機のPowerMac G4(Tiger)で本番VPS経由の動作を検証し、信頼済み証明書を158件から238件に拡張(RSAルート80件を追加。ECCルート41件はTigerの証明書ライブラリがECC非対応のためスキップ)",
+                "note_en": "Initial release. Verified end to end on a real PowerMac G4 (Tiger) against the production VPS: grew the trust store from 158 to 238 entries (80 RSA roots added; 41 ECC roots skipped, since Tiger's certificate library predates ECC support).",
+            },
+        ],
+    },
+    {
         "slug": "mac-snow-leopard-linux",
         "name": "Mac OSX Snow Leopard風 Linux",
         "name_en": "Mac OS X Snow Leopard-inspired Linux",

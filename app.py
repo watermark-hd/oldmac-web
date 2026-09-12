@@ -16,6 +16,7 @@ from apps import APPS, APPS_BY_SLUG
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / "database.db"
 XPI_DIR = BASE_DIR / "static" / "downloads"
+RETROCERT_DIR = BASE_DIR / "static" / "retrocert"
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -205,6 +206,14 @@ def download(lang, slug):
     return send_from_directory(XPI_DIR, APPS_BY_SLUG[slug]["filename"], as_attachment=True)
 
 
+@app.route("/retrocert/<path:filename>")
+def retrocert_publisher(filename):
+    """Static publisher endpoint for RetroCert (github.com/watermark-hd/RetroCert):
+    serves the signed manifest.json + certs/ that RetroCert clients fetch from
+    VPS_BASE_URL. send_from_directory rejects path traversal on its own."""
+    return send_from_directory(RETROCERT_DIR, filename)
+
+
 @app.route("/<lang>/about", strict_slashes=False)
 @app.route("/about", defaults={"lang": "ja"}, strict_slashes=False)
 def about(lang="ja"):
@@ -377,6 +386,7 @@ def sitemap():
         "/ja/apps/exfat-tiger-ppc/", "/en/apps/exfat-tiger-ppc/",
         "/ja/apps/kodama/", "/en/apps/kodama/",
         "/ja/apps/tiger-quicklook/", "/en/apps/tiger-quicklook/",
+        "/ja/apps/retrocert/", "/en/apps/retrocert/",
         "/ja/articles/why-old-macs/", "/en/articles/why-old-macs/",
         "/ja/feedback/", "/en/feedback/",
     ]

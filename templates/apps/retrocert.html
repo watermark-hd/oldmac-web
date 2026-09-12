@@ -1,0 +1,271 @@
+{% extends "base.html" %}
+
+{% block title %}RetroCert{% endblock %}
+
+{% block content %}
+
+  <a class="back-link" href="{{ url_for('top', lang=lang) }}">
+    &laquo; {% if lang == 'en' %}Back to Applications{% else %}アプリ一覧に戻る{% endif %}
+  </a>
+
+  <h1>RetroCert</h1>
+  <div>
+    <span class="platform-badge">{{ app.platform }}</span>
+    <span class="app-card-status source-status">{% if lang == 'en' %}Source Available{% else %}ソース公開中{% endif %}</span>
+  </div>
+
+  {% if lang == 'en' %}
+  <div class="tabs">
+    <input type="radio" name="tabset" id="tab-overview" class="tab-input" checked>
+    <label for="tab-overview" class="tab-label">Overview</label>
+    <input type="radio" name="tabset" id="tab-tech" class="tab-input">
+    <label for="tab-tech" class="tab-label">Technical Info</label>
+
+    <div id="panel-overview" class="tab-panel">
+    <p>
+      A root-certificate rescue tool for old Macs whose Keychain has gone stale, causing HTTPS to fail. It
+      fetches a fresh, signed list of root certificates from a server and applies them &mdash; and the signature
+      is checked even if the transfer itself happens over plain HTTP, since some machines this old can't
+      necessarily speak HTTPS to fetch the fix in the first place.
+    </p>
+    <p>
+      Old Mac &rarr; launch RetroCert &rarr; fetch the current CA list from the server &rarr; apply it to the
+      Keychain &rarr; retry the HTTPS connection.
+    </p>
+
+    <div class="download-box">
+      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">Download RetroCert.zip</a>
+      <div class="meta">Downloads so far: {{ download_count }}</div>
+      {% if updated_at %}<div class="meta">Last updated: {{ updated_at }}{% if app.version %} (v{{ app.version }}){% endif %}</div>{% endif %}
+      <div class="meta"><a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">Source code on GitHub</a></div>
+      <div class="meta">Signature file for the curious: <a href="{{ url_for('static', filename='downloads/RetroCert.zip.sig') }}">RetroCert.zip.sig</a> (verified against the public key bundled inside the zip &mdash; see the GitHub README for how).</div>
+      <div class="meta">Note: Tiger's stock Safari/curl can't verify today's HTTPS certificates, so downloading here directly can fail. We recommend <a href="{{ url_for('app_detail', lang=lang, slug='aquafox-ja') }}">Aquafox</a> &mdash; the PowerPC-era browser we make a Japanese language pack for &mdash; which handles modern HTTPS fine. Failing that, fetch the file on a modern machine and copy it over, or use a modern curl via Tigerbrew/MacPorts.</div>
+    </div>
+
+    <div class="gatekeeper-notice">
+      <strong class="notice-title">⚠️ Please read this before expecting too much</strong>
+      RetroCert only fixes sites that fail <em>purely</em> because of an expired or missing root certificate.
+      Verified on a real PowerMac G4 running Safari: our own VPS (which still accepts old TLS 1.0 connections)
+      worked after the fix, but a typical modern site like apple.com (TLS 1.2/1.3 with ECDHE-only ciphers) still
+      failed &mdash; that's a TLS protocol/cipher mismatch, a hard limit of Tiger's own <code>SecureTransport</code>,
+      and no certificate tool can fix it. On top of that, most people who actively use a Tiger-era Mac today have
+      already moved to <a href="{{ url_for('app_detail', lang=lang, slug='aquafox-ja') }}">Aquafox</a> or
+      Thunderbird for browsing/mail, and both carry their own certificate store that's independent of the OS
+      Keychain and already includes modern roots. <strong>If you're already on Aquafox, you probably don't need
+      this.</strong> RetroCert's real audience is the minority who deliberately still use stock Safari/Mail.app.
+    </div>
+
+    <h2>Requirements</h2>
+    <ul>
+      <li>Mac OS X 10.4 (Tiger) or later, PowerPC.</li>
+      <li>Python 3.12 on the machine you're fixing &mdash; if it's not there yet, our own
+        <a href="{{ url_for('app_detail', lang=lang, slug='apython312') }}">Python 3.12 build for Tiger PowerPC</a>
+        provides it.</li>
+    </ul>
+
+    <h2>Using It</h2>
+    <ol>
+      <li>Download and unzip <code>RetroCert.zip</code> on the old Mac (or unzip elsewhere and copy the folder over).</li>
+      <li>Open Terminal, <code>cd</code> into the unzipped folder, and run:<br>
+        <code>python3.12 retrocert.py</code> &mdash; a dry run; shows what would change, changes nothing.<br>
+        <code>python3.12 retrocert.py --apply</code> &mdash; actually applies the new certificates to your login Keychain.<br>
+        <code>python3.12 retrocert.py --apply --system</code> &mdash; applies system-wide instead (needs <code>sudo</code>).</li>
+      <li>Retry the site that was failing. If the failure really was just a stale certificate (see the notice
+        above), it should connect now.</li>
+    </ol>
+
+    <h2>Supported Environment</h2>
+    <table>
+      <tr><th>Verified</th><td>PowerMac G4 / Mac OS X 10.4.11 (Tiger) / Python 3.12.11, against this site's own production server</td></tr>
+      <tr><th>Requirement</th><td>PowerPC Mac, Mac OS X 10.4 (Tiger) or later, Python 3.12</td></tr>
+    </table>
+
+    <p class="credit">
+      A personal hobby project provided with no warranty. MIT licensed. Full source, the publisher-side tooling,
+      and the design notes are in the <a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub repository</a>.
+    </p>
+    </div>
+
+    <div id="panel-tech" class="tab-panel">
+    <p>
+      The interesting part of this project turned out not to be "fixing certificates" &mdash; that part is
+      routine &mdash; but making sure an update fetched over <em>plain HTTP</em> (because some of these machines
+      can't do HTTPS at all until the certificates are fixed, which is a chicken-and-egg problem) can still be
+      trusted.
+    </p>
+
+    <h3>Signing on a machine that isn't the server</h3>
+    <p>
+      The signing key lives only on the developer's own machine and is never uploaded anywhere. That machine
+      signs <code>manifest.json</code> and the client distribution archive; only the signed output goes to the
+      VPS. The VPS itself holds no private key at all &mdash; it's just a static file server. RetroCert checks
+      the signature with its bundled public key before trusting anything it downloaded. The point:
+      <strong>even if the VPS were fully compromised, an attacker still couldn't produce a valid signature</strong>,
+      so a tampered manifest or certificate file gets rejected by the client itself, regardless of the transport.
+      Each individual certificate is additionally checked against the SHA-256 recorded in the (already verified)
+      manifest, so one signature check covers the whole certificate set.
+    </p>
+
+    <h3>A dependency-free signature verifier</h3>
+    <p>
+      <code>client/verify.py</code> implements RSA-PKCS#1 v1.5 + SHA-256 signature verification in about 90 lines,
+      using only <code>hashlib</code>, <code>pow()</code>, and a small hand-rolled ASN.1 DER parser &mdash; no
+      <code>cryptography</code> or <code>pyOpenSSL</code>. That matters here because the whole point is running on
+      old or constrained Python builds where installing those isn't realistic.
+    </p>
+
+    <h3>What real hardware showed</h3>
+    <div class="tech-note">
+      <strong>Certificates fixed, but modern TLS still fails.</strong> On a real PowerMac G4, applying RetroCert's
+      certificate set grew the trust store from 158 to 238 entries (80 RSA roots; 41 ECC roots were skipped,
+      since Tiger's certificate library predates ECC support entirely). Our own VPS, configured to still accept
+      TLS 1.0, connected fine afterward. A mainstream site like apple.com (TLS 1.2/1.3, ECDHE-only) still failed
+      with "Could not establish a secure connection" &mdash; a protocol/cipher-suite mismatch inside Tiger's
+      <code>SecureTransport</code>, not a certificate problem, and outside what any certificate tool can fix.
+    </div>
+    <div class="tech-note">
+      <strong>The people who'd want this had often already solved it another way.</strong> Inspecting the shipped
+      Aquafox/Thunderbird binaries showed both carry their own NSS certificate store, independent of the OS
+      Keychain, and already bundle modern roots such as ISRG Root X1. Most people still actively driving a
+      Tiger-era Mac have already switched to one or both for exactly this reason. So RetroCert's practical
+      audience narrows to whoever deliberately keeps using stock Safari/Mail.app &mdash; worth stating up front
+      rather than oversell it as a general "browse the modern web on an old Mac" fix.
+    </div>
+    <div class="tech-note">
+      <strong>Tiger has no Trust Settings API.</strong> The per-certificate trust controls added in Leopard
+      (10.5) don't exist on Tiger; root trust there is decided purely by whether a certificate is present in a
+      dedicated anchor store (<code>/System/Library/Keychains/X509Anchors</code>). The macOS backend
+      (<code>store_macos.py</code>) branches on this rather than assuming the newer API everywhere.
+    </div>
+
+    <h3>Ideas for reusing this elsewhere</h3>
+    <p>
+      Given the narrow real-world payoff above, the more interesting part may be the mechanism itself, reusable
+      beyond certificates:
+    </p>
+    <ul>
+      <li><strong>A generic tamper-evident distribution framework.</strong> Nothing here is certificate-specific
+        &mdash; the same "sign on a trusted machine, serve from an untrusted one" pattern works for game patches,
+        fonts, config files, dictionary data, or any small hobby project's auto-update feature that doesn't want
+        the overhead of Sparkle/TUF-style infrastructure.</li>
+      <li><strong><code>verify.py</code> as a standalone utility</strong> anywhere <code>cryptography</code>/
+        <code>pyOpenSSL</code> aren't available &mdash; old Python builds, pip-less sandboxes, an installer's
+        bootstrap step that shouldn't need extra dependencies.</li>
+      <li><strong>Beyond Mac, to any legacy device with a frozen certificate store.</strong> <code>store.py</code>'s
+        per-OS dispatch layer exists specifically for this: old routers, NAS boxes, multi-function printers,
+        industrial equipment, and old Linux/Windows servers all make HTTPS calls whose certificate store never
+        gets updated. Reframed as "keep an old TLS client alive" rather than "old Mac web browsing," it could
+        serve a broader need &mdash; just add a <code>store_windows.py</code> or <code>store_linux.py</code>.</li>
+      <li><strong>(Not attempted here) Reaching into Aquafox/Thunderbird's own NSS store.</strong> This was
+        skipped because <code>certutil</code> isn't available on the target machine, but a binding that calls
+        <code>libnss3.dylib</code> directly via <code>ctypes</code> could in principle add certificates to
+        <code>cert9.db</code>. That's ironically where the actually-useful feature lives, but it needs to match
+        NSS's internal API/ABI exactly &mdash; a meaningfully larger effort.</li>
+    </ul>
+
+    <p class="credit">
+      Full source code, the publisher-side tooling, and license are on <a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>.
+    </p>
+    </div>
+  </div>
+  {% else %}
+  <div class="tabs">
+    <input type="radio" name="tabset" id="tab-overview" class="tab-input" checked>
+    <label for="tab-overview" class="tab-label">概要</label>
+    <input type="radio" name="tabset" id="tab-tech" class="tab-input">
+    <label for="tab-tech" class="tab-label">技術情報</label>
+
+    <div id="panel-overview" class="tab-panel">
+    <p>
+      Keychainが陳腐化してHTTPS接続に失敗するようになった古いMac向けの、ルート証明書レスキューツールです。署名付きの最新CA一覧をサーバーから取得して適用します。この機種はそもそもHTTPSが使えない場合もあるので、通信自体はHTTPでも構わない作りですが、その場合でも署名検証で改竄は検知します。
+    </p>
+    <p>
+      古いMac → RetroCertを起動 → サーバーから最新のCA一覧を取得 → Keychainへ反映 → HTTPS接続を再試行、という流れです。
+    </p>
+
+    <div class="download-box">
+      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">RetroCert.zip をダウンロード</a>
+      <div class="meta">これまでのダウンロード数: {{ download_count }}</div>
+      {% if updated_at %}<div class="meta">最終更新日: {{ updated_at }}{% if app.version %}（v{{ app.version }}）{% endif %}</div>{% endif %}
+      <div class="meta"><a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHubでソースコードを見る</a></div>
+      <div class="meta">気になる方向けの署名ファイル：<a href="{{ url_for('static', filename='downloads/RetroCert.zip.sig') }}">RetroCert.zip.sig</a>（zip内に同梱された公開鍵で検証できます。手順はGitHubのREADMEを参照）。</div>
+      <div class="meta">※ Tiger標準のSafari/curlは現代のHTTPS証明書を検証できないため、ここから直接ダウンロードできない場合があります。当サイトでは <a href="{{ url_for('app_detail', lang=lang, slug='aquafox-ja') }}">Aquafox</a>（当サイトが日本語化パックを配布しているPowerPC向けブラウザ）をおすすめします。現代のHTTPSも普通に扱えます。難しい場合は、現代のMacで取得してからコピーするか、Tigerbrew/MacPorts経由の新しいcurlをご利用ください。</div>
+    </div>
+
+    <div class="gatekeeper-notice">
+      <strong class="notice-title">⚠️ 過度な期待をする前に、これだけ読んでください</strong>
+      RetroCertが直せるのは「証明書の失効・不足だけが原因で失敗しているサイト」だけです。実機のPowerMac G4のSafariで検証した結果、当サイト自身のVPS（TLS 1.0を許容する設定）は直った後に接続できましたが、apple.comのような一般的な現代のサイト（TLS 1.2/1.3・ECDHE専用構成）は接続できませんでした。これはTLSプロトコル・暗号スイート自体の不一致で、Tiger自身の<code>SecureTransport</code>の限界であり、証明書ツールでは解決できません。さらに、今実際にTiger世代のMacを使い続けている人の多くは、ブラウザ・メールをすでに<a href="{{ url_for('app_detail', lang=lang, slug='aquafox-ja') }}">Aquafox</a>やThunderbirdに乗り換えていて、どちらもOSのKeychainとは別に自前の証明書ストアを持ち、最新のルート証明書を最初から内蔵しています。<strong>すでにAquafoxをお使いなら、おそらくこれは要りません。</strong>RetroCertの実際の対象は、あえて標準のSafari/Mail.appを使い続けている少数派です。
+    </div>
+
+    <h2>動作要件</h2>
+    <ul>
+      <li>Mac OS X 10.4 (Tiger) 以降、PowerPC。</li>
+      <li>直したい機種にPython 3.12が必要です。まだ入っていない場合は、当サイトの<a href="{{ url_for('app_detail', lang=lang, slug='apython312') }}">Tiger PowerPC向けPython 3.12ビルド</a>で用意できます。</li>
+    </ul>
+
+    <h2>使い方</h2>
+    <ol>
+      <li>古いMac上で <code>RetroCert.zip</code> をダウンロードして解凍します（別の機種で解凍してフォルダごと転送してもOKです）。</li>
+      <li>ターミナルを開き、解凍したフォルダに <code>cd</code> して実行します。<br>
+        <code>python3.12 retrocert.py</code> …… ドライラン。何が変わるか表示するだけで、実際には何も変更しません。<br>
+        <code>python3.12 retrocert.py --apply</code> …… 実際にログインKeychainへ証明書を反映します。<br>
+        <code>python3.12 retrocert.py --apply --system</code> …… システム全体へ反映します（<code>sudo</code>が必要）。</li>
+      <li>失敗していたサイトに再度アクセスしてください。上の注意書きの通り、本当に証明書だけが原因だった場合は繋がるはずです。</li>
+    </ol>
+
+    <h2>対応環境</h2>
+    <table>
+      <tr><th>動作確認</th><td>PowerMac G4 / Mac OS X 10.4.11 (Tiger) / Python 3.12.11、当サイト自身の本番サーバーに対して確認済み</td></tr>
+      <tr><th>要件</th><td>PowerPC Mac / Mac OS X 10.4 (Tiger) 以降 / Python 3.12</td></tr>
+    </table>
+
+    <p class="credit">
+      個人の趣味プロジェクトにつき無保証です。MITライセンス。ソースコード・発行者側のツール・設計の解説は上記のGitHubリポジトリにあります。
+    </p>
+    </div>
+
+    <div id="panel-tech" class="tab-panel">
+    <p>
+      このプロジェクトの本題は「証明書を直す」こと自体（そこはよくある作業です）ではなく、プレーンなHTTP経由で取得した更新（証明書を直すまでHTTPS自体が使えない機種もあるので、鶏卵問題としてHTTPにも対応しています）を、それでも信用できる形にすることでした。
+    </p>
+
+    <h3>サーバーとは別のマシンで署名する</h3>
+    <p>
+      署名鍵は開発者の手元のマシンにしか存在せず、どこにもアップロードしません。そのマシンで <code>manifest.json</code> とクライアント配布アーカイブに署名し、署名済みの結果だけをVPSに上げます。VPS自体は秘密鍵を一切持たない、ただの静的ファイル配信サーバーです。RetroCertは、取得した内容を信用する前に、同梱の公開鍵で署名を検証します。ポイントは、<strong>VPSが完全に乗っ取られたとしても、攻撃者は正しい署名を作れない</strong>ということです。改竄されたマニフェストや証明書ファイルは、通信経路がHTTPかHTTPSかに関わらず、クライアント側で拒否されます。個々の証明書ファイルも、検証済みマニフェスト内のSHA-256と照合するので、マニフェスト1つの署名検証で証明書一式全体をカバーできます。
+    </p>
+
+    <h3>依存ゼロの署名検証</h3>
+    <p>
+      <code>client/verify.py</code> は、<code>hashlib</code> と <code>pow()</code>、そして自前の小さなASN.1 DERパーサーだけで、RSA-PKCS#1 v1.5 + SHA-256の署名検証を約90行で実装しています。<code>cryptography</code> や <code>pyOpenSSL</code> は使っていません。古い・制約のあるPython環境で動かすのが目的なので、そもそもそれらを入れるのが現実的でない、という事情によるものです。
+    </p>
+
+    <h3>実機で分かったこと</h3>
+    <div class="tech-note">
+      <strong>証明書は直っても、現代のTLSはやはり通らない。</strong> 実機のPowerMac G4で、RetroCertの証明書一式を反映すると、信頼済み証明書は158件から238件に増えました（RSAルート80件追加。ECCルート41件は、Tigerの証明書ライブラリがECC自体に対応していないためスキップ）。TLS 1.0を許容する設定にした当サイト自身のVPSは、その後接続できました。一方、apple.comのような一般的なサイト（TLS 1.2/1.3・ECDHE専用）は「セキュリティで保護された接続を確立できませんでした」のまま変わりませんでした。これはTiger自身の<code>SecureTransport</code>のプロトコル・暗号スイートの不一致であり、証明書ツールでは直せない領域です。
+    </div>
+    <div class="tech-note">
+      <strong>これを欲しがる人は、たいてい別の方法ですでに解決していた。</strong> 配布されているAquafox・Thunderbirdの実行ファイルを調べたところ、どちらもOSのKeychainとは独立した自前のNSS証明書ストアを持ち、ISRG Root X1のような最新のルート証明書を最初から内蔵していました。今もTiger世代のMacを実際に使い続けている人の多くは、まさにこの理由でどちらか（または両方）に乗り換え済みです。結果、RetroCertの実際の対象は、あえて標準のSafari/Mail.appを使い続けている人に絞られます。「古いMacで現代のWebが見られるようになる」汎用ツールとして過大に売り込まないよう、先に明記しておくべき点だと考えました。
+    </div>
+    <div class="tech-note">
+      <strong>TigerにはTrust Settings APIが存在しない。</strong> Leopard(10.5)で入った証明書ごとの信頼設定は、Tigerにはありません。ルート証明書への信頼は、専用のアンカーストア（<code>/System/Library/Keychains/X509Anchors</code>）に証明書が存在するかどうかだけで決まります。macOS側の実装（<code>store_macos.py</code>）は、新しいAPIが常にあるものとは仮定せず、この違いで分岐しています。
+    </div>
+
+    <h3>他プロジェクトへの転用アイデア</h3>
+    <p>上の通り、実際の効果はかなり限定的でしたが、仕組み自体は証明書以外にも転用できると思っています。</p>
+    <ul>
+      <li><strong>汎用の改竄検知つき配布フレームワークとして。</strong> 証明書専用の作りではないので、「信頼できるマシンで署名し、信頼しないサーバーから配信する」というパターンは、ゲームパッチ・フォント・設定ファイル・辞書データなど、Sparkle/TUFのような大掛かりな仕組みを入れたくない個人プロジェクトの自動更新機能に流用できます。</li>
+      <li><strong><code>verify.py</code> を単体のユーティリティとして。</strong> <code>cryptography</code>/<code>pyOpenSSL</code>が入れられない環境（古いPython、pipの使えないサンドボックス、依存を増やしたくないインストーラーの起動処理など）で使えます。</li>
+      <li><strong>Mac以外の、証明書ストアが凍結された古い機器全般に。</strong> <code>store.py</code>のOS別ディスパッチ層はまさにこの汎用化のために用意しています。古いルーター・NAS・複合機・産業機器・古いLinux/Windowsサーバーなど、HTTPS通信はするが証明書ストアが更新されない機器は多く、「古いMacでWebを見る」ではなく「証明書が原因で通信できなくなったレガシー機器を延命するツールキット」と捉え直せば、もっと広い需要がありそうです。<code>store_windows.py</code>のようなバックエンドを足すだけで拡張できます。</li>
+      <li><strong>（未着手）Aquafox/ThunderbirdのNSSストアそのものへの対応。</strong> 対象機に<code>certutil</code>が無いため今回は見送りましたが、<code>libnss3.dylib</code>をctypes経由で直接呼ぶ独自バインディングを書けば、<code>cert9.db</code>への証明書追加も原理的には可能です。皮肉にも、本当に欲しい機能はここにあるのですが、NSSの内部API・ABIに正確に合わせる必要があり、相応の開発コストがかかります。</li>
+    </ul>
+
+    <p class="credit">
+      ソースコード・発行者側のツール・ライセンスは<a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>にあります。
+    </p>
+    </div>
+  </div>
+  {% endif %}
+
+  {% include "partials/feedback_form.html" %}
+
+{% endblock %}
