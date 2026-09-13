@@ -27,12 +27,17 @@ APPS = [
         "tagline_en": "A classic Finder-style file manager that recreates the Tiger-to-Snow Leopard experience on modern Macs.",
         "platform": "現行macOS (Catalina以降 / Intel・Apple Silicon) 向け",
         "filename": "AquaFinder.dmg",
-        "version": "0.2.5",
+        "version": "0.2.6",
         "github_url": "https://github.com/watermark-hd/AquaFinder",
         "category": "app",
         "comment": "現場を退いたおじさんが今のM2 Macを使って物足りなさの原因を探ってたどり着いた成果物。",
         "comment_en": "What an old-timer who left the field for good ended up building, after digging into why a brand-new M2 Mac still felt like something was missing.",
         "changelog": [
+            {
+                "date": "2026-09-13",
+                "note": "アイコン表示で横長・縦長の画像が正方形に押し潰されて表示される不具合を修正。クイックルック中に上下キーで移動すると表示中の並び順と無関係なファイルに飛ぶ不具合を修正。カラム表示で文字サイズ設定を大きくしても文字・アイコンが小さいままだった不具合を修正",
+                "note_en": "Fixed landscape/portrait images being squashed into squares in Icon View thumbnails. Fixed Quick Look's up/down navigation jumping to unrelated files instead of following the folder's actual on-screen order. Fixed Column View's text and icons staying small even after raising the text-size setting",
+            },
             {
                 "date": "2026-09-09",
                 "note": "サイドバーの「共有」項目に接続先ホスト名を表示（例：「書類 (192.168.11.12)」）。Apple IDのファイル共有で他のMacの「書類」「ダウンロード」をSMBマウントすると、ローカルの同名フォルダと見分けがつかなかったため。「場所」「デバイス」の項目は変更なし",
