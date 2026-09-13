@@ -35,6 +35,11 @@ APPS = [
         "changelog": [
             {
                 "date": "2026-09-13",
+                "note": "「ファイル」メニューに「上の階層に移動」(⌘U)を追加。選択中のファイル・フォルダを、今いる場所の親フォルダへ直接移動できます（カラム表示で数階層深いところを選んでいても正しくその親へ）。今までは移動先のフォルダまで自分で辿ってウィンドウを2枚並べてドラッグするしかありませんでした。取り消し(⌘Z)にも対応",
+                "note_en": "Added File > Move to Enclosing Folder (⌘U). Moves the selected file or folder directly into the parent of wherever it currently sits — even several levels deep in Column View — without navigating there yourself and dragging between two windows. Undo (⌘Z) works with it too",
+            },
+            {
+                "date": "2026-09-13",
                 "note": "アイコン表示で横長・縦長の画像が正方形に押し潰されて表示される不具合を修正。クイックルック中に上下キーで移動すると表示中の並び順と無関係なファイルに飛ぶ不具合を修正。カラム表示で文字サイズ設定を大きくしても文字・アイコンが小さいままだった不具合を修正",
                 "note_en": "Fixed landscape/portrait images being squashed into squares in Icon View thumbnails. Fixed Quick Look's up/down navigation jumping to unrelated files instead of following the folder's actual on-screen order. Fixed Column View's text and icons staying small even after raising the text-size setting",
             },
