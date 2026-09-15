@@ -36,6 +36,15 @@
       <div class="meta">Note: Tiger's stock Safari/curl can't verify today's HTTPS certificates, so downloading here directly can fail. We recommend <a href="{{ url_for('app_detail', lang=lang, slug='aquafox-ja') }}">Aquafox</a> &mdash; the PowerPC-era browser we make a Japanese language pack for &mdash; which handles modern HTTPS fine. Failing that, fetch the file on a modern machine and copy it over, or use a modern curl via Tigerbrew/MacPorts.</div>
     </div>
 
+    {% if app.changelog %}
+    <h2>Changelog</h2>
+    <ul>
+      {% for entry in app.changelog %}
+      <li><strong>{{ entry.date }}</strong> &mdash; {{ entry.note_en }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
     <h2>What's Inside</h2>
     <ul>
       <li><strong>exFAT Menu.app</strong> &mdash; a menu bar utility. Click the "exFAT" item, pick a drive to mount or a mounted one to eject.</li>
@@ -185,6 +194,15 @@
       <div class="meta"><a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHubでソースコードを見る</a></div>
       <div class="meta">※ Tiger標準のSafari/curlは現代のHTTPS証明書を検証できないため、ここから直接ダウンロードできない場合があります。当サイトでは <a href="{{ url_for('app_detail', lang=lang, slug='aquafox-ja') }}">Aquafox</a>（当サイトが日本語化パックを配布しているPowerPC向けブラウザ）をおすすめします。現代のHTTPSも普通に扱えます。難しい場合は、現代のMacで取得してからコピーするか、Tigerbrew/MacPorts経由の新しいcurlをご利用ください。</div>
     </div>
+
+    {% if app.changelog %}
+    <h2>更新履歴</h2>
+    <ul>
+      {% for entry in app.changelog %}
+      <li><strong>{{ entry.date }}</strong> &mdash; {{ entry.note }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
 
     <h2>同梱内容</h2>
     <ul>
