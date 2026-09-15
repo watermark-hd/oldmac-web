@@ -266,11 +266,23 @@ APPS = [
         "tagline_en": "A menu bar app that lets PowerPC Mac OS X 10.4 (Tiger) read, write, and mount exFAT drives.",
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "exfat-tiger-ppc.zip",
-        "version": "1.0",
+        "version": "1.1",
         "github_url": "https://github.com/watermark-hd/exfat-tiger-ppc",
         "category": "app",
         "comment": "古いデータが入ったUSBメモリを人から借りたんです、それをPowerMacに挿したら「読めません。フォーマットしますか？」するわけないだろ! その怒りの化身です。",
         "comment_en": "Borrowed a USB drive full of old data from someone. Plugged it into my PowerMac and got “Can't read this. Format it?” — like hell I will! This app is that anger, given form.",
+        "changelog": [
+            {
+                "date": "2026-09-15",
+                "note": "メニューバーのUIを英語対応（システム言語が日本語以外なら英語表示に）",
+                "note_en": "Menu bar UI now shows English when the system language isn't Japanese (was Japanese-only)",
+            },
+            {
+                "date": "2026-09-15",
+                "note": "GPTパーティション上のドライブ（\"Microsoft Basic Data\"など）が検出されない不具合を修正",
+                "note_en": "Fixed drives on GPT-partitioned disks (type \"Microsoft Basic Data\") not being detected at all",
+            },
+        ],
     },
     {
         "slug": "kodama",
