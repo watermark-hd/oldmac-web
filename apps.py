@@ -292,12 +292,17 @@ APPS = [
         "tagline_en": "An ultra-lightweight 3-pane web reader for PowerPC Macs (Tiger), built without WebKit.",
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "Kodama.dmg",
-        "version": "0.2.1",
+        "version": "0.2.2",
         "github_url": "https://github.com/watermark-hd/kodama",
         "category": "app",
         "comment": "Macって思ったより壊れないんですよ。確かに仕事で使ってましたからメンテナンスはよくしてました。でも倉庫の片隅で眠っているMacたち。減損処理？いやもったいない。無理やり使い道を作った渾身の一作。",
         "comment_en": "Macs don't break as easily as you'd think. Sure, I used to maintain them properly back when they were work machines. But there are still Macs sleeping in the corner of a storage room. Write them off? No way, too good to waste. This is the one I forced a use back into.",
         "changelog": [
+            {
+                "date": "2026-09-16",
+                "note": "記事本文の抽出精度を改善。Yahoo!ニュース・ITmediaなどで、関連記事や広告枠の見出しが左ペインの目次に混ざって、クリックしても本文が動かないように見える不具合を修正（<article>等の本文コンテナを検出できるページはその中だけを読むように）。Yahoo!トップページ冒頭の企業・広告誘導ブロックを除外し、ニュース・天気にすぐたどり着けるように。Yahoo!ニュース記事本文中に挟まる「ここがポイント」の過去記事カードも除外",
+                "note_en": "Improved article-body extraction. Fixed related-article and ad-widget headings on sites like Yahoo! News/ITmedia bleeding into the left-pane table of contents, where clicking one just jumped elsewhere without moving the article view (pages with a detectable <article>-style container now read only from inside it). Excluded the corporate/ad promo blocks at the very top of Yahoo! JAPAN's homepage, so news and weather are reachable right away. Also excludes the \"ここがポイント\" past-article card links that Yahoo! News drops mid-article",
+            },
             {
                 "date": "2026-08-29",
                 "note": "v0.2.1: モダンHTTPS用のcurlをアプリに同梱したため、MacPorts / Tigerbrewによる外部curlの導入は不要になりました。特別な理由がなければv0.2.1をご利用ください。",
