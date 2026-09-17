@@ -158,6 +158,28 @@ def get_updated_at(filename):
     return datetime.fromtimestamp(path.stat().st_mtime).strftime("%Y-%m-%d")
 
 
+def get_recent_updates(limit=6):
+    """Flatten every app's changelog into one dated feed for the top page — no
+    separate "latest news" data to hand-maintain, it's just apps.py's existing
+    per-app changelog entries. Only the newest entry per app is kept, so one
+    app's multi-entry release day can't crowd the rest out of a short list."""
+    latest_per_app = {}
+    for a in APP_LIST:
+        entries = a.get("changelog") or []
+        if not entries:
+            continue
+        newest = max(entries, key=lambda e: e["date"])
+        latest_per_app[a["slug"]] = {
+            "app_slug": a["slug"],
+            "app_name": a["name"],
+            "app_name_en": a["name_en"],
+            "date": newest["date"],
+            "note": newest["note"],
+            "note_en": newest["note_en"],
+        }
+    return sorted(latest_per_app.values(), key=lambda e: e["date"], reverse=True)[:limit]
+
+
 SUPPORTED_LANGS = {"ja", "en"}
 
 
@@ -173,6 +195,7 @@ def top(lang="ja"):
         apps=APPS,
         download_counts=get_download_counts(),
         updated_ats={a["slug"]: get_updated_at(a["filename"]) for a in APPS},
+        recent_updates=get_recent_updates(),
     )
 
 

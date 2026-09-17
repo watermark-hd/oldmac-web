@@ -2,6 +2,22 @@
 
 {% block content %}
 
+  {% if recent_updates %}
+  <!-- Recent Updates -->
+  <section class="updates-section">
+    <h2>{% if lang == 'en' %}Latest Updates{% else %}最新アップデート{% endif %}</h2>
+    <ul class="updates-list">
+      {% for u in recent_updates %}
+      <li class="updates-item">
+        <a class="updates-app" href="{{ url_for('app_detail', lang=lang, slug=u.app_slug) }}">{% if lang == 'en' %}{{ u.app_name_en }}{% else %}{{ u.app_name }}{% endif %}</a>
+        <span class="updates-date">{{ u.date }}</span>
+        <span class="updates-note">{% if lang == 'en' %}{{ u.note_en | truncate(110, True, '…') }}{% else %}{{ u.note | truncate(60, True, '…') }}{% endif %}</span>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
   <!-- Applications Section -->
   <section class="apps-section">
     <h2>{% if lang == 'en' %}Applications{% else %}アプリケーション{% endif %}</h2>
