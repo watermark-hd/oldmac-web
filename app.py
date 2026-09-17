@@ -158,11 +158,16 @@ def get_updated_at(filename):
     return datetime.fromtimestamp(path.stat().st_mtime).strftime("%Y-%m-%d")
 
 
-def get_recent_updates(limit=6):
+def get_recent_updates(limit=5, within_days=90):
     """Flatten every app's changelog into one dated feed for the top page — no
     separate "latest news" data to hand-maintain, it's just apps.py's existing
     per-app changelog entries. Only the newest entry per app is kept, so one
-    app's multi-entry release day can't crowd the rest out of a short list."""
+    app's multi-entry release day can't crowd the rest out of a short list.
+
+    Only entries from the last `within_days` days are shown, capped at `limit`.
+    If that filter would leave nothing to show (e.g. everything's gone quiet
+    for a few months), fall back to the plain newest `limit` regardless of
+    age rather than showing an empty section."""
     latest_per_app = {}
     for a in APP_LIST:
         entries = a.get("changelog") or []
@@ -177,7 +182,11 @@ def get_recent_updates(limit=6):
             "note": newest["note"],
             "note_en": newest["note_en"],
         }
-    return sorted(latest_per_app.values(), key=lambda e: e["date"], reverse=True)[:limit]
+    by_date = sorted(latest_per_app.values(), key=lambda e: e["date"], reverse=True)
+
+    cutoff = (datetime.utcnow() - timedelta(days=within_days)).strftime("%Y-%m-%d")
+    recent = [e for e in by_date if e["date"] >= cutoff][:limit]
+    return recent if recent else by_date[:limit]
 
 
 SUPPORTED_LANGS = {"ja", "en"}
