@@ -158,7 +158,7 @@ def get_updated_at(filename):
     return datetime.fromtimestamp(path.stat().st_mtime).strftime("%Y-%m-%d")
 
 
-def get_recent_updates(limit=5, within_days=90):
+def get_recent_updates(limit=6, within_days=90):
     """Flatten every app's changelog into one dated feed for the top page — no
     separate "latest news" data to hand-maintain, it's just apps.py's existing
     per-app changelog entries. Only the newest entry per app is kept, so one
