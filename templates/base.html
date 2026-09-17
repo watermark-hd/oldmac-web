@@ -16,14 +16,14 @@
 <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16.png') }}">
 <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
 <link rel="apple-touch-icon" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
-<title>{% block title %}{% if lang == 'en' %}Thriving on Time-Tested Tech{% else %}枯れた技術で生きていく{% endif %}{% endblock %}</title>
+<title>{% block title %}{% if lang == 'en' %}Old Macs, Still Doing Real Work{% else %}枯れた技術で生きていく{% endif %}{% endblock %}</title>
 <meta name="description" content="{% block meta_description %}{% if app is defined %}{% if lang == 'en' %}{{ app.tagline_en }}{% else %}{{ app.tagline }}{% endif %}{% elif lang == 'en' %}Classic Mac applications and tools for PowerPC Macs through Apple Silicon.{% else %}PowerPC MacからApple Siliconまで、クラシックなMac体験を届けるアプリとツールを配布しています。{% endif %}{% endblock %}">
 <link rel="canonical" href="{{ canonical_url }}">
 <link rel="alternate" hreflang="ja" href="{{ alternate_ja_url }}">
 <link rel="alternate" hreflang="en" href="{{ alternate_en_url }}">
 <link rel="alternate" hreflang="x-default" href="{{ alternate_ja_url }}">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="{% if lang == 'en' %}Thriving on Time-Tested Tech{% else %}枯れた技術で生きていく{% endif %}">
+<meta property="og:site_name" content="{% if lang == 'en' %}Old Macs, Still Doing Real Work{% else %}枯れた技術で生きていく{% endif %}">
 <meta property="og:title" content="{{ self.title() | striptags | trim }}">
 <meta property="og:description" content="{% if app is defined %}{% if lang == 'en' %}{{ app.tagline_en }}{% else %}{{ app.tagline }}{% endif %}{% elif lang == 'en' %}Classic Mac applications and tools for PowerPC Macs through Apple Silicon.{% else %}PowerPC MacからApple Siliconまで、クラシックなMac体験を届けるアプリとツールを配布しています。{% endif %}">
 <meta property="og:url" content="{{ canonical_url }}">
@@ -56,13 +56,13 @@
       {% if request.endpoint == 'top' %}
       <h1 class="site-title">
         <a href="{{ url_for('top', lang=lang) }}">
-          <span class="site-title-kicker">{% if lang == 'en' %}Thriving on Time-Tested Tech{% else %}枯れた技術で生きていく{% endif %}</span>
+          <span class="site-title-kicker">{% if lang == 'en' %}Old Macs, Still Doing Real Work{% else %}枯れた技術で生きていく{% endif %}</span>
           <span class="site-title-main">{% if lang == 'en' %}The Still-Got-It Mac Club{% else %}まだイケるMac部{% endif %}</span>
         </a>
       </h1>
       {% else %}
       <a href="{{ url_for('top', lang=lang) }}" class="site-title">
-        <span class="site-title-kicker">{% if lang == 'en' %}Thriving on Time-Tested Tech{% else %}枯れた技術で生きていく{% endif %}</span>
+        <span class="site-title-kicker">{% if lang == 'en' %}Old Macs, Still Doing Real Work{% else %}枯れた技術で生きていく{% endif %}</span>
         <span class="site-title-main">{% if lang == 'en' %}The Still-Got-It Mac Club{% else %}まだイケるMac部{% endif %}</span>
       </a>
       {% endif %}
