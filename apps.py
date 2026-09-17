@@ -266,12 +266,22 @@ APPS = [
         "tagline_en": "A menu bar app that lets PowerPC Mac OS X 10.4 (Tiger) read, write, and mount exFAT drives.",
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "exfat-tiger-ppc.zip",
-        "version": "1.1",
+        "version": "1.2",
         "github_url": "https://github.com/watermark-hd/exfat-tiger-ppc",
         "category": "app",
         "comment": "古いデータが入ったUSBメモリを人から借りたんです、それをPowerMacに挿したら「読めません。フォーマットしますか？」するわけないだろ! その怒りの化身です。",
         "comment_en": "Borrowed a USB drive full of old data from someone. Plugged it into my PowerMac and got “Can't read this. Format it?” — like hell I will! This app is that anger, given form.",
         "changelog": [
+            {
+                "date": "2026-09-17",
+                "note": "CLIツール未インストールでも、アプリが管理者パスワードを求めて自動インストールするように（ターミナル操作不要に）",
+                "note_en": "The app now installs the CLI tools itself with an admin password prompt if they're missing (no more Terminal needed)",
+            },
+            {
+                "date": "2026-09-17",
+                "note": "「取り出す」メニューにマウント中ドライブの空き容量/総容量を表示するように",
+                "note_en": "The \"Eject\" menu item now shows free/total space for the mounted drive",
+            },
             {
                 "date": "2026-09-15",
                 "note": "メニューバーのUIを英語対応（システム言語が日本語以外なら英語表示に）",
