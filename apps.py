@@ -63,12 +63,17 @@ APPS = [
         "tagline_en": "A file browser for turning a PowerPC Mac G4 into an SMB3-ready NAS-like file server.",
         "platform": "PowerPC Mac (Tiger) 向け",
         "filename": "AquaLink.zip",
-        "version": "0.5.17",
+        "version": "0.5.18",
         "github_url": "https://github.com/watermark-hd/ppc-mac-modernization/tree/main/smb3/AquaLink",
         "category": "app",
         "comment": "PowerMac G4、iBook G4、iMac G5（未検証） そんなマシンたちにまだ活躍してもらうために作りました。昔のデータが入りっぱなし、元データを作った時の環境が知りたい。そんな事情で作りました。",
         "comment_en": "Made so PowerMac G4s, iBook G4s, and (untested) iMac G5s can keep earning their keep. Old data still sitting on them, and I wanted to see it in the environment it was actually made in — that's the real reason.",
         "changelog": [
+            {
+                "date": "2026-09-18",
+                "note": "セキュリティレビューを実施。「このMacを共有する」機能に、短時間に大量の認証失敗を繰り返す相手を自動的に一時遮断するレート制限を追加(通常利用には影響しない)。あわせて、この機能を使う場合はルーターのUPnPを無効にすることを推奨(実際に有効なままだとLAN外への露出リスクがあると確認)。パスワードをより安全な方式(Digest認証)に切り替える対応も試したが、Windows/macOS純正クライアントの両立ができず見送り",
+                "note_en": "Ran a security review. The \"share this Mac\" feature now rate-limits and temporarily blocks clients that repeatedly fail authentication in a short time (normal use is unaffected). Also, if you use this feature, it's recommended to disable UPnP on your router (confirmed as a real exposure risk when left enabled). Attempted to switch the password scheme to Digest authentication for better security, but found no way to satisfy both Windows's and macOS's native WebDAV clients, so this was not shipped.",
+            },
             {
                 "date": "2026-09-12",
                 "note": "PowerMac G4実機で見つかった、ファイル一覧で行をクリック後にスクロールすると落ちることがある不具合を修正。ファイル名のアイコン表示に使っていた仕組みを、AppleのNSCellが標準で保証する方式に作り直し、機種によって起きる可能性のあるクラッシュの原因を根本から断った",
@@ -344,10 +349,15 @@ APPS = [
         "filename": "TigerQuickLook.dmg",
         "github_url": "https://github.com/watermark-hd/tiger-quicklook",
         "category": "app",
-        "version": "0.4",
+        "version": "0.5",
         "comment": "軽いからという理由でTigerを使い続けるためにも便利すぎるこの機能はぜひ欲しかった。パッチを当ててLeopardにしようかとも考えましたが、非力なマシンで、Tigerのまま実装したかったんです。まだまだアップデート予定ですが、ある程度のフォーマットには対応しています。",
         "comment_en": "I keep using Tiger because it's light, and I really wanted this far-too-convenient feature while I'm at it. I thought about patching my way up to Leopard, but I wanted to build it on Tiger, on the underpowered machine as it is. Plenty of updates still to come, but it already handles a decent set of formats.",
         "changelog": [
+            {
+                "date": "2026-09-18",
+                "note": "v0.5: Finderに切り替えた直後の約0.3秒間Spaceが効かない制限を解消（MacRumorsで指摘を受け、0.3秒ごとのポーリングから、前面アプリの切り替えを即座に検知できるCarbonイベントに変更）。プレビュー中に矢印キーで移動すると、Finder側の選択（青いハイライト）も連動するように。「QL」メニューにバージョン番号を表示。あわせて、矢印キー移動の並び順を「2.jpg」が「10.jpg」より先に来るような数字認識ソートに変更（アイコン表示を独自の配置にしている場合は、この並び順と一致しないことがあります。名前順のリスト表示ならぴったり一致します）",
+                "note_en": "v0.5: Removed the ~0.3-second dead zone right after switching to the Finder where Space didn't yet work (a MacRumors reader's suggestion led to swapping the 0.3s polling loop for a Carbon event that detects the frontmost-app switch instantly). Arrow-key navigation now syncs the Finder's own selection (the blue highlight) to the file being previewed. The \"QL\" menu now shows the version number. Also switched arrow-key sort order to be numeric-aware, so \"2.jpg\" sorts before \"10.jpg\" like the Finder's own Name sort (if Icon view is arranged some other way, this order won't match what's on screen — List view or Icon view sorted by Name lines up exactly)",
+            },
             {
                 "date": "2026-09-09",
                 "note": "v0.4: プレビュー中の矢印キー移動が、表示できないファイル（壊れた xlsx や本文を取り出せない Office ファイルなど）で止まらず、次の表示できるファイルまで飛ぶように変更（止まると前のプレビューが残って別ファイルに見えるため）。行き止まりでは音で知らせます。あわせて、アプリ内の文言（メニュー・警告・ツールチップ）を日本語と英語の併記にしました",

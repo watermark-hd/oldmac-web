@@ -73,7 +73,8 @@
       Bring the Finder to the front, select one file, and press <strong>Space</strong>. Press Space again
       (or <strong>Esc</strong> in the window) to close it. While a preview is open, <strong>&larr; / &rarr; / &uarr; / &darr;</strong>
       move to the previous/next file in the same folder, in name order &mdash; files it can't display are
-      skipped over, and a beep marks the end of the run. It's the same feel as Leopard's Quick Look, so you
+      skipped over, and a beep marks the end of the run. The Finder's own selection follows along too, so
+      it's clear which file you're actually looking at. It's the same feel as Leopard's Quick Look, so you
       can flip between images without pressing Space again. When the app is
       running as a resident agent, a <strong>"QL"</strong> item appears at the right end of the menu bar
       &mdash; quit it from there (or <code>killall TigerQuickLook</code> in Terminal). When something other
@@ -91,7 +92,7 @@
     <h2>Limitations</h2>
     <ul>
       <li>Pressing Space while renaming a file inline in the Finder types no space and opens a preview instead &mdash; there's no way for an outside process to tell the Finder is in text-edit mode. Press Esc to recover.</li>
-      <li>For up to ~0.3&nbsp;s right after switching to the Finder, Space may not take effect (the frontmost-app check is a poll, since Tiger has no activation notification). Selecting a file gives it enough time.</li>
+      <li>Arrow-key navigation moves through files in name order (numeric-aware, so "2.jpg" comes before "10.jpg"). In List view, or Icon view arranged by Name, that matches what's on screen exactly; with any other Icon view arrangement it won't.</li>
     </ul>
 
     <h2>Supported Environment</h2>
@@ -151,7 +152,7 @@
 
     <h3>Bugs and lessons along the way</h3>
     <div class="tech-note">
-      <strong>An active event tap turns Space into a full-width space in Terminal.</strong> With the agent running, typing Space in Terminal produced U+3000 (full-width) instead of a normal space; TextEdit was fine. Cause: when a key event passes through an <em>active</em> event tap, the WindowServer commits it using the current input source &mdash; so with a Japanese IME on, Space gets converted, and apps that read <code>[event characters]</code> directly (like Terminal) receive the full-width character. The fix: never leave the tap enabled all the time. A 0.3&nbsp;s <code>NSTimer</code> poll enables <code>CGEventTapEnable</code> only while the Finder is frontmost or a preview is showing (Tiger has no <code>NSWorkspaceDidActivateApplicationNotification</code> &mdash; that's 10.6+). The side effect is the ~0.3&nbsp;s dead window after switching to the Finder.
+      <strong>An active event tap turns Space into a full-width space in Terminal.</strong> With the agent running, typing Space in Terminal produced U+3000 (full-width) instead of a normal space; TextEdit was fine. Cause: when a key event passes through an <em>active</em> event tap, the WindowServer commits it using the current input source &mdash; so with a Japanese IME on, Space gets converted, and apps that read <code>[event characters]</code> directly (like Terminal) receive the full-width character. The fix: never leave the tap enabled all the time &mdash; enable it only while the Finder is frontmost or a preview is showing. v0.1&ndash;0.4 decided that with a 0.3&nbsp;s <code>NSTimer</code> poll (Tiger has no <code>NSWorkspaceDidActivateApplicationNotification</code> &mdash; that's 10.6+), which left a ~0.3&nbsp;s dead window right after switching to the Finder. v0.5 replaced the poll as the primary trigger with Carbon's <code>kEventAppFrontSwitched</code> &mdash; a public event, available since 10.0, that fires the instant the frontmost process changes &mdash; so the tap turns on immediately; the poll is still there, just slowed to 2&nbsp;s, as a fallback in case the event is ever missed.
     </div>
     <div class="tech-note">
       <strong>Running the executable by path leaves the app unregistered with the GUI session.</strong> Not just over SSH &mdash; even from Terminal on the machine itself, calling <code>.../MacOS/TigerQuickLook</code> directly skips LaunchServices, so <code>LSUIElement</code> never applies and the status-bar item, the <code>NSAppleScript</code> calls to the Finder, and the preview window are all unresponsive. Only the low-level <code>CGEventTap</code> still fires, which makes it easy to chase the wrong bug. Always start it via <code>open</code>, a double-click, or a Login Item.
@@ -219,7 +220,7 @@
 
     <h2>使い方</h2>
     <p>
-      Finder を最前面にしてファイルを1つ選び、<strong>Space</strong> を押します。もう一度 <strong>Space</strong>（またはウィンドウで <strong>Esc</strong>）で閉じます。プレビュー表示中に <strong>← / → / ↑ / ↓</strong> を押すと、同じフォルダ内のファイルを名前順で前後に移動します（表示できないファイルは飛ばし、行き止まりでは音で知らせます）。Leopard の Quick Look と同じ操作感で、Space を押し直さずに隣の画像を続けて見比べられます。常駐させると <strong>メニューバー右側に「QL」</strong> が表示され、終了はそこから行います（またはターミナルで <code>killall TigerQuickLook</code>）。Finder 以外が最前面のときは、Space は横取りされず通常どおり動きます。
+      Finder を最前面にしてファイルを1つ選び、<strong>Space</strong> を押します。もう一度 <strong>Space</strong>（またはウィンドウで <strong>Esc</strong>）で閉じます。プレビュー表示中に <strong>← / → / ↑ / ↓</strong> を押すと、同じフォルダ内のファイルを名前順で前後に移動します（表示できないファイルは飛ばし、行き止まりでは音で知らせます）。Finder 側の選択（青いハイライト）も連動するので、今どのファイルを見ているか分かりやすくなっています。Leopard の Quick Look と同じ操作感で、Space を押し直さずに隣の画像を続けて見比べられます。常駐させると <strong>メニューバー右側に「QL」</strong> が表示され、終了はそこから行います（またはターミナルで <code>killall TigerQuickLook</code>）。Finder 以外が最前面のときは、Space は横取りされず通常どおり動きます。
     </p>
 
     <h2>インストール手順</h2>
@@ -233,7 +234,7 @@
     <h2>制限</h2>
     <ul>
       <li>Finder でファイル名をインラインでリネーム中に Space を押すと、スペースが入力されずプレビューが出てしまいます。編集中かどうかを外部プロセスから判定できないためです。Esc で戻せます。</li>
-      <li>Finder に切り替えた直後の約0.3秒間は、Space が効かないことがあります（前面アプリの監視がポーリングのため。Tiger には最前面アプリの変化を知らせる通知がありません）。ファイルを選ぶ動作で十分間が空きます。</li>
+      <li>矢印キーでの移動は名前順です（「2.jpg」が「10.jpg」より先に来るよう数字も考慮します）。リスト表示、または名前順に並べたアイコン表示なら画面の並びとぴったり一致しますが、それ以外の並べ方のアイコン表示では一致しません。</li>
     </ul>
 
     <h2>対応環境</h2>
@@ -269,7 +270,7 @@
 
     <h3>ハマった点</h3>
     <div class="tech-note">
-      <strong>Terminal で Space が全角になる。</strong> エージェントを動かした状態だと、Terminal で Space を打つと半角スペースではなく全角スペース（U+3000）が入りました。TextEdit では正常。原因は、アクティブなイベントタップをキーイベントが通過すると、WindowServer がそのイベントを「現在の入力ソース」で確定してしまうことです。日本語入力が有効だと Space が全角に変換され、<code>[event characters]</code> を直接読むタイプのアプリ（Terminal など）がその全角を受け取ります。対策はタップを常時有効にしないこと。0.3秒ごとの <code>NSTimer</code> ポーリングで「Finder が最前面、またはプレビュー表示中」のときだけ <code>CGEventTapEnable</code> します（Tiger には <code>NSWorkspaceDidActivateApplicationNotification</code> がなく、10.6以降の機能です）。副作用として、Finder に切り替えた直後の最大0.3秒は Space が効きません。
+      <strong>Terminal で Space が全角になる。</strong> エージェントを動かした状態だと、Terminal で Space を打つと半角スペースではなく全角スペース（U+3000）が入りました。TextEdit では正常。原因は、アクティブなイベントタップをキーイベントが通過すると、WindowServer がそのイベントを「現在の入力ソース」で確定してしまうことです。日本語入力が有効だと Space が全角に変換され、<code>[event characters]</code> を直接読むタイプのアプリ（Terminal など）がその全角を受け取ります。対策はタップを常時有効にしないこと——「Finder が最前面、またはプレビュー表示中」のときだけ有効化します。v0.1〜0.4 はこれを 0.3秒ごとの <code>NSTimer</code> ポーリングでやっていて（Tiger には <code>NSWorkspaceDidActivateApplicationNotification</code> がなく、10.6以降の機能です）、Finder に切り替えた直後の最大0.3秒は Space が効かない副作用がありました。v0.5 では、ポーリングを主な仕組みとして使うのをやめ、Carbon の <code>kEventAppFrontSwitched</code>（10.0以降ある公開イベントで、最前面プロセスが変わった瞬間に発火）に切り替え、切り替え直後から即座に有効化されるようにしました。ポーリングは、このイベントを万一取りこぼした時の保険として、2秒間隔に落として残してあります。
     </div>
     <div class="tech-note">
       <strong>実行ファイルをパスで直接 exec すると GUI セッションに登録されない。</strong> SSH 越しはもちろん、実機の Terminal から <code>.../MacOS/TigerQuickLook</code> と叩いても、LaunchServices を通らないため <code>LSUIElement</code> が適用されず、メニューバー項目・Finder への <code>NSAppleScript</code>・プレビューウィンドウがすべて無反応になります。<code>CGEventTap</code> だけは低レベルなので動いてしまい、切り分けを誤りやすいです。必ず <code>open</code>・ダブルクリック・ログイン項目から起動します。
