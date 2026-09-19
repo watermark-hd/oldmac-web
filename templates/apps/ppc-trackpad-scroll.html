@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+
+{% block title %}{% if lang == 'en' %}PPC Trackpad Scroll{% else %}PPC Trackpad Scroll{% endif %}{% endblock %}
+
+{% block content %}
+
+  <a class="back-link" href="{{ url_for('top', lang=lang) }}">
+    &laquo; {% if lang == 'en' %}Back to Applications{% else %}アプリ一覧に戻る{% endif %}
+  </a>
+
+  <h1>PPC Trackpad Scroll</h1>
+  <div>
+    <span class="platform-badge">{{ app.platform }}</span>
+    <span class="app-card-status source-status">{% if lang == 'en' %}Source Available{% else %}ソース公開中{% endif %}</span>
+  </div>
+
+  {% if lang == 'en' %}
+  <div class="tabs">
+    <input type="radio" name="tabset" id="tab-overview" class="tab-input" checked>
+    <label for="tab-overview" class="tab-label">Overview</label>
+    <input type="radio" name="tabset" id="tab-tech" class="tab-input">
+    <label for="tab-tech" class="tab-label">Technical Info</label>
+
+    <div id="panel-overview" class="tab-panel">
+    <p>
+      A menu-bar background app for legacy PowerPC Macs (iBook, PowerBook, etc.) whose trackpads don't
+      support two-finger scrolling. Hold the &#8984; (Command) key and move the trackpad up or down, and the
+      screen scrolls &mdash; no Dock icon, just a small "TP" item in the menu bar.
+    </p>
+
+    <div class="download-box">
+      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">Download ppc-trackpad-scroll.zip</a>
+      <div class="meta">Downloads so far: {{ download_count }}</div>
+      {% if updated_at %}<div class="meta">Last updated: {{ updated_at }}{% if app.version %} (v{{ app.version }}){% endif %}</div>{% endif %}
+      <div class="meta"><a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">Source code on GitHub</a></div>
+      <div class="meta">Note: Tiger's stock Safari/curl can't verify today's HTTPS certificates, so downloading here directly can fail. We recommend <a href="{{ url_for('app_detail', lang=lang, slug='aquafox-ja') }}">Aquafox</a> &mdash; the PowerPC-era browser we make a Japanese language pack for &mdash; which handles modern HTTPS fine. Failing that, fetch the file on a modern machine and copy it over, or use a modern curl via Tigerbrew/MacPorts.</div>
+    </div>
+
+    {% if app.changelog %}
+    <h2>Changelog</h2>
+    <ul>
+      {% for entry in app.changelog %}
+      <li><strong>{{ entry.date }}</strong> &mdash; {{ entry.note_en }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    <h2>Requirements</h2>
+    <ul>
+      <li>Mac OS X 10.4 Tiger / 10.5 Leopard, PowerPC</li>
+      <li>Universal Access enabled &mdash; System Preferences &gt; Universal Access &gt; "Enable access for assistive devices" (the app walks you through this on first launch if it's off, and retries automatically once you turn it on)</li>
+    </ul>
+
+    <h2>Installation</h2>
+    <ol>
+      <li>Put <code>PPC Trackpad Scroll.app</code> anywhere you like (e.g. the Applications folder).</li>
+      <li>Double-click to launch &mdash; a "TP" label appears in the menu bar.</li>
+      <li>If Universal Access is off, follow the dialog to turn it on.</li>
+    </ol>
+    <p>
+      The app links only against standard OS frameworks, so moving the folder around doesn't break it &mdash;
+      it's safe to run straight out of the zip.
+    </p>
+
+    <h2>Using It</h2>
+    <ul>
+      <li>Hold &#8984; and move the trackpad up/down to scroll.</li>
+      <li>Click "TP" in the menu bar &rarr; Settings&hellip; to adjust scroll sensitivity, invert the scroll direction (inverted/"natural" is on by default), or check Universal Access status.</li>
+    </ul>
+    <p>
+      Language follows the Mac's system language automatically &mdash; there's no in-app switch. Any language
+      other than Japanese falls back to English.
+    </p>
+
+    <h2>Note for Aquafox (TenFourFox-family) users</h2>
+    <p>
+      Gecko-based browsers like Aquafox treat &#8984;+wheel as page zoom. If you're remapping a key (e.g. the right
+      Enter key) to &#8984; with something like <a href="http://actinicsoft.com/doublecommand/" target="_blank" rel="noopener noreferrer">DoubleCommand</a>,
+      a normal scroll can get misread as a zoom. Fix it by opening <code>about:config</code> in Aquafox's address
+      bar and setting <code>mousewheel.with_meta.action</code> (and <code>mousewheel.with_control.action</code> if
+      needed) to <code>0</code>.
+    </p>
+
+    <h2>Known Limitations</h2>
+    <ul>
+      <li>PowerPC-only build &mdash; won't run on Intel Macs.</li>
+      <li>Scroll amount depends on the sensitivity setting and actual trackpad movement, so it may need tuning per machine/preference.</li>
+      <li>The app doesn't distinguish a trackpad from an external mouse, so &#8984;+mouse-movement scrolls too &mdash; this can fire unintentionally on desktop Macs with no trackpad.</li>
+      <li>Tested on an iBook G4 and PowerBook G4, Mac OS X 10.4.11.</li>
+    </ul>
+
+    <p class="credit">
+      A personal hobby project provided with no warranty. MIT license &mdash; see the GitHub repository above for
+      full source and license files.
+    </p>
+    </div>
+
+    <div id="panel-tech" class="tab-panel">
+    <p>
+      Uses <code>CGEventTapCreate</code> to watch system-wide <code>kCGEventFlagsChanged</code> /
+      <code>kCGEventMouseMoved</code> events. While &#8984; is held, <code>kCGEventMouseMoved</code> events are
+      intercepted: the cursor move is cancelled and a synthetic scroll-wheel event is posted instead. Only
+      button-up movement is watched, so click-drags and tap-lock drags (e.g. &#8984;+dragging a file) are delivered
+      as a different event type and never touched. The synthetic scroll event has its modifier flags explicitly
+      cleared, so it doesn't collide with the common "&#8984;+scroll = zoom" convention (see the Aquafox note above
+      for the one exception).
+    </p>
+
+    <h3>Bugs and lessons along the way</h3>
+    <div class="tech-note">
+      <strong>Posting a scroll event straight from the event-tap callback could hang the whole machine.</strong>
+      The first version called <code>CGEventCreate</code>/<code>CGEventPost</code> synchronously inside the tap
+      callback itself. Moving the trackpad quickly on real PowerPC hardware fired that callback often enough that
+      the WindowServer round-trip backed up and froze the whole system. The fix: the callback now only accumulates
+      scroll distance, and a 50&nbsp;Hz (0.02s) timer does the actual <code>CGEventPost</code> in a batch, keeping
+      the tap callback itself as light as possible.
+    </div>
+    <div class="tech-note">
+      <strong>Modifier-remap utilities like DoubleCommand make the &#8984; flag flicker.</strong> Testing on a real
+      PowerBook G4 with DoubleCommand (remapping the right Enter key to &#8984;) showed the &#8984; flag dropping out
+      intermittently for anywhere from a few hundred milliseconds to a couple of seconds &mdash; maximizing the OS's
+      key-repeat rate didn't help, so this looks like timing internal to the DoubleCommand kext itself. Cutting the
+      gesture the instant the flag dropped made the app feel like it needed constant, deliberate pressure to keep
+      working. The fix remembers that &#8984; was down within the last moment and tolerates a flag dropout inside
+      that window without ending the gesture. That window went through a few real-hardware rounds &mdash; 120ms,
+      then 0.8s, then briefly 1.0s &mdash; before settling back on 0.8s, since Tiger/Leopard has no background-window
+      scrolling to make a longer delay in releasing real &#8984; keyups feel wrong.
+    </div>
+    <div class="tech-note">
+      <strong>Clamping scroll distance could silently eat the accumulated value.</strong> At high sensitivity plus a
+      fast flick, the code was subtracting the pre-clamp rounded value from the running accumulator instead of the
+      post-clamp value actually sent, so part of every large motion just vanished. Fixed by subtracting exactly what
+      was posted.
+    </div>
+
+    <p class="credit">
+      Full source code is on <a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>.
+    </p>
+    </div>
+  </div>
+  {% else %}
+  <div class="tabs">
+    <input type="radio" name="tabset" id="tab-overview" class="tab-input" checked>
+    <label for="tab-overview" class="tab-label">概要</label>
+    <input type="radio" name="tabset" id="tab-tech" class="tab-input">
+    <label for="tab-tech" class="tab-label">技術情報</label>
+
+    <div id="panel-overview" class="tab-panel">
+    <p>
+      iBook / PowerBookなど、2本指スクロールに対応していないレガシーMac（PowerPC）のトラックパッド用に、
+      ⌘（Command）キーを押しながらトラックパッドを上下に動かすと、画面がスクロールするようにする常駐アプリです。
+      Dockアイコンは出ず、メニューバーに「TP」とだけ表示されます。
+    </p>
+
+    <div class="download-box">
+      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">ppc-trackpad-scroll.zip をダウンロード</a>
+      <div class="meta">これまでのダウンロード数: {{ download_count }}</div>
+      {% if updated_at %}<div class="meta">最終更新日: {{ updated_at }}{% if app.version %}（v{{ app.version }}）{% endif %}</div>{% endif %}
+      <div class="meta"><a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHubでソースコードを見る</a></div>
+      <div class="meta">※ Tiger標準のSafari/curlは現代のHTTPS証明書を検証できないため、ここから直接ダウンロードできない場合があります。当サイトでは <a href="{{ url_for('app_detail', lang=lang, slug='aquafox-ja') }}">Aquafox</a>（当サイトが日本語化パックを配布しているPowerPC向けブラウザ）をおすすめします。現代のHTTPSも普通に扱えます。難しい場合は、現代のMacで取得してからコピーするか、Tigerbrew/MacPorts経由の新しいcurlをご利用ください。</div>
+    </div>
+
+    {% if app.changelog %}
+    <h2>更新履歴</h2>
+    <ul>
+      {% for entry in app.changelog %}
+      <li><strong>{{ entry.date }}</strong> &mdash; {{ entry.note }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    <h2>動作要件</h2>
+    <ul>
+      <li>Mac OS X 10.4 Tiger / 10.5 Leopard、PowerPC</li>
+      <li>Universal Access（アクセシビリティ）が有効であること &mdash; 「システム環境設定 &gt; Universal Access」の「補助装置にアクセスできるようにする」（無効な場合、初回起動時にアプリがダイアログで案内し、有効化後は自動的に再試行します）</li>
+    </ul>
+
+    <h2>インストール手順</h2>
+    <ol>
+      <li><code>PPC Trackpad Scroll.app</code> を好きな場所（アプリケーションフォルダなど）に置きます。</li>
+      <li>ダブルクリックで起動すると、メニューバーに「TP」と表示されます。</li>
+      <li>Universal Accessが無効な場合は、ダイアログの案内に従って有効化してください。</li>
+    </ol>
+    <p>
+      アプリはOS標準フレームワークのみに依存しているため、フォルダを移動しても問題なく動作します（zip単体で配布・実行可能です）。
+    </p>
+
+    <h2>使い方</h2>
+    <ul>
+      <li>⌘キーを押しながらトラックパッドを上下に動かす → スクロール。</li>
+      <li>メニューバーの「TP」→「設定...」から、スクロール感度、スクロール方向の反転（デフォルトで反転＝ナチュラル風が有効）、Universal Accessの状態確認ができます。</li>
+    </ul>
+    <p>
+      言語切り替えボタンはなく、Mac本体の使用言語設定（システム環境設定 &gt; International / 言語環境）に応じて自動的に日本語/英語が切り替わります。それ以外の言語環境では英語表示になります。
+    </p>
+
+    <h2>Aquafox（TenFourFox系ブラウザ）をお使いの方へ</h2>
+    <p>
+      Aquafoxなど Gecko系ブラウザには、⌘＋ホイール＝ページ拡大縮小という独自の挙動があります。特に
+      <a href="http://actinicsoft.com/doublecommand/" target="_blank" rel="noopener noreferrer">DoubleCommand</a>等で
+      右Enterキーなどを⌘キーに割り当てている場合、本来のスクロール操作が拡大縮小として認識されてしまうことがあります。
+      改善するには、Aquafoxのアドレスバーに<code>about:config</code>と入力し、<code>mousewheel.with_meta.action</code>
+      （必要であれば<code>mousewheel.with_control.action</code>も）を<code>0</code>に変更してください。
+    </p>
+
+    <h2>既知の制限</h2>
+    <ul>
+      <li>PowerPC専用ビルドです（Intel Macでは動作しません）。</li>
+      <li>スクロール量は感度設定と実際のトラックパッドの移動量に依存するため、機種や個人の操作感に応じて調整が必要な場合があります。</li>
+      <li>トラックパッドと外付けマウスを区別していないため、外付けマウスを接続している環境でも⌘＋マウス移動でスクロールに変換されます（トラックパッドを持たないデスクトップ機で意図せず発動する場合があります）。</li>
+      <li>動作確認はiBook G4 / PowerBook G4、Mac OS X 10.4.11で行っています。</li>
+    </ul>
+
+    <p class="credit">
+      個人の趣味プロジェクトにつき無保証です。MITライセンス。詳しいソースコードやライセンスは上記のGitHubリポジトリをご覧ください。
+    </p>
+    </div>
+
+    <div id="panel-tech" class="tab-panel">
+    <p>
+      <code>CGEventTapCreate</code>でシステム全体の<code>kCGEventFlagsChanged</code> / <code>kCGEventMouseMoved</code>
+      を監視しています。⌘キーが押されている間の<code>kCGEventMouseMoved</code>のみを検知し、カーソル移動をキャンセルして
+      スクロールイベントに変換して送出します。監視対象は「ボタンを押していない移動」のみのため、クリックドラッグや
+      タップロックドラッグ（⌘＋ファイルのドラッグ移動など）とは別のイベント種別として扱われ、競合しません。送出する
+      スクロールイベントは修飾キーフラグを明示的に取り除いているため、⌘＋スクロール＝拡大縮小という一般的な規約とも
+      衝突しません（上記Aquafoxの注意点を除く）。
+    </p>
+
+    <h3>ハマった点</h3>
+    <div class="tech-note">
+      <strong>イベントタップのコールバック内から直接スクロールイベントを送出すると、実機がハングすることがある。</strong>
+      最初のバージョンでは、コールバック内で毎回<code>CGEventCreate</code>/<code>CGEventPost</code>を同期的に呼んでいました。
+      実機でトラックパッドを高速に動かすとこのコールバックが非常に高頻度で呼ばれ、WindowServerとのやり取りが詰まって
+      古いPowerPC実機ではシステム全体がハングしました。対策として、コールバック側はスクロール量を蓄積するだけに留め、
+      実際の<code>CGEventPost</code>送出は50Hz（0.02秒間隔）のタイマーでまとめて行うように変更し、タップのコールバックを
+      可能な限り軽く保つようにしました。
+    </div>
+    <div class="tech-note">
+      <strong>DoubleCommandなどの修飾キー入れ替えユーティリティでは、⌘フラグが瞬間的に途切れる。</strong>
+      PowerBook G4 + DoubleCommand（右Enterキーを⌘キーとして扱う設定）での実機検証で、⌘フラグの検知が数百ミリ秒〜数秒単位で
+      断続的に途切れることが判明しました。OS側のキーリピート速度を最速にしても改善しなかったため、DoubleCommand kext内部の
+      固有タイミングに起因すると見られます。⌘フラグが1回でも外れるとその場でジェスチャーを打ち切る作りだったため、
+      「粘り強く動かさないと反応しない」体感になっていました。直近で⌘が押されていたことを覚えておき、その間のフラグ欠落を
+      無視してジェスチャーを継続する猶予期間を追加。この猶予は120ms→0.8秒→一時1.0秒と実機検証を重ね、Tiger/Leopardには
+      背面ウィンドウのスクロール機能が無く、本物の⌘キーリリース時のカーソル操作復帰が多少遅れても違和感が少ないことから、
+      最終的に0.8秒に落ち着きました。
+    </div>
+    <div class="tech-note">
+      <strong>クランプ処理がスクロール量を静かに消していた。</strong>
+      高感度設定＋高速フリック時、クランプ前の丸め値をそのまま蓄積変数から差し引いていたため、大きな動きの一部が
+      実際には送出されずに消えていました。実際に送出した（クランプ後の）値を差し引くように修正しています。
+    </div>
+
+    <p class="credit">
+      ソースコードは<a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>にあります。
+    </p>
+    </div>
+  </div>
+  {% endif %}
+
+  {% include "partials/feedback_form.html" %}
+
+{% endblock %}

@@ -397,6 +397,27 @@ APPS = [
         ],
     },
     {
+        "slug": "ppc-trackpad-scroll",
+        "name": "PPC Trackpad Scroll",
+        "name_en": "PPC Trackpad Scroll",
+        "tagline": "2本指スクロール非対応のPowerPCトラックパッドで、⌘＋トラックパッド移動をスクロールに変換する常駐アプリ",
+        "tagline_en": "A menu-bar app that turns ⌘+trackpad movement into scrolling on PowerPC Macs whose trackpads don't support two-finger scroll.",
+        "platform": "PowerPC Mac (Tiger/Leopard) 向け",
+        "filename": "ppc-trackpad-scroll.zip",
+        "version": "0.5",
+        "github_url": "https://github.com/watermark-hd/ppc-trackpad-scroll",
+        "category": "app",
+        "comment": "iBookやPowerBookのトラックパッドって、今のMacと違って2本指スクロールが効かないんですよね。マウス無しで作業してるとスクロールバーをいちいち掴むはめになって、地味にストレスでした。だったら⌘キーを押しながらトラックパッドを動かしたらスクロールする、を自分で作ってしまえと。",
+        "comment_en": "The trackpad on an iBook or PowerBook doesn't do two-finger scrolling like a modern Mac. Working without a mouse meant constantly grabbing the scrollbar by hand — small friction, but real. So I just made holding ⌘ and moving the trackpad scroll instead.",
+        "changelog": [
+            {
+                "date": "2026-09-20",
+                "note": "初版公開。⌘キーを押しながらトラックパッドを動かすと画面がスクロールするメニューバー常駐アプリ。Macのシステム言語設定に応じて日本語/英語表示が自動切り替え。PowerBook G4実機での検証を経て、DoubleCommandなど修飾キー入れ替えユーティリティ使用時に⌘フラグの検知が瞬間的に途切れる現象を吸収する猶予期間(0.8秒)を追加",
+                "note_en": "Initial release. A menu-bar app that turns holding ⌘ + moving the trackpad into scrolling. Automatically follows the Mac's Japanese/English system language setting. After testing on real PowerBook G4 hardware, added a 0.8-second grace period to absorb momentary ⌘-flag dropouts from modifier-remap utilities like DoubleCommand.",
+            },
+        ],
+    },
+    {
         "slug": "mac-snow-leopard-linux",
         "name": "Mac OSX Snow Leopard風 Linux",
         "name_en": "Mac OS X Snow Leopard-inspired Linux",
