@@ -131,14 +131,16 @@
     </p>
 
     <div class="tech-note">
-      <strong>The ruled-notebook lines fought back hard enough to lose, on purpose.</strong> The "Note" theme
-      draws horizontal ruled lines behind the text, like real notebook paper. Getting that pixel-perfect in
-      tkinter turned into a long chain of fixes &mdash; measuring baselines directly instead of guessing at
-      fixed pitch, a scroll-position bug that kept quietly adding padding on every scroll, tab-switching
-      redrawing the wrong widget. After yet another real-hardware round came back with "only the first two
-      lines show up," the lines got turned off rather than asking for another round of testing on someone
-      else's time. Everything else about the Note theme (paper color, the three-ring holes, the typeface)
-      stayed as-is; the ruled lines themselves weren't abandoned, just shelved for a calmer attempt later.
+      <strong>The ruled notebook lines finally got fixed by giving up on measuring.</strong> The "Note" theme
+      draws horizontal ruled lines behind the text, like real notebook paper. The first approach measured
+      each visible line's actual rendered position and placed a rule to match it &mdash; but headers, emoji,
+      and kanji-heavy lines all rendered at different heights, which kept producing double lines or, at one
+      point, only the first two lines showing up at all; that had the ruling turned off entirely for a
+      while. What finally worked was flipping the dependency around: instead of measuring text and placing
+      lines to match, the grid of ruled lines is now laid down first, at a fixed pitch, top to bottom, with
+      no regard for where the text actually is &mdash; and the text is what gets aligned to the grid
+      afterward. With nothing left to measure, there's nothing left to drift, and the lines now hold up
+      reliably, including in the write-in box at the bottom.
     </div>
     <div class="tech-note">
       <strong>The GUI can start up even if <code>setup.sh</code> was never run.</strong> Originally the GUI
@@ -263,14 +265,14 @@
     </p>
 
     <div class="tech-note">
-      <strong>ノート風の横罫線は、頑張った末にあえて手放した。</strong>
-      「ノート」テーマは、本物のノート用紙のように文字の下に横罫線を描きます。これをtkinterでピクセル単位に
-      合わせ込む作業は長い修正の連続でした&mdash;固定ピッチで決め打ちせず隣り合う行のベースラインを実測する方式に
-      変更したり、スクロールのたびに余白が静かに積み重なっていくバグを直したり、タブ切替が別のウィジェットを
-      再描画していた不具合を直したり。それでも実機での検証で「最初の2行しか出ない」という結果が返ってきた時点で、
-      これ以上検証をお願いするのは負担が大きいと判断し、横罫線の描画自体をいったんオフにしました。用紙の色や
-      ルーズリーフの穴、書体などノートの見た目自体はそのままです。罫線を諦めたわけではなく、また落ち着いて
-      取り組むつもりで一旦棚上げにしています。
+      <strong>ノート風の横罫線は、「測るのをやめる」ことで最終的に解決した。</strong>
+      「ノート」テーマは、本物のノート用紙のように文字の下に横罫線を描きます。最初のやり方は、今画面に
+      実際に描画されている行を1行ずつ実測して、その位置に合わせて線を引く方式でした。ただ見出し・絵文字・
+      漢字の多い行などで高さがまちまちになり、二重線になったり、ある時は「最初の2行しか出ない」という
+      崩れ方をしたりを繰り返し、一度は描画自体をオフにしていました。最終的にうまくいったのは、依存の向きを
+      逆にしたことです。文字の位置を一切見ずに、上から下まで固定ピッチで先に罫線のグリッドを敷き、その後で
+      本文の行の方をグリッドに合わせて配置するように作り直しました。実測するものが無くなった分、ズレる要素
+      自体が無くなり、ノート下部の書き込み欄も含めて、安定して罫線が引けるようになっています。
     </div>
     <div class="tech-note">
       <strong><code>setup.sh</code>を一度も実行していなくてもGUIが起動できる。</strong>
