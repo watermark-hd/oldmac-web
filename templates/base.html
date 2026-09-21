@@ -36,7 +36,7 @@
   "name": (app.name_en if lang == 'en' else app.name),
   "description": (app.tagline_en if lang == 'en' else app.tagline),
   "applicationCategory": "UtilitiesApplication",
-  "operatingSystem": app.platform,
+  "operatingSystem": (app.platform_en if lang == 'en' and app.platform_en else app.platform),
   "url": canonical_url,
   "downloadUrl": url_for('download', lang=lang, slug=app.slug, _external=True),
   "offers": {
@@ -74,7 +74,7 @@
     </div>
     <p class="site-tagline">
       {% if lang == 'en' %}
-        Distributing classic Mac applications from PowerPC Mac to Apple Silicon, bringing retro Mac experiences to modern systems.
+        Apps and tools that keep old Macs useful &mdash; from PowerPC to Intel, with a few classic Mac ideas brought to Apple Silicon.
         Why throw away a Mac that still works? True sustainability is using what we have.
       {% else %}
         PowerPC MacからApple Siliconまで、クラシックなMac体験を届けるアプリを配布しています。

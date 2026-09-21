@@ -26,7 +26,7 @@
         {% if app.category == 'app' %}
         <li class="app-card">
           <a class="app-card-title" href="{{ url_for('app_detail', lang=lang, slug=app.slug) }}">{% if lang == 'en' %}{{ app.name_en }}{% else %}{{ app.name }}{% endif %}</a>
-          <span class="app-card-platform">{{ app.platform }}</span>
+          <span class="app-card-platform">{% if lang == 'en' %}{{ app.platform_en or app.platform }}{% else %}{{ app.platform }}{% endif %}</span>
           {% if not app.filename %}
             {% if app.github_url %}
             <span class="app-card-status source-status">{% if lang == 'en' %}Source Available{% else %}ソース公開中{% endif %}</span>
@@ -73,7 +73,7 @@
           {% else %}
             <a class="app-card-title" href="{{ url_for('app_detail', lang=lang, slug=app.slug) }}">{% if lang == 'en' %}{{ app.name_en }}{% else %}{{ app.name }}{% endif %}</a>
           {% endif %}
-          <span class="app-card-platform">{{ app.platform }}</span>
+          <span class="app-card-platform">{% if lang == 'en' %}{{ app.platform_en or app.platform }}{% else %}{{ app.platform }}{% endif %}</span>
           {% if not app.filename and not app.url %}
           <span class="app-card-status">{% if lang == 'en' %}Concept Stage{% else %}構想中{% endif %}</span>
           {% endif %}
@@ -90,7 +90,7 @@
     <div class="support-box">
       <p class="support-text">
         {% if lang == 'en' %}
-          A personal, non-commercial project &mdash; the server and domain bills come out of my own monthly allowance, and I'm not even exaggerating when I say I can barely afford a McDonald's run these days because of it. If any of this has been useful to you, even coffee money genuinely helps.
+          This is a personal, non-commercial project. Server, domain, testing hardware, and development costs all come out of my own pocket. If something here has been useful to you, a coffee helps keep the project going.
         {% else %}
           個人の非営利プロジェクトです。サーバー代とドメイン代は毎月のお小遣いから捻出してます。スタバなんてもう何年も行ってません。何か役に立ったなら、コーヒー1杯ぶんの支援でも本当に助かります。
         {% endif %}
@@ -100,7 +100,7 @@
       </a>
       <p class="support-meta">
         {% if lang == 'en' %}
-          Ko-fi account: <code>watermark_hd</code> &mdash; same person as <code>watermark-hd</code> on the GitHub links throughout this site.
+          Ko-fi: <code>watermark_hd</code> &middot; GitHub: <code>watermark-hd</code>
         {% else %}
           Ko-fi のアカウント名は <code>watermark_hd</code> です。このサイトの各所にあるGitHubリンク（<code>watermark-hd</code>）と同一人物です。
         {% endif %}

@@ -10,7 +10,7 @@
 
   <h1>Tiger QuickLook</h1>
   <div>
-    <span class="platform-badge">{{ app.platform }}</span>
+    <span class="platform-badge">{% if lang == 'en' %}{{ app.platform_en }}{% else %}{{ app.platform }}{% endif %}</span>
     <span class="app-card-status source-status">{% if lang == 'en' %}Source Available{% else %}ソース公開中{% endif %}</span>
   </div>
 

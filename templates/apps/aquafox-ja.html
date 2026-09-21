@@ -9,7 +9,7 @@
   </a>
 
   <h1>{% if lang == 'en' %}Aquafox Japanese Localization Pack{% else %}Aquafox 日本語化パック{% endif %}</h1>
-  <div><span class="platform-badge">{{ app.platform }}</span></div>
+  <div><span class="platform-badge">{% if lang == 'en' %}{{ app.platform_en }}{% else %}{{ app.platform }}{% endif %}</span></div>
 
   {% if lang == 'en' %}
     <p>
