@@ -419,8 +419,8 @@ APPS = [
     },
     {
         "slug": "advisor",
-        "name": "Advisor",
-        "name_en": "Advisor",
+        "name": "Advisor - ノート型AIエージェント",
+        "name_en": "Advisor - Notebook-style AI Agent",
         "tagline": "Claude/Geminiを切り替えて会話もできてコーディング相談もできる、Intel Mac(Mavericks〜High Sierra)向け軽量AIエージェント。既定の「ノート」モードは、1冊のノートに追記し合うような会話UI",
         "tagline_en": "A lightweight AI agent for Intel Macs (Mavericks–High Sierra) that switches between Claude and Gemini for both casual chat and coding help. Its default \"Note\" mode feels like writing back and forth in a single shared notebook.",
         "platform": "Intel Mac (Mavericks〜High Sierra) 向け",
