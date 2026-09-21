@@ -130,6 +130,21 @@ def init_db():
         )
         """
     )
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS crash_reports (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            submitted_at TEXT NOT NULL,
+            app_slug TEXT NOT NULL,
+            app_version TEXT,
+            os_version TEXT,
+            machine TEXT,
+            log_text TEXT NOT NULL,
+            ip TEXT,
+            handled INTEGER NOT NULL DEFAULT 0
+        )
+        """
+    )
     conn.commit()
     conn.close()
 
@@ -393,6 +408,99 @@ def admin_feedback():
         "FROM feedback ORDER BY id DESC LIMIT 500"
     ).fetchall()
     return render_template("admin_feedback.html", rows=rows)
+
+
+# ---------- クラッシュ報告(2026-09-22、AquaLink向けに追加) ----------
+# アプリ側(Cocoa/Tiger)から、利用者が明示的に同意した場合だけ届く。
+# 「勝手に送らない・内容を書き換えない」という本サイトの他機能と同じ方針で、
+# アプリ側は送信前に必ず全文をユーザーに見せた上での一回ごとの同意を取る
+# (詳細はAquaLink側のAppDelegate.mコメント参照)。ここではフィードバック
+# 機能と全く同じ基盤(sqlite保存 + Gmail SMTPでのベストエフォート通知)を
+# そのまま再利用しており、新しい秘密情報の追加は不要。
+
+def _send_crash_email(app_slug, app_version, os_version, machine, log_text, ip):
+    """フィードバックと同じくベストエフォート。行が先に保存されているので、
+    ここが失敗してもプッシュ通知が来ないだけで実害は無い。"""
+    addr = FEEDBACK_CFG.get("GMAIL_ADDRESS")
+    pw = FEEDBACK_CFG.get("GMAIL_APP_PASSWORD")
+    to = FEEDBACK_CFG.get("FEEDBACK_TO", addr)
+    if not (addr and pw and to):
+        return
+    msg = EmailMessage()
+    msg["Subject"] = f"[oldmac crash] {app_slug} {app_version or '?'} — {machine or '?'}"
+    msg["From"] = addr
+    msg["To"] = to
+    msg.set_content(
+        f"App:     {app_slug}\n"
+        f"Version: {app_version or '-'}\n"
+        f"OS:      {os_version or '-'}\n"
+        f"Machine: {machine or '-'}\n"
+        f"IP:      {ip or '-'}\n"
+        f"Time:    {datetime.utcnow().isoformat()}Z\n"
+        f"\n----- crash log -----\n{log_text}\n\n"
+        f"Admin: {SITE_URL}/admin/crashes?key=(your key)\n"
+    )
+    with smtplib.SMTP("smtp.gmail.com", 587, timeout=12) as server:
+        server.starttls()
+        server.login(addr, pw)
+        server.send_message(msg)
+
+
+@app.route("/crash-report/submit", methods=["POST"])
+def crash_report_submit():
+    app_slug = (request.form.get("app") or "").strip()
+    if app_slug not in APPS_BY_SLUG:
+        abort(400)
+
+    app_version = (request.form.get("app_version") or "").strip()[:50]
+    os_version = (request.form.get("os_version") or "").strip()[:100]
+    machine = (request.form.get("machine") or "").strip()[:100]
+    log_text = request.form.get("log") or ""
+
+    # クラッシュログは大きくてもだいたい100〜200KB程度(実機で確認した範囲)。
+    # 上限を大きめに300KBに設定し、それ以上/空は不正なリクエストとして拒否する。
+    if not log_text or len(log_text) > 300_000:
+        abort(400)
+
+    ip = (request.headers.get("X-Forwarded-For", request.remote_addr or "")
+          .split(",")[0].strip())
+
+    db = get_db()
+    if ip:
+        # フィードバックより緩め(1時間10件)。連続クラッシュを何度か報告する
+        # ケースは正当にあり得るため。
+        cutoff = (datetime.utcnow() - timedelta(hours=1)).isoformat()
+        recent = db.execute(
+            "SELECT COUNT(*) FROM crash_reports WHERE ip = ? AND submitted_at > ?",
+            (ip, cutoff),
+        ).fetchone()[0]
+        if recent >= 10:
+            return ("rate limited", 429)
+
+    db.execute(
+        "INSERT INTO crash_reports (submitted_at, app_slug, app_version, os_version, machine, log_text, ip) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?)",
+        (datetime.utcnow().isoformat(), app_slug, app_version, os_version, machine, log_text, ip),
+    )
+    db.commit()
+    try:
+        _send_crash_email(app_slug, app_version, os_version, machine, log_text, ip)
+    except Exception as exc:  # noqa: BLE001 - never let email break the response
+        app.logger.warning("crash report email failed: %s", exc)
+    return ("OK", 200)
+
+
+@app.route("/admin/crashes", strict_slashes=False)
+def admin_crashes():
+    key = FEEDBACK_CFG.get("ADMIN_KEY")
+    if not key or request.args.get("key") != key:
+        abort(404)
+    db = get_db()
+    rows = db.execute(
+        "SELECT id, submitted_at, app_slug, app_version, os_version, machine, log_text, ip "
+        "FROM crash_reports ORDER BY id DESC LIMIT 200"
+    ).fetchall()
+    return render_template("admin_crashes.html", rows=rows)
 
 
 @app.route("/robots.txt")
