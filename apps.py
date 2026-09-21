@@ -418,6 +418,27 @@ APPS = [
         ],
     },
     {
+        "slug": "advisor",
+        "name": "Advisor",
+        "name_en": "Advisor",
+        "tagline": "Claude/Geminiを切り替えて会話・コーディング相談ができる、Intel Mac(Mavericks〜High Sierra)向け軽量AIエージェント。ノート/コーディング/ハッカーの3テーマGUI付き",
+        "tagline_en": "A lightweight AI agent for Intel Macs (Mavericks–High Sierra) that switches between Claude and Gemini for chat and coding help — with a 3-theme GUI (Note / Coding / Hacker).",
+        "platform": "Intel Mac (Mavericks〜High Sierra) 向け",
+        "filename": "advisor.zip",
+        "version": "0.1",
+        "github_url": "https://github.com/watermark-hd/advisor",
+        "category": "app",
+        "comment": "きっかけは、ほとんど使わなくなった古いIntel Macでした。今どきのAIエージェントは動かないだろうと思い込んでいましたが、それは単純な勘違いでした。動くなら、課金を気にせず気軽に話しかけられる相棒にしたいと思って作りました。",
+        "comment_en": "Started with an old Intel Mac I'd basically stopped using. I assumed a modern AI agent just wouldn't run on it — turned out I was wrong. Once it did run, I wanted it to be something I could talk to without worrying about the bill, so that's what I built.",
+        "changelog": [
+            {
+                "date": "2026-09-21",
+                "note": "初版公開(v0.1)。Claude(Anthropic)とGemini(Google)を切り替えて会話・コーディング相談ができるターミナル+GUIエージェント。ノート/コーディング/ハッカーの3テーマGUI、会話履歴の暗号化ローカル保存、日本語/英語自動切替(GUI・ターミナル・メニューバーまで)、APIキー登録もGUI上で完結。現時点ではMavericks(10.9)〜High Sierra(10.13)に対応(Snow Leopard〜Mountain Lionは未対応、今後の予定)",
+                "note_en": "Initial release (v0.1). A terminal + GUI agent that switches between Claude (Anthropic) and Gemini (Google) for chat and coding help. Three GUI themes (Note / Coding / Hacker), encrypted local conversation history, automatic Japanese/English switching (GUI, terminal, and even the menu bar), and API key setup that happens entirely inside the GUI. Currently supports Mavericks (10.9) through High Sierra (10.13); Snow Leopard–Mountain Lion support is planned but not yet implemented.",
+            },
+        ],
+    },
+    {
         "slug": "mac-snow-leopard-linux",
         "name": "Mac OSX Snow Leopard風 Linux",
         "name_en": "Mac OS X Snow Leopard-inspired Linux",

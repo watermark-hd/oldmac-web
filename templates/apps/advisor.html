@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+
+{% block title %}{% if lang == 'en' %}Advisor{% else %}Advisor{% endif %}{% endblock %}
+
+{% block content %}
+
+  <a class="back-link" href="{{ url_for('top', lang=lang) }}">
+    &laquo; {% if lang == 'en' %}Back to Applications{% else %}アプリ一覧に戻る{% endif %}
+  </a>
+
+  <h1>Advisor</h1>
+  <div>
+    <span class="platform-badge">{{ app.platform }}</span>
+    <span class="app-card-status source-status">{% if lang == 'en' %}Source Available{% else %}ソース公開中{% endif %}</span>
+  </div>
+
+  {% if lang == 'en' %}
+  <div class="tabs">
+    <input type="radio" name="tabset" id="tab-overview" class="tab-input" checked>
+    <label for="tab-overview" class="tab-label">Overview</label>
+    <input type="radio" name="tabset" id="tab-tech" class="tab-input">
+    <label for="tab-tech" class="tab-label">Technical Info</label>
+
+    <div id="panel-overview" class="tab-panel">
+    <p>
+      A lightweight terminal + GUI agent that brings Claude and Gemini to an old Intel Mac. Where our
+      <a href="{{ url_for('app_detail', lang=lang, slug='ppc-claude-agent') }}">PPC Claude Agent</a> targets
+      PowerPC/Tiger, Advisor targets the later Intel generation &mdash; currently Mavericks (10.9) through
+      High Sierra (10.13), whose stock <code>curl</code> already speaks TLS 1.2 so it runs with no toolchain
+      rebuild at all. Command name is deliberately neutral (<code>advisor</code>, not "claude" or "gemini")
+      since you can switch providers mid-conversation.
+    </p>
+
+    <h2>Why I Made This</h2>
+    <div class="origin-story">
+    <p>
+      This started with an old MacBook I'd basically stopped using. I first assumed a modern coding agent
+      just wouldn't run on it &mdash; High Sierra tops out at VS Code 1.85 &mdash; but that turned out to be
+      a plain misunderstanding. Some things do run.
+    </p>
+    <p>
+      Even so, AI APIs aren't free, and if I was going to put an old Mac back to work, I wanted something I
+      could reach for without watching the bill. There were two goals from the start: something like a
+      casual chat partner, an exchange diary you can talk to without much ceremony; and something you could
+      also use from the Terminal for a quick coding question or file operation. Showing both faces &mdash;
+      the soft-spoken listener and the sharp, businesslike AI &mdash; in one app is where Advisor starts.
+      That's also why the GUI has three themes (Note / Coding / Hacker): they're a way to move between
+      those two faces.
+    </p>
+    </div>
+
+    <div class="download-box">
+      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">Download advisor.zip</a>
+      <div class="meta">Downloads so far: {{ download_count }}</div>
+      {% if updated_at %}<div class="meta">Last updated: {{ updated_at }}{% if app.version %} (v{{ app.version }}){% endif %}</div>{% endif %}
+      <div class="meta"><a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">Source code on GitHub</a></div>
+      <div class="meta">This is the standalone <code>Advisor.app</code> build &mdash; unzip it, drag it into Applications, and go. No Terminal required. (The GitHub Releases page also has a source zip for anyone who wants to run <code>setup.sh</code> instead.)</div>
+    </div>
+
+    {% if app.changelog %}
+    <h2>Changelog</h2>
+    <ul>
+      {% for entry in app.changelog %}
+      <li><strong>{{ entry.date }}</strong> &mdash; {{ entry.note_en }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    <h2>Main Features</h2>
+    <ul>
+      <li>Switch between Claude (Anthropic) and Gemini (Google, has a free tier) any time, mid-conversation.</li>
+      <li>GUI with three themes &mdash; Note (a ruled notebook look), Coding, and Hacker (green on black) &mdash; switchable from the header at any time.</li>
+      <li>Also usable straight from the Terminal via the <code>advisor</code> command, for anyone who'd rather skip the GUI.</li>
+      <li>Conversation history is encrypted and saved locally; nobody without the passphrase can read it, even on a Mac shared with family.</li>
+      <li>Automatic Japanese/English switching &mdash; GUI text, terminal output, and even the native macOS menu bar all follow the Mac's system language.</li>
+      <li>API key setup happens entirely inside the GUI on first launch &mdash; no Terminal needed even for that.</li>
+    </ul>
+
+    <h2>Installation</h2>
+    <ol>
+      <li>Unzip <code>advisor.zip</code> and drag <code>Advisor</code> into your Applications folder (or the Dock).</li>
+      <li><strong>First launch only:</strong> right-click (or Control-click) <code>Advisor</code> instead of double-clicking, choose "Open," then click "Open" again on the unidentified-developer warning (expected &mdash; there's no paid Apple Developer ID signature yet). Every launch after that is a normal double-click.</li>
+      <li>The first time it runs, you'll see an API key setup screen &mdash; follow the prompts. Gemini's free tier lets you start right away at no cost.</li>
+    </ol>
+    <p>
+      Prefer the Terminal? Download the source zip from the <a href="{{ app.github_url }}/releases/latest" target="_blank" rel="noopener noreferrer">Releases page</a> instead, then run <code>bash setup.sh</code> &mdash; it walks you through picking a provider, saving the key, installing the <code>advisor</code> command and bash completion, and building <code>Advisor.app</code> locally.
+    </p>
+
+    <h2>About the API Key (billing)</h2>
+    <p>
+      Advisor itself is free; talking to an AI needs your own API key for whichever provider you pick. No
+      key is embedded in the code anywhere. Gemini's key is free to create at
+      <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">aistudio.google.com</a>,
+      with a no-credit-card free tier. Anthropic's key is pay-as-you-go at
+      <a href="https://console.anthropic.com/" target="_blank" rel="noopener noreferrer">console.anthropic.com</a>
+      &mdash; a separate site and billing system from a claude.ai subscription.
+    </p>
+
+    <h2>Supported Environments</h2>
+    <table>
+      <tr><th>Environment</th><td>Intel Mac, Mac OS X 10.9 (Mavericks) through 10.13 (High Sierra)</td></tr>
+      <tr><th>Not yet supported</th><td>Snow Leopard&ndash;Mountain Lion (10.6&ndash;10.8) &mdash; planned, needs a from-source OpenSSL/curl toolchain since stock curl there doesn't reach TLS 1.0.</td></tr>
+    </table>
+
+    <p class="credit">
+      A personal hobby project provided with no warranty. MIT license &mdash; see the GitHub repository above
+      for full source and license files.
+    </p>
+    </div>
+
+    <div id="panel-tech" class="tab-panel">
+    <p>
+      The GUI (<code>advisor_gui.py</code>, plain tkinter, no external Python packages) spawns the same
+      single-file Perl agent used from the Terminal (<code>agent/claude-agent.pl --gui</code>) as a
+      subprocess and talks to it over stdin/stdout, one JSON object per line. The agent itself doesn't know
+      or care whether it's being driven by a human typing in a terminal or by the GUI on the other end of a
+      pipe &mdash; the same read_file/write_file/list_dir/run_shell tools, the same Claude&harr;Gemini
+      provider abstraction, work either way.
+    </p>
+
+    <h3>Encrypted history, without relying on anything exotic</h3>
+    <p>
+      Each conversation file is encrypted with a random master key, and that master key is itself wrapped
+      by your passphrase (and, optionally, a recovery question) into <code>key.enc</code> /
+      <code>key.recovery.enc</code> &mdash; either one can unwrap it, so a forgotten passphrase doesn't mean
+      lost history. The actual encryption shells out to <code>openssl enc -aes-256-cbc</code>, since that's
+      what High Sierra's stock LibreSSL already provides; the secret is passed to openssl only via an
+      environment variable, never through <code>ps</code> output, argv, or disk. High Sierra's LibreSSL
+      doesn't support <code>-pbkdf2</code>, so key derivation falls back to MD5-based, which is weaker than
+      ideal &mdash; but still a long way better than leaving the history in plaintext.
+    </p>
+
+    <div class="tech-note">
+      <strong>The ruled-notebook lines fought back hard enough to lose, on purpose.</strong> The "Note" theme
+      draws horizontal ruled lines behind the text, like real notebook paper. Getting that pixel-perfect in
+      tkinter turned into a long chain of fixes &mdash; measuring baselines directly instead of guessing at
+      fixed pitch, a scroll-position bug that kept quietly adding padding on every scroll, tab-switching
+      redrawing the wrong widget. After yet another real-hardware round came back with "only the first two
+      lines show up," the lines got turned off rather than asking for another round of testing on someone
+      else's time. Everything else about the Note theme (paper color, the three-ring holes, the typeface)
+      stayed as-is; the ruled lines themselves weren't abandoned, just shelved for a calmer attempt later.
+    </div>
+    <div class="tech-note">
+      <strong>The GUI can start up even if <code>setup.sh</code> was never run.</strong> Originally the GUI
+      assumed <code>~/bin/advisor</code> (the wrapper <code>setup.sh</code> generates) already existed, and
+      just errored out if it didn't. Now, if that wrapper is missing, the GUI drops the bundled
+      <code>claude-agent.pl</code>/<code>models.txt</code> into <code>~/claude-build</code> and launches the
+      Perl agent directly as a fallback &mdash; and if no API key is registered yet either, it shows an
+      onboarding screen (pick a provider, open the signup page with one click, paste the key, verify it
+      against the real API) instead of the normal chat view. Between the standalone <code>Advisor.app</code>
+      build and this fallback path, someone can go from "double-click the app" to "talking to an AI" without
+      ever opening a terminal.
+    </div>
+
+    <p class="credit">
+      Full source code is on <a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>.
+    </p>
+    </div>
+  </div>
+  {% else %}
+  <div class="tabs">
+    <input type="radio" name="tabset" id="tab-overview" class="tab-input" checked>
+    <label for="tab-overview" class="tab-label">概要</label>
+    <input type="radio" name="tabset" id="tab-tech" class="tab-input">
+    <label for="tab-tech" class="tab-label">技術情報</label>
+
+    <div id="panel-overview" class="tab-panel">
+    <p>
+      古いIntel MacにClaudeとGeminiを連れてくる、軽量なターミナル+GUIエージェントです。
+      <a href="{{ url_for('app_detail', lang=lang, slug='ppc-claude-agent') }}">PPC Claude Agent</a>がPowerPC/Tigerを
+      対象にしているのに対し、Advisorはその後のIntel世代&mdash;現時点ではMavericks(10.9)〜High Sierra(10.13)&mdash;
+      を対象にしています。標準の<code>curl</code>が既にTLS 1.2に対応しているため、ツールチェーンの再構築なしでそのまま動きます。
+      コマンド名はあえて中立な<code>advisor</code>にしていて、会話中にプロバイダをいつでも切り替えられます。
+    </p>
+
+    <h2>なぜ作ったか</h2>
+    <div class="origin-story">
+    <p>
+      きっかけは、ほとんど使わなくなった古いMacBookでした。最初は「今どきのコーディングエージェントは、古いVSCode
+      (High Sierraだと1.85までしか入りません)では動かないだろう」と思い込んでいたのですが、これは単純な勘違いでした。
+      動くものもあります。
+    </p>
+    <p>
+      ただ、仮に動いたとしても、AIのAPIは決して安くありません。せっかく古いMacを活かすなら、課金を気にせず気軽に使える
+      ものにしたいと思いました。そもそもの目的も2つありました。ひとつは、ただの雑談相手というか、交換日記のような、
+      気軽に話しかけられる存在が欲しかったこと。もうひとつは、せっかくAIを使うなら、ターミナルからサクッとコーディング
+      の相談やファイル操作もできるようにしたかったこと。「優しい相談相手」の顔と「賢く無機質なAI」の顔、その両方を
+      1つのアプリで見せたい、というのがAdvisorの出発点です。GUIに「ノート」「コーディング」「ハッカー」という3つの
+      テーマがあるのは、この2つの顔を行き来できるようにするためです。
+    </p>
+    </div>
+
+    <div class="download-box">
+      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">advisor.zip をダウンロード</a>
+      <div class="meta">これまでのダウンロード数: {{ download_count }}</div>
+      {% if updated_at %}<div class="meta">最終更新日: {{ updated_at }}{% if app.version %}（v{{ app.version }}）{% endif %}</div>{% endif %}
+      <div class="meta"><a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHubでソースコードを見る</a></div>
+      <div class="meta">これはスタンドアロン版の<code>Advisor.app</code>です。解凍してアプリケーションフォルダに入れるだけで使えます。ターミナルは不要です(GitHubのReleasesページには、<code>setup.sh</code>を実行するソース版のzipもあります)。</div>
+    </div>
+
+    {% if app.changelog %}
+    <h2>更新履歴</h2>
+    <ul>
+      {% for entry in app.changelog %}
+      <li><strong>{{ entry.date }}</strong> &mdash; {{ entry.note }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    <h2>主な機能</h2>
+    <ul>
+      <li>Claude(Anthropic)とGemini(Google、無料枠あり)を、会話の途中でもいつでも切り替え可能。</li>
+      <li>ノート(罫線入りノート風)/コーディング/ハッカー(黒地に緑文字)の3テーマGUI。ヘッダーからいつでも切り替えられます。</li>
+      <li>GUIを使わない人向けに、ターミナルから<code>advisor</code>コマンドでも直接使えます。</li>
+      <li>会話履歴は暗号化してローカルに保存。パスフレーズを知らない人には読めないので、家族と1台のMacを共有していても安心です。</li>
+      <li>日本語/英語の自動切替&mdash;GUIの文言、ターミナルの出力、OS標準のメニューバーまで、Macのシステム言語設定に自動で追従します。</li>
+      <li>APIキーの登録も初回起動時にGUI上で完結。ここでもターミナルは不要です。</li>
+    </ul>
+
+    <h2>インストール手順</h2>
+    <ol>
+      <li><code>advisor.zip</code>を解凍し、中の<code>Advisor</code>を「アプリケーション」フォルダ(またはDock)に置きます。</li>
+      <li><strong>最初の1回だけ</strong>、ダブルクリックではなく右クリック(またはcontrolキーを押しながらクリック)して「開く」を選び、「開発元が未確認のため…」という警告が出たらもう一度「開く」を押してください(有料のApple Developer ID署名をまだ行っていないための、想定内の警告です)。2回目以降は普通にダブルクリックで起動できます。</li>
+      <li>初回起動時にAPIキーの登録画面が出るので、案内に沿って進めてください。Geminiの無料枠なら今すぐ費用ゼロで始められます。</li>
+    </ol>
+    <p>
+      ターミナル派の方は、<a href="{{ app.github_url }}/releases/latest" target="_blank" rel="noopener noreferrer">Releasesページ</a>からソース版のzipをダウンロードして<code>bash setup.sh</code>を実行してください。使うプロバイダの選択、キーの案内・保存、<code>advisor</code>コマンドの設置、bash補完の設置、<code>Advisor.app</code>のローカルビルドまで自動で行います。
+    </p>
+
+    <h2>APIキーについて(課金)</h2>
+    <p>
+      Advisor本体は無料ですが、実際にAIと会話するには、選んだプロバイダのAPIキーを利用者ひとりひとりが発行する必要があります。コードにAPIキーは一切含まれていません。Geminiのキーは<a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">aistudio.google.com</a>で無料発行でき、クレジットカードの登録も不要です。Anthropicのキーは<a href="https://console.anthropic.com/" target="_blank" rel="noopener noreferrer">console.anthropic.com</a>での従量課金制で、claude.aiのサブスクリプションとは別のサイト・別の課金体系です。
+    </p>
+
+    <h2>対応環境</h2>
+    <table>
+      <tr><th>動作環境</th><td>Intel Mac、Mac OS X 10.9(Mavericks)〜10.13(High Sierra)</td></tr>
+      <tr><th>未対応</th><td>Snow Leopard〜Mountain Lion(10.6〜10.8) &mdash; 今後対応予定。標準curlがTLS 1.0にも届かないため、ソースからのOpenSSL/curlビルドが別途必要です。</td></tr>
+    </table>
+
+    <p class="credit">
+      個人の趣味プロジェクトにつき無保証です。MITライセンス。詳しいソースコードやライセンスは上記のGitHubリポジトリをご覧ください。
+    </p>
+    </div>
+
+    <div id="panel-tech" class="tab-panel">
+    <p>
+      GUI本体(<code>advisor_gui.py</code>、標準のtkinterのみで外部Pythonパッケージ不使用)は、ターミナルから使うのと
+      同じ単一ファイルのPerlエージェント(<code>agent/claude-agent.pl --gui</code>)をサブプロセスとして起動し、
+      標準入出力経由で1行1件のJSONをやり取りします。エージェント自身は、人間がターミナルで打っているのか、
+      パイプの向こう側のGUIが打っているのかを一切区別しません&mdash;read_file/write_file/list_dir/run_shellの
+      各ツールも、Claude⇔Geminiのプロバイダ変換も、どちらの経路でも同じように動きます。
+    </p>
+
+    <h3>特別な仕組みに頼らない暗号化履歴</h3>
+    <p>
+      各会話ファイルはランダムなマスター鍵で暗号化され、そのマスター鍵自体はパスフレーズ(と、任意で合言葉)で
+      包んで<code>key.enc</code> / <code>key.recovery.enc</code>に保存します。どちらか一方でマスター鍵を取り出せるので、
+      パスフレーズを忘れても履歴が失われるわけではありません。暗号化そのものは<code>openssl enc -aes-256-cbc</code>への
+      シェルアウトで行っていて、High Sierra標準のLibreSSLがそのまま使えます。秘密は環境変数経由でopensslに渡し、
+      <code>ps</code>出力やコマンドライン、ディスクには一切出しません。High SierraのLibreSSLは<code>-pbkdf2</code>に
+      対応していないため鍵導出はMD5ベースとやや弱めですが、平文でそのまま置くよりははるかに安全という位置づけです。
+    </p>
+
+    <div class="tech-note">
+      <strong>ノート風の横罫線は、頑張った末にあえて手放した。</strong>
+      「ノート」テーマは、本物のノート用紙のように文字の下に横罫線を描きます。これをtkinterでピクセル単位に
+      合わせ込む作業は長い修正の連続でした&mdash;固定ピッチで決め打ちせず隣り合う行のベースラインを実測する方式に
+      変更したり、スクロールのたびに余白が静かに積み重なっていくバグを直したり、タブ切替が別のウィジェットを
+      再描画していた不具合を直したり。それでも実機での検証で「最初の2行しか出ない」という結果が返ってきた時点で、
+      これ以上検証をお願いするのは負担が大きいと判断し、横罫線の描画自体をいったんオフにしました。用紙の色や
+      ルーズリーフの穴、書体などノートの見た目自体はそのままです。罫線を諦めたわけではなく、また落ち着いて
+      取り組むつもりで一旦棚上げにしています。
+    </div>
+    <div class="tech-note">
+      <strong><code>setup.sh</code>を一度も実行していなくてもGUIが起動できる。</strong>
+      元々GUIは、<code>setup.sh</code>が生成するラッパー<code>~/bin/advisor</code>が既に存在する前提で、
+      無ければそのままエラーになっていました。今は、そのラッパーが無ければ同梱の<code>claude-agent.pl</code>/
+      <code>models.txt</code>を<code>~/claude-build</code>に自動配置してPerlエージェントを直接起動するフォールバック
+      経路を追加し、さらにAPIキーも未登録であれば、通常のチャット画面の代わりにオンボーディング画面(プロバイダを選ぶ
+      → ボタン一つでキー取得ページを開く → 貼り付け → 実際のAPIに投げて疎通確認)を表示するようにしました。
+      スタンドアロン版の<code>Advisor.app</code>とこのフォールバック経路の組み合わせで、「アプリをダブルクリック」
+      から「AIと会話」まで、一度もターミナルを開かずに到達できます。
+    </div>
+
+    <p class="credit">
+      ソースコードは<a href="{{ app.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>にあります。
+    </p>
+    </div>
+  </div>
+  {% endif %}
+
+  {% include "partials/feedback_form.html" %}
+
+{% endblock %}

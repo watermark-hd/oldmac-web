@@ -422,6 +422,7 @@ def sitemap():
         "/ja/apps/tiger-quicklook/", "/en/apps/tiger-quicklook/",
         "/ja/apps/retrocert/", "/en/apps/retrocert/",
         "/ja/apps/ppc-trackpad-scroll/", "/en/apps/ppc-trackpad-scroll/",
+        "/ja/apps/advisor/", "/en/apps/advisor/",
         "/ja/articles/why-old-macs/", "/en/articles/why-old-macs/",
         "/ja/feedback/", "/en/feedback/",
     ]
