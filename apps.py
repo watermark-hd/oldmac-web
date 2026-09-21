@@ -66,12 +66,17 @@ APPS = [
         "platform": "PowerPC Mac (Tiger) 向け",
         "platform_en": "For PowerPC Macs (Tiger)",
         "filename": "AquaLink.zip",
-        "version": "0.5.18",
+        "version": "0.5.19",
         "github_url": "https://github.com/watermark-hd/ppc-mac-modernization/tree/main/smb3/AquaLink",
         "category": "app",
         "comment": "PowerMac G4、iBook G4、iMac G5（未検証） そんなマシンたちにまだ活躍してもらうために作りました。昔のデータが入りっぱなし、元データを作った時の環境が知りたい。そんな事情で作りました。",
         "comment_en": "Made so PowerMac G4s, iBook G4s, and (untested) iMac G5s can keep earning their keep. Old data still sitting on them, and I wanted to see it in the environment it was actually made in — that's the real reason.",
         "changelog": [
+            {
+                "date": "2026-09-21",
+                "note": "「共有名」「ユーザー名」欄にIPアドレスのような文字列が入っている(アドレス欄と入れ替わっている可能性がある)場合、内容は書き換えずに確認するようにした",
+                "note_en": "If the \"Share\" or \"Username\" field contains something that looks like an IP address (possibly swapped with the Address field), AquaLink now asks for confirmation before connecting, without rewriting what you typed.",
+            },
             {
                 "date": "2026-09-18",
                 "note": "セキュリティレビューを実施。「このMacを共有する」機能に、短時間に大量の認証失敗を繰り返す相手を自動的に一時遮断するレート制限を追加(通常利用には影響しない)。あわせて、この機能を使う場合はルーターのUPnPを無効にすることを推奨(実際に有効なままだとLAN外への露出リスクがあると確認)。パスワードをより安全な方式(Digest認証)に切り替える対応も試したが、Windows/macOS純正クライアントの両立ができず見送り",
