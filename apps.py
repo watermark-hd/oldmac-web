@@ -362,10 +362,15 @@ APPS = [
         "filename": "TigerQuickLook.dmg",
         "github_url": "https://github.com/watermark-hd/tiger-quicklook",
         "category": "app",
-        "version": "0.5",
+        "version": "0.6",
         "comment": "軽いからという理由でTigerを使い続けるためにも便利すぎるこの機能はぜひ欲しかった。パッチを当ててLeopardにしようかとも考えましたが、非力なマシンで、Tigerのまま実装したかったんです。まだまだアップデート予定ですが、ある程度のフォーマットには対応しています。",
         "comment_en": "I keep using Tiger because it's light, and I really wanted this far-too-convenient feature while I'm at it. I thought about patching my way up to Leopard, but I wanted to build it on Tiger, on the underpowered machine as it is. Plenty of updates still to come, but it already handles a decent set of formats.",
         "changelog": [
+            {
+                "date": "2026-09-22",
+                "note": "v0.6: デスクトップ上のファイルをプレビューして閉じると、Finderの新しいウィンドウ(起動ディスクのルート)が開いてしまう不具合を修正。原因はFinderにフォーカスを戻す処理が、開いているウィンドウが0枚の状態(デスクトップはウィンドウとして数えられない)だとDockアイコンを押した時と同じ挙動になり、新規ウィンドウを開いていたため。Finderの復帰方法をCarbonのSetFrontProcessに変更し、この副作用を回避",
+                "note_en": "v0.6: Fixed dismissing a preview for a file on the Desktop opening a new Finder window at the startup disk's root. The cause: the method used to hand focus back to Finder took the same path as clicking its Dock icon whenever it had zero open document windows (the Desktop doesn't count as a window), which opens a new one by default. Switched to Carbon's SetFrontProcess to bring Finder forward without that side effect.",
+            },
             {
                 "date": "2026-09-18",
                 "note": "v0.5: Finderに切り替えた直後の約0.3秒間Spaceが効かない制限を解消（MacRumorsで指摘を受け、0.3秒ごとのポーリングから、前面アプリの切り替えを即座に検知できるCarbonイベントに変更）。プレビュー中に矢印キーで移動すると、Finder側の選択（青いハイライト）も連動するように。「QL」メニューにバージョン番号を表示。あわせて、矢印キー移動の並び順を「2.jpg」が「10.jpg」より先に来るような数字認識ソートに変更（アイコン表示を独自の配置にしている場合は、この並び順と一致しないことがあります。名前順のリスト表示ならぴったり一致します）",
