@@ -66,12 +66,17 @@ APPS = [
         "platform": "PowerPC Mac (Tiger) 向け",
         "platform_en": "For PowerPC Macs (Tiger)",
         "filename": "AquaLink.zip",
-        "version": "0.5.20",
+        "version": "0.5.22",
         "github_url": "https://github.com/watermark-hd/ppc-mac-modernization/tree/main/smb3/AquaLink",
         "category": "app",
         "comment": "PowerMac G4、iBook G4、iMac G5（未検証） そんなマシンたちにまだ活躍してもらうために作りました。昔のデータが入りっぱなし、元データを作った時の環境が知りたい。そんな事情で作りました。",
         "comment_en": "Made so PowerMac G4s, iBook G4s, and (untested) iMac G5s can keep earning their keep. Old data still sitting on them, and I wanted to see it in the environment it was actually made in — that's the real reason.",
         "changelog": [
+            {
+                "date": "2026-09-22",
+                "note": "「このMacを共有する」機能にHTTPS(暗号化通信)対応を追加(共有設定の「HTTPS(暗号化・実験的)」チェックボックスで有効化、既定はオフ)。OpenSSLを実機上でビルドして組み込み、自己署名証明書を初回のみ生成して以降使い回す(Finder側の信頼設定が毎回リセットされないように)。これまで注意喚起していた「LAN内が平文」という弱点が、有効にすれば補えるようになった。Windows側の証明書信頼は今回対象外のため、Windowsからの接続は引き続き平文",
+                "note_en": "Added optional HTTPS support to the \"share this Mac\" feature (a new \"HTTPS (encrypted, experimental)\" checkbox in Share Settings, off by default). OpenSSL is built on-device and statically linked; a self-signed certificate is generated once on first use and reused after that, so Finder's trust decision doesn't reset on every launch. This addresses the previously-flagged plaintext-on-LAN limitation when turned on. Windows-side certificate trust is out of scope for now, so Windows connections stay on plain HTTP.",
+            },
             {
                 "date": "2026-09-22",
                 "note": "任意送信のクラッシュレポート機能を追加。前回起動時にクラッシュログが新しく記録されていた場合、起動時にその内容を全文表示し、本サイトへ送信するか毎回確認(同意なしに送信されることはなく、内容の書き換えも一切なし)。実装中にTiger実機だけで再現する本物の不具合を2件発見・修正(この環境に存在しない-[NSAlert setAccessoryView:]の呼び出し、確認ダイアログを閉じた直後にAppKitのドラッグ型登録処理と競合してクラッシュしていた問題)",
