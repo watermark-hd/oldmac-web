@@ -17,12 +17,17 @@
       This pack is based on Firefox 45.9.0esr's official Japanese language pack and includes roughly 80 additional
       Aquafox-specific translations.
     </p>
+    <p>
+      Don't have Aquafox itself yet? Get it from the official
+      <a href="https://blackbirdlc.github.io/aquafox/Download.html" target="_blank" rel="noopener noreferrer">Aquafox download page</a>
+      first, then come back here for the Japanese pack.
+    </p>
 
     <div class="download-box">
       <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">Download ja-aquafox.xpi</a>
       <div class="meta">Downloads so far: {{ download_count }}</div>
       {% if updated_at %}<div class="meta">Last updated: {{ updated_at }}</div>{% endif %}
-      <div class="meta">Note: Tiger's stock Safari/curl can't verify today's HTTPS certificates and may fail to download this directly &mdash; use a modern curl via Tigerbrew/MacPorts instead, or download Aquafox itself first, which handles this fine.</div>
+      <div class="meta">Note: Tiger's stock Safari/curl can't verify today's HTTPS certificates and may fail to download this directly &mdash; use a modern curl via Tigerbrew/MacPorts instead, or download <a href="https://blackbirdlc.github.io/aquafox/Download.html" target="_blank" rel="noopener noreferrer">Aquafox itself</a> first, which handles this fine.</div>
     </div>
 
     {% if app.changelog %}
@@ -68,12 +73,17 @@
       言語パックです。Firefox 45.9.0esr の公式 ja 言語パックをベースに、Aquafox 独自の追加項目
       （約80箇所）を翻訳して組み込んであります。
     </p>
+    <p>
+      Aquafox本体をまだお持ちでない方は、まず公式の
+      <a href="https://blackbirdlc.github.io/aquafox/Download.html" target="_blank" rel="noopener noreferrer">Aquafoxダウンロードページ</a>
+      から入手してから、こちらの日本語パックに戻ってきてください。
+    </p>
 
     <div class="download-box">
       <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">ja-aquafox.xpi をダウンロード</a>
       <div class="meta">これまでのダウンロード数: {{ download_count }}</div>
       {% if updated_at %}<div class="meta">最終更新日: {{ updated_at }}</div>{% endif %}
-      <div class="meta">※ Tiger標準のSafari/curlは現代のHTTPS証明書を検証できず、ここから直接ダウンロードできない場合があります。TigerbrewやMacPorts経由の新しいcurl、またはAquafox本体経由でのダウンロードをお試しください。</div>
+      <div class="meta">※ Tiger標準のSafari/curlは現代のHTTPS証明書を検証できず、ここから直接ダウンロードできない場合があります。TigerbrewやMacPorts経由の新しいcurl、または<a href="https://blackbirdlc.github.io/aquafox/Download.html" target="_blank" rel="noopener noreferrer">Aquafox本体</a>経由でのダウンロードをお試しください。</div>
     </div>
 
     {% if app.changelog %}
