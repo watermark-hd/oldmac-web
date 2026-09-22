@@ -74,6 +74,11 @@ APPS = [
         "changelog": [
             {
                 "date": "2026-09-22",
+                "note": "Windows用接続ガイド(AquaLink-windows-setup.zip)のhostsファイル更新処理を修正。サーバー名の一致判定が部分一致になっていたため、例えば「aqualink」という名前で登録しようとしても、既存の「aqualink-nas」に含まれる文字列だと誤認され、本来必要な行が追加されないまま名前解決に失敗していた。加えて、名前が一致していてもIPアドレスまでは確認していなかったため、以前の実行で登録された古いIP(Macの再起動などで変わりうる)がそのまま残ってしまうケースもあった。名前とIPの両方を正しく突き合わせてから書き換えるよう修正",
+                "note_en": "Fixed the hosts-file update step in the Windows connection guide (AquaLink-windows-setup.zip). The name check was a substring match, so registering a server named \"aqualink\" could be wrongly treated as \"already present\" just because an unrelated entry like \"aqualink-nas\" contained it as a substring — the real entry never got added and name resolution failed. It also never checked whether a matching name's IP was still correct, so a stale entry from an earlier run (the Mac's IP can change) could silently stick around. Now checks both the exact name and the current IP before rewriting.",
+            },
+            {
+                "date": "2026-09-22",
                 "note": "Windows用接続ガイド(AquaLink-windows-setup.zip)を修正。AquaLinkの既定ポート(8091)がWindows標準のWebClient設定では許可対象外で、認証情報が送られず「認証されていません」(エラー1244)とだけ表示され原因が分かりにくかった問題を修正(許可リストにこのポートを追加する設定を追加)。あわせて、この修正後に見つかったもう1件も対処: サーバー名だけを指定する通常のUNCパスはWebClient側で常にポート80とみなされるため、AquaLink既定の8091には別途「サーバー名@ポート番号」形式での指定が必要だった(「ネットワークパスが見つかりません」エラー67の原因)。実際にWindows 11実機で両方の発生を確認",
                 "note_en": "Fixed the Windows connection guide (AquaLink-windows-setup.zip). AquaLink's default port (8091) wasn't on Windows's WebClient allow-list, so credentials never got sent and Windows just showed a generic \"not authenticated\" error (code 1244) with no clue the port was the cause. Also fixed a second issue found right after that one: a plain UNC path naming just the server is always read as port 80 by WebClient, so reaching AquaLink's non-standard port 8091 needs a \"servername@port\" suffix (this was showing up as \"network path not found,\" error 67). Both confirmed on a real Windows 11 machine.",
             },
