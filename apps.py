@@ -66,12 +66,17 @@ APPS = [
         "platform": "PowerPC Mac (Tiger) 向け",
         "platform_en": "For PowerPC Macs (Tiger)",
         "filename": "AquaLink.zip",
-        "version": "0.5.19",
+        "version": "0.5.20",
         "github_url": "https://github.com/watermark-hd/ppc-mac-modernization/tree/main/smb3/AquaLink",
         "category": "app",
         "comment": "PowerMac G4、iBook G4、iMac G5（未検証） そんなマシンたちにまだ活躍してもらうために作りました。昔のデータが入りっぱなし、元データを作った時の環境が知りたい。そんな事情で作りました。",
         "comment_en": "Made so PowerMac G4s, iBook G4s, and (untested) iMac G5s can keep earning their keep. Old data still sitting on them, and I wanted to see it in the environment it was actually made in — that's the real reason.",
         "changelog": [
+            {
+                "date": "2026-09-22",
+                "note": "任意送信のクラッシュレポート機能を追加。前回起動時にクラッシュログが新しく記録されていた場合、起動時にその内容を全文表示し、本サイトへ送信するか毎回確認(同意なしに送信されることはなく、内容の書き換えも一切なし)。実装中にTiger実機だけで再現する本物の不具合を2件発見・修正(この環境に存在しない-[NSAlert setAccessoryView:]の呼び出し、確認ダイアログを閉じた直後にAppKitのドラッグ型登録処理と競合してクラッシュしていた問題)",
+                "note_en": "Added an opt-in crash report feature. If the previous session left a new crash log, it's shown in full on launch and you're asked once whether to send it to this site (never sent without consent, and never rewritten). Building it surfaced two real bugs that only showed up on actual Tiger hardware: a call to -[NSAlert setAccessoryView:], which doesn't exist on this AppKit, and a crash that raced with AppKit's drag-type registration right after the confirmation dialog closed.",
+            },
             {
                 "date": "2026-09-21",
                 "note": "「共有名」「ユーザー名」欄にIPアドレスのような文字列が入っている(アドレス欄と入れ替わっている可能性がある)場合、内容は書き換えずに確認するようにした",
