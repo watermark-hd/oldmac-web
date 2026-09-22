@@ -11,22 +11,23 @@
 
   {% if lang == 'en' %}
     <h1>Why Keep Using an Old PowerPC Mac in 2026</h1>
-    <p class="article-lede">We know how good Apple Silicon is. That's not the point here.</p>
+    <p class="article-lede">We know how good Apple Silicon is &mdash; it's what I use as my daily driver. That's not the point here.</p>
 
     <p>
       A PowerPC Mac running Tiger or Leopard is now over 20 years old &mdash; and in most cases, it still boots,
       still runs its original software, and still has a keyboard and screen that feel genuinely pleasant to use.
-      Throwing that away just because it can't browse a modern website comfortably feels like a waste. This page
-      is where we thought through what actually gets in the way on an old Mac today, and what you can still do
-      about it.
+      A PowerBook G4's keyboard is honestly still hard to beat for long stretches of writing. Throwing that away
+      just because it can't browse a modern website comfortably feels like a waste. This page is where we thought
+      through what actually gets in the way on an old Mac today, and what you can still do about it.
     </p>
 
-    <h2>What Actually Stops Working</h2>
+    <h2>What Actually Stops Working (Hint: It's the Software)</h2>
     <p>
-      It's rarely the hardware that gives up first &mdash; it's the network. Most of today's web runs on TLS
-      versions and JavaScript that Tiger/Leopard-era browsers were never built for, so plain browsing gets
-      difficult fast. File sharing is another wall: modern NAS boxes, Windows PCs, and current Macs speak SMB3,
-      which Tiger's Finder simply doesn't understand, so pulling files on or off the machine becomes its own project.
+      It's rarely the hardware that gives up first &mdash; it's usually the networking software. Most of today's
+      web runs on TLS versions and JavaScript that Tiger/Leopard-era browsers were never built for, so plain
+      browsing gets difficult fast. File sharing is another wall: modern NAS boxes, Windows PCs, and current Macs
+      speak SMB3, which Tiger's Finder simply doesn't understand, so pulling files on or off the machine becomes
+      its own project.
     </p>
 
     <h2>A Few Quirks to Expect</h2>
@@ -94,39 +95,47 @@
       </li>
     </ul>
 
+    <p>
+      Most USB drives these days default to exFAT, since it handles the big files that FAT32 chokes on &mdash;
+      and OS X Tiger can't read exFAT at all. That's exactly the gap the <strong>exFAT</strong> tool I built here
+      closes. No more fighting the "This disk is not readable by this computer... Initialize?" dialog.
+    </p>
+
     <h2>A Few Practical Tips</h2>
     <ul>
       <li><strong>Pick your browser by task.</strong> Aquafox/TenFourFox handles most sites reasonably, but for
         anything with heavy modern JavaScript, plan to use a current machine instead &mdash; fighting that battle
         on PowerPC hardware usually isn't worth it.</li>
-      <li><strong>Swap spinning disks for CF/SD-to-IDE adapters or a small SSD</strong> where the model allows it.
-        It's the single biggest speed and reliability upgrade for a machine this age.</li>
-      <li><strong>Keep a wired or known-good Wi-Fi connection.</strong> Older AirPort cards can struggle with
-        modern WPA3-only networks; a lot of headaches disappear once the network layer is solid.</li>
-      <li><strong>Use file sharing rather than optical media or USB shuffling</strong> to move files around &mdash;
-        this is exactly the gap AquaLink is meant to close.</li>
+      <li><strong>Swap spinning disks for an IDE-to-SSD adapter</strong> where the model allows it. It's the
+        single biggest speed and reliability upgrade for a machine this age &mdash; and if you've already maxed
+        out the RAM, this might actually surprise you more than that upgrade did.</li>
+      <li><strong>Keep a wired or known-good Wi-Fi connection.</strong> Older AirPort cards often don't get along
+        with newer routers; a lot of headaches disappear once the network layer is solid.</li>
+      <li><strong>Use file sharing instead of optical media or shuffling USB sticks around</strong> &mdash; save
+        yourself the hassle. This is exactly the gap AquaLink is meant to close.</li>
     </ul>
 
     <p class="article-breathe">
       None of this requires you to be a retrocomputing enthusiast. If a PowerPC Mac is sitting in a closet and
       still powers on, it's very likely still capable of being genuinely useful &mdash; it just needs a couple of
-      the right bridges to today's network. That's what this site tries to provide.
+      the right bridges to today's network and software. That's what this site is here to keep providing.
     </p>
 
   {% else %}
     <h1>なぜ今、古いPowerPC Macを使い続けるのか</h1>
-    <p class="article-lede">Apple silicon の素晴らしさは知っているけれども。</p>
+    <p class="article-lede">Apple silicon の素晴らしさは知ってます。メインで使ってます。</p>
 
     <p>
       Tiger や Leopard を積んだPowerPC Macは、もう20年選手です。それでも多くの機体は今も普通に起動し、
-      当時のソフトも動き、キーボードや画面の感触は今でも心地よいものです。「今のWebサイトが快適に見られない」
+      当時のソフトも動き、キーボードや画面の感触は今でも心地よいものです。PowerBook G4は長時間のテキスト編集に
+      これほど相性の良いキーボードは他にないでしょう。「今のWebサイトが快適に見られない」
       というだけの理由で手放してしまうのは、もったいない話です。このページでは、古いMacで実際に何が
       困りごとになるのか、そしてそれにどう対処できるのかを、いろいろ考えました。
     </p>
 
-    <h2>実際に困るのは「ハードウェア」より「ネットワーク」</h2>
+    <h2>実際に困るのは「ハードウェア」より「ネットワーク」とそれを支える「ソフトウェア」</h2>
     <p>
-      先に音を上げるのはハードウェアではなく、たいていネットワーク周りです。今のWebサイトの多くは
+      先に音を上げるのはハードウェアではなく、たいていネットワーク周りのソフトウェアです。今のWebサイトの多くは
       Tiger/Leopard時代のブラウザが想定していないTLSバージョンやJavaScriptの上に成り立っているため、
       普通に閲覧するだけでもすぐに苦労します。ファイル共有も同様の壁があります。現代のNAS・Windows PC・
       現行Macはいずれも SMB3 で話しますが、TigerのFinderはこれを理解できないため、ファイルの出し入れが
@@ -197,23 +206,30 @@
       </li>
     </ul>
 
+    <p>
+      最近のUSBメモリは、大きいファイルのやり取りが出来るexFATが主流です。それがOSX Tigerでは読めません。
+      ここで作ったのがexFATというツールです。もう「この形式は読めないまたは壊れている可能性があります。
+      フォーマットしますか」のメッセージに腹を立てることはありません。
+    </p>
+
     <h2>快適に使い続けるための工夫</h2>
     <ul>
       <li><strong>ブラウザは用途で割り切る。</strong> Aquafox/TenFourFoxはたいていのサイトを表示できますが、
         JavaScriptを多用する重いサイトは素直に現行機に任せる方が得策です。PowerPC上で無理に戦うのは
         あまり報われません。</li>
-      <li><strong>可能な機種はCF/SD-IDE変換やSSDに換装する。</strong> この世代の機体にとって、体感速度と
-        信頼性を最も改善できる一手です。</li>
-      <li><strong>有線、または相性の良いWi-Fi環境を用意する。</strong> 古いAirPortカードはWPA3専用の
-        ネットワークとは相性が悪いことがあります。ネットワーク層さえ安定すれば、悩みの多くは解消します。</li>
-      <li><strong>光学メディアやUSBメモリの受け渡しより、ファイル共有を使う。</strong> ここを埋めるために
+      <li><strong>可能な機種はIDE変換アダプタを使いSSDに換装する。</strong> この世代の機体にとって、体感速度と
+        信頼性を最も改善できる一手です。もうほとんどの人は限界までメモリを積んでると思います。そのメモリを
+        追加した時よりも感動が大きいかもしれません。</li>
+      <li><strong>有線、または相性の良いWi-Fi環境を用意する。</strong> 古いAirPortカードは最近のルーターと
+        相性が悪いことが多いです。ネットワーク層さえ安定すれば、悩みの多くは解消します。</li>
+      <li><strong>光学メディアやUSBメモリの受け渡しより、ファイル共有を使って楽をする。</strong> ここを埋めるために
         作ったのがAquaLinkです。</li>
     </ul>
 
     <p class="article-breathe">
       レトロコンピューティングに詳しい必要はありません。押し入れにPowerPC Macが眠っていて、まだ電源が
-      入るなら、それはまだ十分に「使えるMac」である可能性が高いです。あとは今のネットワークとの間に、
-      いくつかの橋を架けるだけ。このサイトはその橋を提供しています。
+      入るなら、それはまだ十分に「使えるMac」である可能性が高いです。あとは今のネットワークやソフトウェアとの間に、
+      いくつかの橋を架けるだけ。このサイトはその橋を提供していきます。
     </p>
 
   {% endif %}
