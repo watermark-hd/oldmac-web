@@ -66,12 +66,17 @@ APPS = [
         "platform": "PowerPC Mac (Tiger) 向け",
         "platform_en": "For PowerPC Macs (Tiger)",
         "filename": "AquaLink.zip",
-        "version": "0.5.22",
+        "version": "0.5.23",
         "github_url": "https://github.com/watermark-hd/ppc-mac-modernization/tree/main/smb3/AquaLink",
         "category": "app",
         "comment": "PowerMac G4、iBook G4、iMac G5（未検証） そんなマシンたちにまだ活躍してもらうために作りました。昔のデータが入りっぱなし、元データを作った時の環境が知りたい。そんな事情で作りました。",
         "comment_en": "Made so PowerMac G4s, iBook G4s, and (untested) iMac G5s can keep earning their keep. Old data still sitting on them, and I wanted to see it in the environment it was actually made in — that's the real reason.",
         "changelog": [
+            {
+                "date": "2026-09-23",
+                "note": "AquaLinkの「このMacを共有する」機能のHTTPS対応を、Windows側でも使えるように拡張(それまではMac/Finderのみ対応)。Windows用接続ガイドが自己署名証明書を自動取得・信頼登録し、「@SSL@ポート番号」形式のパスで接続。実装の過程で証明書自体の本物の不具合を2件発見・修正: ホスト名検証用のSAN(Subject Alternative Name)が入っておらず、Windowsが証明書を拒否していた問題(サーバーのLAN内IPをSANとして追加して解決)。SAN追加時にX.509のバージョンをv3に上げていなかったため、.NET側の厳格な証明書パーサーに「破損した証明書」として拒否されていた問題。あわせて、接続スクリプトを管理者権限で実行すると、マウントしたドライブが通常のデスクトップのエクスプローラーから見えなくなり「成功しているのに繋がらない」という分かりにくい失敗の原因になっていたため、管理者権限での実行を検知して警告するように変更。Windows 11・Ventura・High Sierra・M2 MacBook Air(Tahoe)で実機確認",
+                "note_en": "Extended the HTTPS support in \"share this Mac\" to work from Windows too (previously Mac/Finder only). The Windows connection guide now fetches and trusts AquaLink's self-signed certificate automatically, and connects using an \"@SSL@port\" path. Building this surfaced two real certificate bugs: the certificate had no SAN (Subject Alternative Name) for hostname matching, so Windows rejected it outright (fixed by adding the server's LAN IP as a SAN); and adding that SAN without also bumping the certificate to X.509v3 left it in a state .NET's stricter certificate parser rejected as \"corrupted\" (fixed by explicitly setting the version). Also fixed a separate, very confusing failure: running the connection script as administrator hid the mounted drive from the normal desktop's File Explorer even though it reported success, so the script now detects and refuses to run elevated. Tested on real hardware: Windows 11, Ventura, High Sierra, and an M2 MacBook Air on Tahoe.",
+            },
             {
                 "date": "2026-09-22",
                 "note": "Windows用接続ガイド(AquaLink-windows-setup.zip)のhostsファイル更新処理を修正。サーバー名の一致判定が部分一致になっていたため、例えば「aqualink」という名前で登録しようとしても、既存の「aqualink-nas」に含まれる文字列だと誤認され、本来必要な行が追加されないまま名前解決に失敗していた。加えて、名前が一致していてもIPアドレスまでは確認していなかったため、以前の実行で登録された古いIP(Macの再起動などで変わりうる)がそのまま残ってしまうケースもあった。名前とIPの両方を正しく突き合わせてから書き換えるよう修正",
