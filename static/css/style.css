@@ -714,3 +714,31 @@ footer {
     min-width: 0;
   }
 }
+
+.screenshot-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.screenshot-item {
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.screenshot-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-bottom: 1px solid var(--line);
+}
+
+.screenshot-caption {
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  text-align: center;
+}

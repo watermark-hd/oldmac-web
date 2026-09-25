@@ -31,6 +31,21 @@
       since you can switch providers mid-conversation.
     </p>
 
+    <div class="screenshot-gallery">
+      <div class="screenshot-item">
+        <img src="{{ url_for('static', filename='img/advisor/hacker-mode.png') }}" alt="Advisor's Hacker theme running a real Terminal command (system_profiler) and reading back the actual hardware info">
+        <p class="screenshot-caption">Hacker mode &mdash; a real terminal underneath, not a browser tab. It just ran <code>system_profiler</code> and read the actual result.</p>
+      </div>
+      <div class="screenshot-item">
+        <img src="{{ url_for('static', filename='img/advisor/coding-mode.png') }}" alt="Advisor's Coding theme generating real HTML/CSS code for a webpage">
+        <p class="screenshot-caption">Coding mode &mdash; writing real HTML/CSS, not just describing it.</p>
+      </div>
+      <div class="screenshot-item">
+        <img src="{{ url_for('static', filename='img/advisor/note-mode.png') }}" alt="Advisor's Note theme showing a casual back-and-forth about a recipe, written into a shared notebook page">
+        <p class="screenshot-caption">Note mode &mdash; the default, for when you just want to talk.</p>
+      </div>
+    </div>
+
     <h2>Why I Made This</h2>
     <div class="origin-story">
     <p>
@@ -183,6 +198,21 @@
       を対象にしています。標準の<code>curl</code>が既にTLS 1.2に対応しているため、ツールチェーンの再構築なしでそのまま動きます。
       コマンド名はあえて中立な<code>advisor</code>にしていて、会話中にプロバイダをいつでも切り替えられます。
     </p>
+
+    <div class="screenshot-gallery">
+      <div class="screenshot-item">
+        <img src="{{ url_for('static', filename='img/advisor/hacker-mode.png') }}" alt="Advisorのハッカーテーマで実際のターミナルコマンド(system_profiler)を実行し、本当のハードウェア情報を取得している画面">
+        <p class="screenshot-caption">ハッカーモード &mdash; ブラウザの向こうじゃなく、本物のターミナルが動いています。ここでは実際に<code>system_profiler</code>を実行して、本当のハードウェア情報を読み取っています。</p>
+      </div>
+      <div class="screenshot-item">
+        <img src="{{ url_for('static', filename='img/advisor/coding-mode.png') }}" alt="Advisorのコーディングテーマで実際にHTML/CSSのコードを生成している画面">
+        <p class="screenshot-caption">コーディングモード &mdash; HTML/CSSを実際に書いています。説明するだけではありません。</p>
+      </div>
+      <div class="screenshot-item">
+        <img src="{{ url_for('static', filename='img/advisor/note-mode.png') }}" alt="Advisorのノートテーマで、料理レシピについての雑談が1冊のノートに書き足されていく画面">
+        <p class="screenshot-caption">ノートモード &mdash; 既定の見た目。ただ話したいだけの時に。</p>
+      </div>
+    </div>
 
     <h2>なぜ作ったか</h2>
     <div class="origin-story">
