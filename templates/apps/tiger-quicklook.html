@@ -28,8 +28,15 @@
       select a file in the Finder, press <strong>Space</strong>, and a preview window appears &mdash; on a real
       Tiger machine. The aim is to see what a file <em>is</em> when the name doesn't tell you: it covers
       images, PDF, plain text, and even Office documents (see the table below), using nothing but tools Tiger
-      already ships. Still an early release (<strong>v0.4</strong>), with more being added.
+      already ships. Still an early release (<strong>v{{ app.version }}</strong>), with more being added.
     </p>
+
+    <div class="screenshot-gallery screenshot-gallery--narrow">
+      <div class="screenshot-item">
+        <img src="{{ url_for('static', filename='img/tiger-quicklook/preview-demo.webp') }}" alt="Tiger QuickLook previewing a photo, selected in the Finder, after pressing Space">
+        <p class="screenshot-caption">Press Space on a file in the Finder, and this shows up &mdash; on real Tiger hardware.</p>
+      </div>
+    </div>
 
     <div class="download-box">
       <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">Download TigerQuickLook.dmg</a>
@@ -181,8 +188,15 @@
 
     <div id="panel-overview" class="tab-panel">
     <p>
-      Mac OS X 10.4 Tiger 実機の上でネイティブに動く、軽量な Quick Look 代替アプリです。Quick Look 自体は Leopard (10.5) からの機能なので、Tiger には存在しません。「Finder でファイルを選んで <strong>Space</strong> キーを押すとプレビューが出る」という Leopard 以降の操作感を、Tiger 機で再現します。目的は「タイトルだけでは思い出せないファイルの中身確認」で、画像・PDF・テキスト・Office 文書（下の表を参照）まで、Tiger に最初から入っているものだけで対応しています。現在は <strong>v0.4</strong>、まだ機能を追加中です。
+      Mac OS X 10.4 Tiger 実機の上でネイティブに動く、軽量な Quick Look 代替アプリです。Quick Look 自体は Leopard (10.5) からの機能なので、Tiger には存在しません。「Finder でファイルを選んで <strong>Space</strong> キーを押すとプレビューが出る」という Leopard 以降の操作感を、Tiger 機で再現します。目的は「タイトルだけでは思い出せないファイルの中身確認」で、画像・PDF・テキスト・Office 文書（下の表を参照）まで、Tiger に最初から入っているものだけで対応しています。現在は <strong>v{{ app.version }}</strong>、まだ機能を追加中です。
     </p>
+
+    <div class="screenshot-gallery screenshot-gallery--narrow">
+      <div class="screenshot-item">
+        <img src="{{ url_for('static', filename='img/tiger-quicklook/preview-demo.webp') }}" alt="Finderで選んだ写真ファイルをSpaceキーでプレビューしているTiger QuickLookの画面">
+        <p class="screenshot-caption">Finderでファイルを選んでSpaceキーを押すと、これが出ます &mdash; 実機のTigerで動いています。</p>
+      </div>
+    </div>
 
     <div class="download-box">
       <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">TigerQuickLook.dmg をダウンロード</a>

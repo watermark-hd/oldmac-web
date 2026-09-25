@@ -742,3 +742,9 @@ footer {
   color: var(--ink-soft);
   text-align: center;
 }
+
+.screenshot-gallery--narrow {
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+}
