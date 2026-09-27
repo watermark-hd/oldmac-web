@@ -29,12 +29,17 @@ APPS = [
         "platform": "現行macOS (Catalina以降 / Intel・Apple Silicon) 向け",
         "platform_en": "For modern macOS (Catalina or later / Intel & Apple Silicon)",
         "filename": "AquaFinder.dmg",
-        "version": "0.2.7",
+        "version": "0.2.8",
         "github_url": "https://github.com/watermark-hd/AquaFinder",
         "category": "app",
         "comment": "現場を退いたおじさんが今のM2 Macを使って物足りなさの原因を探ってたどり着いた成果物。",
         "comment_en": "What an old-timer who left the field for good ended up building, after digging into why a brand-new M2 Mac still felt like something was missing.",
         "changelog": [
+            {
+                "date": "2026-09-28",
+                "note": "リスト表示でフォルダをダブルクリックして開く際に、稀に落ちることがあった不具合について、内部のフォルダ内容キャッシュを排他制御するよう修正し安定性を向上",
+                "note_en": "Improved stability around double-clicking to open a folder in List view, which could rarely crash — the internal folder-listing cache is now properly synchronized against concurrent access",
+            },
             {
                 "date": "2026-09-27",
                 "note": "リスト表示・カラム表示で、画像ファイルのアイコンが圧縮画像でなく白紙のアイコンになる不具合を修正（実際の内容を表示するサムネイルはこれまでアイコン表示でしか使われていませんでした）。右クリックメニューに「上の階層に移動」を追加（これまではFileメニュー／⌘Uのみ）",
