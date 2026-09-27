@@ -29,12 +29,17 @@ APPS = [
         "platform": "現行macOS (Catalina以降 / Intel・Apple Silicon) 向け",
         "platform_en": "For modern macOS (Catalina or later / Intel & Apple Silicon)",
         "filename": "AquaFinder.dmg",
-        "version": "0.2.6",
+        "version": "0.2.7",
         "github_url": "https://github.com/watermark-hd/AquaFinder",
         "category": "app",
         "comment": "現場を退いたおじさんが今のM2 Macを使って物足りなさの原因を探ってたどり着いた成果物。",
         "comment_en": "What an old-timer who left the field for good ended up building, after digging into why a brand-new M2 Mac still felt like something was missing.",
         "changelog": [
+            {
+                "date": "2026-09-27",
+                "note": "リスト表示・カラム表示で、画像ファイルのアイコンが圧縮画像でなく白紙のアイコンになる不具合を修正（実際の内容を表示するサムネイルはこれまでアイコン表示でしか使われていませんでした）。右クリックメニューに「上の階層に移動」を追加（これまではFileメニュー／⌘Uのみ）",
+                "note_en": "Fixed image files showing a blank generic icon instead of a real content thumbnail in List and Column view (real thumbnails were previously only used in Icon view). Added \"Move to Enclosing Folder\" to the right-click menu (previously only reachable via the File menu / ⌘U)",
+            },
             {
                 "date": "2026-09-13",
                 "note": "「ファイル」メニューに「上の階層に移動」(⌘U)を追加。選択中のファイル・フォルダを、今いる場所の親フォルダへ直接移動できます（カラム表示で数階層深いところを選んでいても正しくその親へ）。今までは移動先のフォルダまで自分で辿ってウィンドウを2枚並べてドラッグするしかありませんでした。取り消し(⌘Z)にも対応",
