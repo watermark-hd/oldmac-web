@@ -124,7 +124,13 @@ def init_db():
         ("is_bot", "INTEGER NOT NULL DEFAULT 0"),
     ):
         if col not in existing_cols:
-            conn.execute(f"ALTER TABLE downloads ADD COLUMN {col} {ddl}")
+            try:
+                conn.execute(f"ALTER TABLE downloads ADD COLUMN {col} {ddl}")
+            except sqlite3.OperationalError as exc:
+                # gunicornのワーカーが同時に起動すると、先に片方が追加済みで
+                # ここに来ることがある(2026-09-28に本番で実際に起きた)。
+                if "duplicate column name" not in str(exc):
+                    raise
     conn.execute(
         """
         CREATE TABLE IF NOT EXISTS feedback (
