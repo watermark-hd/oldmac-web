@@ -1,3 +1,4 @@
+import hashlib
 import re
 import smtplib
 import sqlite3
@@ -114,6 +115,16 @@ def init_db():
         )
         """
     )
+    # 2026-09-28: ボット除外・同一IP重複排除のために列を追加。既存DBにも
+    # 安全に足せるよう、無い列だけALTERする(過去の行は3列ともNULL/0のまま)。
+    existing_cols = {row[1] for row in conn.execute("PRAGMA table_info(downloads)")}
+    for col, ddl in (
+        ("user_agent", "TEXT"),
+        ("ip_hash", "TEXT"),
+        ("is_bot", "INTEGER NOT NULL DEFAULT 0"),
+    ):
+        if col not in existing_cols:
+            conn.execute(f"ALTER TABLE downloads ADD COLUMN {col} {ddl}")
     conn.execute(
         """
         CREATE TABLE IF NOT EXISTS feedback (
@@ -153,9 +164,21 @@ init_db()
 
 
 def get_download_counts():
+    """Human-ish download counts. Rows logged before 2026-09-28 have no IP hash,
+    so they're counted one-for-one as they always were (no way to reclassify
+    them). Newer rows skip bots and count once per (app, visitor, UTC day)."""
     db = get_db()
     rows = db.execute(
-        "SELECT app_slug, COUNT(*) FROM downloads GROUP BY app_slug"
+        """
+        SELECT app_slug, COUNT(*) FROM (
+            SELECT app_slug FROM downloads
+             WHERE ip_hash IS NULL AND is_bot = 0
+            UNION ALL
+            SELECT app_slug FROM downloads
+             WHERE ip_hash IS NOT NULL AND is_bot = 0
+             GROUP BY app_slug, ip_hash, substr(downloaded_at, 1, 10)
+        ) GROUP BY app_slug
+        """
     ).fetchall()
     counts = {app["slug"]: 0 for app in APPS}
     counts.update(dict(rows))
@@ -239,6 +262,25 @@ def app_detail(lang, slug):
     )
 
 
+# curl/wget は意図的に含めない: Tiger機の利用者は新しいcurlで取得するよう
+# 案内しているので、それは本物のダウンロードとして数える。
+_BOT_UA_MARKERS = (
+    "bot", "spider", "crawl", "slurp", "externalagent", "facebookexternalhit",
+    "python-requests", "go-http-client", "scrapy", "headlesschrome", "pdfmin",
+)
+
+
+def _is_bot_user_agent(ua):
+    ua = (ua or "").strip().lower()
+    return not ua or any(marker in ua for marker in _BOT_UA_MARKERS)
+
+
+def _hash_ip(ip):
+    # 重複排除にしか使わないので、生のIPはDBに残さない。
+    salt = FEEDBACK_CFG.get("ADMIN_KEY", "") + "|downloads"
+    return hashlib.sha256(f"{salt}|{ip}".encode()).hexdigest()[:16]
+
+
 @app.route("/download/<slug>", defaults={"lang": "ja"}, strict_slashes=False)
 @app.route("/<lang>/download/<slug>", strict_slashes=False)
 def download(lang, slug):
@@ -246,12 +288,23 @@ def download(lang, slug):
         abort(404)
     if slug not in APPS_BY_SLUG or not APPS_BY_SLUG[slug]["filename"]:
         abort(404)
-    db = get_db()
-    db.execute(
-        "INSERT INTO downloads (app_slug, downloaded_at) VALUES (?, ?)",
-        (slug, datetime.utcnow().isoformat()),
-    )
-    db.commit()
+    # HEADはリンク確認ツールが送るもので、ダウンロードではないので記録しない。
+    if request.method == "GET":
+        ua = request.headers.get("User-Agent", "")
+        ip = request.headers.get("X-Forwarded-For", request.remote_addr or "").split(",")[0].strip()
+        db = get_db()
+        db.execute(
+            "INSERT INTO downloads (app_slug, downloaded_at, user_agent, ip_hash, is_bot) "
+            "VALUES (?, ?, ?, ?, ?)",
+            (
+                slug,
+                datetime.utcnow().isoformat(),
+                ua[:300],
+                _hash_ip(ip) if ip else None,
+                1 if _is_bot_user_agent(ua) else 0,
+            ),
+        )
+        db.commit()
     return send_from_directory(XPI_DIR, APPS_BY_SLUG[slug]["filename"], as_attachment=True)
 
 
