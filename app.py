@@ -224,6 +224,7 @@ def get_recent_updates(min_shown=3, within_days=90):
             "app_slug": a["slug"],
             "app_name": a["name"],
             "app_name_en": a["name_en"],
+            "version": a.get("version"),
             "date": newest["date"],
             "note": newest["note"],
             "note_en": newest["note_en"],
