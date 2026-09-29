@@ -82,6 +82,16 @@
       uglier bugs along the way.
     </p>
 
+    <div class="origin-story">
+    <p>
+      People assume AI makes this easy. It does make some things easier &mdash; typos and indentation
+      mistakes basically don't happen anymore. But what actually happens is lining up at least 3, sometimes
+      4, of Windows, a PowerMac G4, an iBook G4, an M2 MacBook Air, and a 2010 MacBook &mdash; all real
+      hardware &mdash; taking logs off each one by hand, and squashing bugs one at a time in VS Code on the
+      M2 MacBook Air. AquaLink especially went through this.
+    </p>
+    </div>
+
     <h3>Why libsmb2</h3>
     <p>
       There was just no way for a PPC Mac to talk to a modern SMB3 NAS &mdash; the built-in SMB stack
@@ -245,6 +255,12 @@
     <p>
       AquaLinkの中身は、SMB2/3をしゃべるCライブラリ <a href="https://github.com/sahlberg/libsmb2" target="_blank" rel="noopener noreferrer">libsmb2</a> です。私が調べた限りだと、PowerPC Mac OS Xで実際に動くSMB2/3クライアントはこれが世界初じゃないかと思います(Appleの純正 smbfs.kext はSMB1止まりで、そもそもPPC Macから今どきのSMB3 NASに繋ぐ手段自体がありませんでした)。ここでは実装のポイントと、ハマったところを紹介します。
     </p>
+
+    <div class="origin-story">
+    <p>
+      「AIって楽だと思うでしょう？」とよく言われます。たしかに楽になった部分はあります。コードのスペルミスやインデントのミスは、もうほとんど起きません。でも実際にやってることは、Windows・PowerMac G4・iBook G4・M2 MacBook Air・MacBook 2010(いずれも実機)を、最低3台、多い時は4台並べて、手作業でログを取って、M2 MacBook AirのVSCode上でバグを1個ずつ潰していく作業です。AquaLinkは特にこれをやりました。
+    </p>
+    </div>
 
     <h3>なぜlibsmb2にしたか</h3>
     <p>
