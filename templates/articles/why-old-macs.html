@@ -121,6 +121,27 @@
       the right bridges to today's network and software. That's what this site is here to keep providing.
     </p>
 
+    <div class="origin-story">
+    <p>
+      People assume AI makes this easy. It really did get easier &mdash; while I'm writing 300 lines of Python
+      by hand, fixing my own typos as I go, AI writes 3,000 lines wiring Python to SQLite in about 3 minutes,
+      with no typos or indentation mistakes. But what that actually looks like day to day is lining up at
+      least 3, sometimes 4, of Windows, a PowerMac G4, an iBook G4, an M2 MacBook Air, and a 2010 MacBook,
+      taking logs and checking behavior on each one by hand, then feeding facts and direction into VS Code on
+      the M2 MacBook Air to squash bugs one at a time. I did that loop something like 100 times. Writing code
+      got dozens of times faster, but whenever the AI gets stuck, the checking, testing, and log-gathering is
+      still a full day of manual work. Something like 80% of it got faster; the other 20% got harder.
+    </p>
+    <p>
+      A couple of the apps on this site were built specifically to bring that same AI coding to PowerPC and
+      Intel Macs themselves &mdash;
+      <a href="{{ url_for('app_detail', lang=lang, slug='ppc-claude-agent') }}">PPC Claude Agent</a> and
+      <a href="{{ url_for('app_detail', lang=lang, slug='advisor') }}">Advisor</a>. I actually use one of them
+      to tweak Firefox's tab bar and bookmark bar height &mdash; even a fiddly request like that comes back as
+      real, working CSS.
+    </p>
+    </div>
+
   {% else %}
     <h1>なぜ今、古いPowerPC Macを使い続けるのか</h1>
     <p class="article-lede">Apple silicon の素晴らしさは知ってます。メインで使ってます。</p>
@@ -231,6 +252,25 @@
       入るなら、それはまだ十分に「使えるMac」である可能性が高いです。あとは今のネットワークやソフトウェアとの間に、
       いくつかの橋を架けるだけ。このサイトはその橋を提供していきます。
     </p>
+
+    <div class="origin-story">
+    <p>
+      「AIって楽だと思うでしょう？」とよく言われます。そりゃ楽にはなりましたよ。私がPythonのコードをミスを
+      直しながら300行書いている間に、AIはPythonとSQLiteを繋ぐコード3000行を、スペルもインデントミスもなく
+      3分くらいで書き上げます。でも実際は、Windows・PowerMac G4・iBook G4・M2 MacBook Air・MacBook 2010の
+      中から最低3台、多い時は4台を並べて、手作業で動作確認とエラーログ取りをして、M2 MacBook AirのVSCodeに
+      事実と方針を伝えながら、バグを1個ずつ潰していく作業です。これを100回くらい繰り返しました。書く速さは
+      何十倍にもなりましたが、AIが行き詰まった時の確認・テスト・ログ取りは、結局1日がかりの手作業です。
+      速くなった部分が8割、逆に難しくなった部分が2割、という感覚です。
+    </p>
+    <p>
+      そして今公開しているアプリの中には、PowerPCやIntel MacでもAIコーディングができるようにリリースした
+      ものもあります(<a href="{{ url_for('app_detail', lang=lang, slug='ppc-claude-agent') }}">PPC Claude Agent</a>や
+      <a href="{{ url_for('app_detail', lang=lang, slug='advisor') }}">Advisor</a>)。実際、私はこれを使って
+      Firefoxのタブバーやブックマークバーの高さを調整したりしています。面倒な指示を出しても、中のCSSコードを
+      きちんと出してくれます。
+    </p>
+    </div>
 
   {% endif %}
 
