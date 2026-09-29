@@ -16,8 +16,8 @@
 <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16.png') }}">
 <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
 <link rel="apple-touch-icon" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
-<title>{% block title %}{% if lang == 'en' %}Old Macs, Still Doing Real Work{% else %}枯れた技術で生きていく{% endif %}{% endblock %}</title>
-<meta name="description" content="{% block meta_description %}{% if app is defined %}{% if lang == 'en' %}{{ app.tagline_en }}{% else %}{{ app.tagline }}{% endif %}{% elif lang == 'en' %}Classic Mac applications and tools for PowerPC Macs through Apple Silicon.{% else %}PowerPC MacからApple Siliconまで、クラシックなMac体験を届けるアプリとツールを配布しています。{% endif %}{% endblock %}">
+<title>{% block title %}{% if lang == 'en' %}Apps for PowerMac, PowerBook &amp; iBook | Old Macs, Still Doing Real Work{% else %}PowerMac・PowerBook・iBookのためのアプリ配布 | 枯れた技術で生きていく{% endif %}{% endblock %}</title>
+<meta name="description" content="{% block meta_description %}{% if app is defined %}{% if lang == 'en' %}{{ app.tagline_en }}{% else %}{{ app.tagline }}{% endif %}{% elif lang == 'en' %}Free apps for PowerMac G4, PowerBook G4, and iBook G4 on Tiger/Leopard: SMB3 NAS access, exFAT, a Quick Look replacement, and an AI agent — all verified on real hardware, plus tools for the Intel-Mac generation.{% else %}Tiger/LeopardのPowerMac G4・PowerBook G4・iBook G4向けに、SMB3のNAS接続・exFAT対応・Quick Look代替・AIエージェントなどを配布。実機で検証済みの無料アプリです。Intel世代・現行macOS向けツールもあります。{% endif %}{% endblock %}">
 <link rel="canonical" href="{{ canonical_url }}">
 <link rel="alternate" hreflang="ja" href="{{ alternate_ja_url }}">
 <link rel="alternate" hreflang="en" href="{{ alternate_en_url }}">

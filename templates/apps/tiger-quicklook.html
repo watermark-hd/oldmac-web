@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Tiger QuickLook{% endblock %}
+{% block title %}{% if lang == 'en' %}{{ app.name_en }} – {{ app.platform_en }}{% else %}{{ app.name }} – {{ app.platform }}{% endif %}{% endblock %}
 
 {% block content %}
 

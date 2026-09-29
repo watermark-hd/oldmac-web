@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{% if lang == 'en' %}Aquafox Japanese Localization Pack{% else %}Aquafox 日本語化パック{% endif %}{% endblock %}
+{% block title %}{% if lang == 'en' %}{{ app.name_en }} – {{ app.platform_en }}{% else %}{{ app.name }} – {{ app.platform }}{% endif %}{% endblock %}
 
 {% block content %}
 
