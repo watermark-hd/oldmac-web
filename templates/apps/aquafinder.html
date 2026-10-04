@@ -43,6 +43,10 @@
           in the dialog that appears (this option doesn't show up on every macOS version — if it's missing, use method 1 instead)</li>
         <li>If neither works, run this in Terminal, then launch it normally:
           <br><code>xattr -cr /Applications/AquaFinder.app</code></li>
+        <li>If that still doesn't clear it (reported to happen on some newer macOS versions), remove the
+          quarantine flag and re-sign it with an ad-hoc signature instead:
+          <br><code>xattr -rd com.apple.quarantine /Applications/AquaFinder.app</code>
+          <br><code>codesign --force --sign - /Applications/AquaFinder.app</code></li>
       </ol>
       Once approved, it opens normally with a regular double-click from then on.
       Note: the "Full Disk Access" setting is unrelated to this issue.
@@ -199,6 +203,10 @@
           （macOSのバージョンによってはこの方法が出てこないことがあります。その場合は方法1へ）</li>
         <li>それでも解決しない場合は、ターミナルで次のコマンドを実行してから起動する:
           <br><code>xattr -cr /Applications/AquaFinder.app</code></li>
+        <li>それでも直らない場合（新しいmacOSの一部バージョンで報告あり）は、検疫属性を削除してから
+          アドホック署名をやり直す方法を試してください:
+          <br><code>xattr -rd com.apple.quarantine /Applications/AquaFinder.app</code>
+          <br><code>codesign --force --sign - /Applications/AquaFinder.app</code></li>
       </ol>
       一度許可すれば、以降は通常どおりダブルクリックで起動できます。
       ※「フルディスクアクセス」の設定は、この問題とは無関係です。
