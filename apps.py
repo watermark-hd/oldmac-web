@@ -29,12 +29,17 @@ APPS = [
         "platform": "現行macOS (Catalina以降 / Intel・Apple Silicon) 向け",
         "platform_en": "For modern macOS (Catalina or later / Intel & Apple Silicon)",
         "filename": "AquaFinder.dmg",
-        "version": "0.2.8",
+        "version": "0.2.9",
         "github_url": "https://github.com/watermark-hd/AquaFinder",
         "category": "app",
         "comment": "現場を退いたおじさんが今のM2 Macを使って物足りなさの原因を探ってたどり着いた成果物。",
         "comment_en": "What an old-timer who left the field for good ended up building, after digging into why a brand-new M2 Mac still felt like something was missing.",
         "changelog": [
+            {
+                "date": "2026-10-04",
+                "note": "「サーバへ接続」でSMB以外（AFP、NFS、WebDAVなど）のアドレスも入力できることを明記（接続機能自体は以前から対応していましたが、入力欄の表示がSMB専用に見えていました）",
+                "note_en": "\"Connect to Server\" now makes clear it accepts AFP/NFS/WebDAV addresses too, not just SMB (the underlying connection already supported them — only the dialog's placeholder text made it look SMB-only)",
+            },
             {
                 "date": "2026-09-28",
                 "note": "リスト表示でフォルダをダブルクリックして開く際に、稀に落ちることがあった不具合について、内部のフォルダ内容キャッシュを排他制御するよう修正し安定性を向上",
