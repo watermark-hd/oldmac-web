@@ -81,12 +81,17 @@ APPS = [
         "platform": "PowerPC Mac (Tiger) 向け",
         "platform_en": "For PowerPC Macs (Tiger)",
         "filename": "AquaLink.zip",
-        "version": "0.5.23",
+        "version": "0.5.24",
         "github_url": "https://github.com/watermark-hd/ppc-mac-modernization/tree/main/smb3/AquaLink",
         "category": "app",
         "comment": "PowerMac G4、iBook G4、iMac G5（未検証） そんなマシンたちにまだ活躍してもらうために作りました。昔のデータが入りっぱなし、元データを作った時の環境が知りたい。そんな事情で作りました。",
         "comment_en": "Made so PowerMac G4s, iBook G4s, and (untested) iMac G5s can keep earning their keep. Old data still sitting on them, and I wanted to see it in the environment it was actually made in — that's the real reason.",
         "changelog": [
+            {
+                "date": "2026-10-13",
+                "note": "HTTPS接続用の証明書が、Macの現在のLAN内IPアドレスを元に作られていたため、ルーター再起動やWi-Fi/有線の切替でIPが変わると証明書が無効になり、Windows側で「認証されていません」(エラー1244)が再発する不具合を修正。IPの代わりに、ネットワーク構成が変わっても一定であるBonjourのローカルホスト名を使うように変更(Windows用接続ガイド・アプリ内の接続案内もあわせて更新)",
+                "note_en": "Fixed the HTTPS certificate being tied to the Mac's current LAN IP address, which meant a router reboot or switching between Wi-Fi/Ethernet could change the IP and invalidate the certificate, bringing back the Windows \"not authenticated\" error (code 1244). The certificate now uses the Mac's Bonjour local hostname instead, which stays the same across network changes (the Windows setup script and in-app connection guide were updated to match).",
+            },
             {
                 "date": "2026-09-23",
                 "note": "AquaLinkの「このMacを共有する」機能のHTTPS対応を、Windows側でも使えるように拡張(それまではMac/Finderのみ対応)。Windows用接続ガイドが自己署名証明書を自動取得・信頼登録し、「@SSL@ポート番号」形式のパスで接続。実装の過程で証明書自体の本物の不具合を2件発見・修正: ホスト名検証用のSAN(Subject Alternative Name)が入っておらず、Windowsが証明書を拒否していた問題(サーバーのLAN内IPをSANとして追加して解決)。SAN追加時にX.509のバージョンをv3に上げていなかったため、.NET側の厳格な証明書パーサーに「破損した証明書」として拒否されていた問題。あわせて、接続スクリプトを管理者権限で実行すると、マウントしたドライブが通常のデスクトップのエクスプローラーから見えなくなり「成功しているのに繋がらない」という分かりにくい失敗の原因になっていたため、管理者権限での実行を検知して警告するように変更。Windows 11・Ventura・High Sierra・M2 MacBook Air(Tahoe)で実機確認",
