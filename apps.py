@@ -29,12 +29,17 @@ APPS = [
         "platform": "現行macOS (Catalina以降 / Intel・Apple Silicon) 向け",
         "platform_en": "For modern macOS (Catalina or later / Intel & Apple Silicon)",
         "filename": "AquaFinder.dmg",
-        "version": "0.2.9",
+        "version": "0.3.0",
         "github_url": "https://github.com/watermark-hd/AquaFinder",
         "category": "app",
         "comment": "現場を退いたおじさんが今のM2 Macを使って物足りなさの原因を探ってたどり着いた成果物。",
         "comment_en": "What an old-timer who left the field for good ended up building, after digging into why a brand-new M2 Mac still felt like something was missing.",
         "changelog": [
+            {
+                "date": "2026-10-18",
+                "note": "ファイルのコピー・移動時に、Tiger〜Snow Leopard時代のクラシックな青いAquaスタイルの進捗パネルを表示するように。大きなファイルをコピーする際、これまで進捗表示が一切なくアプリ全体が固まって見えていた問題も合わせて解消（バックグラウンドで処理するよう変更）",
+                "note_en": "Copying or moving files now shows a classic Tiger/Snow Leopard-style blue Aqua progress panel. Also fixes large file copies previously freezing the whole app with no feedback at all (now runs in the background with real progress)",
+            },
             {
                 "date": "2026-10-04",
                 "note": "「サーバへ接続」でSMB以外（AFP、NFS、WebDAVなど）のアドレスも入力できることを明記（接続機能自体は以前から対応していましたが、入力欄の表示がSMB専用に見えていました）",
