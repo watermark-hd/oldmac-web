@@ -29,12 +29,17 @@ APPS = [
         "platform": "現行macOS (Catalina以降 / Intel・Apple Silicon) 向け",
         "platform_en": "For modern macOS (Catalina or later / Intel & Apple Silicon)",
         "filename": "AquaFinder.dmg",
-        "version": "0.3.0",
+        "version": "0.3.1",
         "github_url": "https://github.com/watermark-hd/AquaFinder",
         "category": "app",
         "comment": "現場を退いたおじさんが今のM2 Macを使って物足りなさの原因を探ってたどり着いた成果物。",
         "comment_en": "What an old-timer who left the field for good ended up building, after digging into why a brand-new M2 Mac still felt like something was missing.",
         "changelog": [
+            {
+                "date": "2026-10-21",
+                "note": "フォルダ（複数ファイル）のコピー・移動でも、進捗パネルのバーが実際に埋まっていくように修正。前回(0.3.0)は単一の大きなファイルのみ対応しており、フォルダのコピーでは依然としてバーが空のまま完了していました",
+                "note_en": "Folder copies/moves now actually fill the progress bar too, not just single large files — v0.3.0 only covered the single-file case, so copying a folder still showed an empty bar the whole time",
+            },
             {
                 "date": "2026-10-18",
                 "note": "ファイルのコピー・移動時に、Tiger〜Snow Leopard時代のクラシックな青いAquaスタイルの進捗パネルを表示するように。大きなファイルをコピーする際、これまで進捗表示が一切なくアプリ全体が固まって見えていた問題も合わせて解消（バックグラウンドで処理するよう変更）",
