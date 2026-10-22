@@ -29,12 +29,17 @@ APPS = [
         "platform": "現行macOS (Catalina以降 / Intel・Apple Silicon) 向け",
         "platform_en": "For modern macOS (Catalina or later / Intel & Apple Silicon)",
         "filename": "AquaFinder.dmg",
-        "version": "0.3.1",
+        "version": "0.3.2",
         "github_url": "https://github.com/watermark-hd/AquaFinder",
         "category": "app",
         "comment": "現場を退いたおじさんが今のM2 Macを使って物足りなさの原因を探ってたどり着いた成果物。",
         "comment_en": "What an old-timer who left the field for good ended up building, after digging into why a brand-new M2 Mac still felt like something was missing.",
         "changelog": [
+            {
+                "date": "2026-10-22",
+                "note": "非常に大きなフォルダ（84GB）をコピーすると、アプリが60GB以上のメモリを使いシステムごと固まることがあった不具合を修正。進捗パネルの更新処理が、転送速度によっては描画が追いつかないほど頻繁にメインスレッドへ処理を積んでしまっていたのが原因でした。あわせて、進捗バーの青をクラシックなAquaの選択色に近い、より明るい色合いに調整",
+                "note_en": "Fixed a real issue where copying a very large folder (84GB) could push this app to 60+GB of memory and freeze the whole system — the progress panel was queuing UI updates on the main thread faster than it could draw them on fast transfers. Also lightened the progress bar's blue to better match classic Aqua's own selection color",
+            },
             {
                 "date": "2026-10-21",
                 "note": "フォルダ（複数ファイル）のコピー・移動でも、進捗パネルのバーが実際に埋まっていくように修正。前回(0.3.0)は単一の大きなファイルのみ対応しており、フォルダのコピーでは依然としてバーが空のまま完了していました",
