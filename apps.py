@@ -96,12 +96,17 @@ APPS = [
         "platform": "PowerPC Mac (Tiger) 向け",
         "platform_en": "For PowerPC Macs (Tiger)",
         "filename": "AquaLink.zip",
-        "version": "0.5.24",
+        "version": "0.5.25",
         "github_url": "https://github.com/watermark-hd/ppc-mac-modernization/tree/main/smb3/AquaLink",
         "category": "app",
         "comment": "PowerMac G4、iBook G4、iMac G5（未検証） そんなマシンたちにまだ活躍してもらうために作りました。昔のデータが入りっぱなし、元データを作った時の環境が知りたい。そんな事情で作りました。",
         "comment_en": "Made so PowerMac G4s, iBook G4s, and (untested) iMac G5s can keep earning their keep. Old data still sitting on them, and I wanted to see it in the environment it was actually made in — that's the real reason.",
         "changelog": [
+            {
+                "date": "2026-11-15",
+                "note": "マウント中に終了すると、Finderから取り出せない壊れたボリュームが残る不具合を修正(ログアウト・シャットダウンが止まることもなくなりました)。マウント方式をFSMountServerVolumeSyncに変更し、Finderの取り出しボタンが正しく使えるように(取り外すたびにFinderが再起動する不具合も解消)。強制終了やクラッシュ時にも、監視役のプロセスが残ったボリュームを自動的に片付けるように。あわせてlibsmb2を6.3.2に更新(セキュリティ修正を含む)",
+                "note_en": "Fixed a dead, un-ejectable volume being left behind when quitting while mounted (logout and shutdown no longer get blocked either). Switched to FSMountServerVolumeSync for mounting, so Finder's own eject button works correctly (and no longer restarts Finder on unmount). A small watchdog now cleans up the volume automatically if AquaLink is force-quit or crashes. Also updated libsmb2 to 6.3.2, which includes security fixes.",
+            },
             {
                 "date": "2026-10-13",
                 "note": "HTTPS接続用の証明書が、Macの現在のLAN内IPアドレスを元に作られていたため、ルーター再起動やWi-Fi/有線の切替でIPが変わると証明書が無効になり、Windows側で「認証されていません」(エラー1244)が再発する不具合を修正。IPの代わりに、ネットワーク構成が変わっても一定であるBonjourのローカルホスト名を使うように変更(Windows用接続ガイド・アプリ内の接続案内もあわせて更新)",
