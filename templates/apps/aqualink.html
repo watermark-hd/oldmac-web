@@ -40,17 +40,19 @@
     </div>
 
     {% if app.changelog %}
+    {% set shown = app.changelog[:3] + (app.changelog[3:] | selectattr('pin') | list) %}
+    {% set older = app.changelog[3:] | rejectattr('pin') | list %}
     <h2>Changelog</h2>
     <ul>
-      {% for entry in app.changelog[:5] %}
+      {% for entry in shown %}
       <li><strong>{{ entry.date }}</strong> &mdash; {{ entry.note_en }}</li>
       {% endfor %}
     </ul>
-    {% if app.changelog | length > 5 %}
+    {% if older %}
     <details class="changelog-older">
-      <summary>Older updates ({{ app.changelog | length - 5 }})</summary>
+      <summary>Older updates ({{ older | length }})</summary>
       <ul>
-        {% for entry in app.changelog[5:] %}
+        {% for entry in older %}
         <li><strong>{{ entry.date }}</strong> &mdash; {{ entry.note_en }}</li>
         {% endfor %}
       </ul>
@@ -229,17 +231,19 @@
     </div>
 
     {% if app.changelog %}
+    {% set shown = app.changelog[:3] + (app.changelog[3:] | selectattr('pin') | list) %}
+    {% set older = app.changelog[3:] | rejectattr('pin') | list %}
     <h2>更新履歴</h2>
     <ul>
-      {% for entry in app.changelog[:5] %}
+      {% for entry in shown %}
       <li><strong>{{ entry.date }}</strong> &mdash; {{ entry.note }}</li>
       {% endfor %}
     </ul>
-    {% if app.changelog | length > 5 %}
+    {% if older %}
     <details class="changelog-older">
-      <summary>以前の更新履歴({{ app.changelog | length - 5 }}件)</summary>
+      <summary>以前の更新履歴({{ older | length }}件)</summary>
       <ul>
-        {% for entry in app.changelog[5:] %}
+        {% for entry in older %}
         <li><strong>{{ entry.date }}</strong> &mdash; {{ entry.note }}</li>
         {% endfor %}
       </ul>
