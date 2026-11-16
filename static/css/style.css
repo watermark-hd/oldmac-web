@@ -804,14 +804,37 @@ footer {
 }
 
 .changelog-older summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   cursor: pointer;
   color: var(--aqua-dark);
-  font-size: 14px;
+  background: var(--aqua-light);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 15px;
+  font-weight: 700;
+  list-style: none;
   user-select: none;
 }
 
+.changelog-older summary::-webkit-details-marker {
+  display: none;
+}
+
+.changelog-older summary::before {
+  content: "\25B6";
+  font-size: 13px;
+  transition: transform 0.15s ease;
+}
+
+.changelog-older[open] summary::before {
+  transform: rotate(90deg);
+}
+
 .changelog-older summary:hover {
-  text-decoration: underline;
+  border-color: var(--aqua);
 }
 
 .changelog-older[open] summary {
