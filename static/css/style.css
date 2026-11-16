@@ -798,3 +798,22 @@ footer {
   margin-left: auto;
   margin-right: auto;
 }
+
+.changelog-older {
+  margin: 4px 0 20px;
+}
+
+.changelog-older summary {
+  cursor: pointer;
+  color: var(--aqua-dark);
+  font-size: 14px;
+  user-select: none;
+}
+
+.changelog-older summary:hover {
+  text-decoration: underline;
+}
+
+.changelog-older[open] summary {
+  margin-bottom: 8px;
+}

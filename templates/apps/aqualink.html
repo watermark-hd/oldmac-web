@@ -42,10 +42,20 @@
     {% if app.changelog %}
     <h2>Changelog</h2>
     <ul>
-      {% for entry in app.changelog %}
+      {% for entry in app.changelog[:5] %}
       <li><strong>{{ entry.date }}</strong> &mdash; {{ entry.note_en }}</li>
       {% endfor %}
     </ul>
+    {% if app.changelog | length > 5 %}
+    <details class="changelog-older">
+      <summary>Older updates ({{ app.changelog | length - 5 }})</summary>
+      <ul>
+        {% for entry in app.changelog[5:] %}
+        <li><strong>{{ entry.date }}</strong> &mdash; {{ entry.note_en }}</li>
+        {% endfor %}
+      </ul>
+    </details>
+    {% endif %}
     {% endif %}
 
     <h2>What to Download</h2>
@@ -221,10 +231,20 @@
     {% if app.changelog %}
     <h2>更新履歴</h2>
     <ul>
-      {% for entry in app.changelog %}
+      {% for entry in app.changelog[:5] %}
       <li><strong>{{ entry.date }}</strong> &mdash; {{ entry.note }}</li>
       {% endfor %}
     </ul>
+    {% if app.changelog | length > 5 %}
+    <details class="changelog-older">
+      <summary>以前の更新履歴({{ app.changelog | length - 5 }}件)</summary>
+      <ul>
+        {% for entry in app.changelog[5:] %}
+        <li><strong>{{ entry.date }}</strong> &mdash; {{ entry.note }}</li>
+        {% endfor %}
+      </ul>
+    </details>
+    {% endif %}
     {% endif %}
 
     <h2>ダウンロードするもの</h2>
