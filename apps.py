@@ -416,6 +416,13 @@ APPS = [
         "version": "3.12.11",
         "comment": "3.12だけ、上にも下にもあるのに無かったんです。バージョンが違うと地味に色々変わるので、手元のPowerBook G4で使うにはこれが要る、と思って作りました。コンパイルとエラー潰しで丸一日溶けました。",
         "comment_en": "3.12 was the one version that just didn't exist — everything above and below it did. Python versions quietly change more than people think, and I wanted this exact one on my PowerBook G4, so I built it myself. Burned a full day compiling and chasing down errors.",
+        "changelog": [
+            {
+                "date": "2026-11-22",
+                "note": "同梱のREADME.txtを、Tigerのテキストエディットでも日本語が文字化けせずに開けるように直しました。Python本体は変更していません。",
+                "note_en": "The bundled README.txt now opens without garbled Japanese text in Tiger's TextEdit. Python itself is unchanged.",
+            },
+        ],
     },
     {
         "slug": "tiger-quicklook",
