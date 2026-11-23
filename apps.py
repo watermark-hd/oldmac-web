@@ -354,12 +354,17 @@ APPS = [
         "platform": "PowerPC Mac (Tiger) 向け",
         "platform_en": "For PowerPC Macs (Tiger)",
         "filename": "exfat-tiger-ppc.zip",
-        "version": "1.2",
+        "version": "1.3",
         "github_url": "https://github.com/watermark-hd/exfat-tiger-ppc",
         "category": "app",
         "comment": "古いデータが入ったUSBメモリを人から借りたんです、それをPowerMacに挿したら「読めません。フォーマットしますか？」するわけないだろ! その怒りの化身です。",
         "comment_en": "Borrowed a USB drive full of old data from someone. Plugged it into my PowerMac and got “Can't read this. Format it?” — like hell I will! This app is that anger, given form.",
         "changelog": [
+            {
+                "date": "2026-11-24",
+                "note": "メニューに「フォーマット」を追加しました。外付けドライブをexFATで初期化できます(ボリューム名も付けられます)。対象はUSB/FireWireでつないだ外付けドライブだけで、起動ディスクは選べないようになっています。実行前に確認画面が出て、Returnキーを押しただけでは消えない(キャンセル側になる)作りです",
+                "note_en": "Added \"Format\" to the menu: erase an external drive as exFAT, with a volume name of your choice. Only USB/FireWire external drives are offered, and the startup disk is always refused. A confirmation panel comes first, and pressing Return there cancels rather than erases.",
+            },
             {
                 "date": "2026-09-17",
                 "note": "CLIツール未インストールでも、アプリが管理者パスワードを求めて自動インストールするように（ターミナル操作不要に）",
