@@ -24,7 +24,7 @@
     </p>
 
     <div class="download-box">
-      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">Download ja-aquafox.xpi</a>
+      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">Download aquafox-ja.dmg</a>
       <div class="meta">Downloads so far: {{ download_count }}</div>
       {% if updated_at %}<div class="meta">Last updated: {{ updated_at }}</div>{% endif %}
       <div class="meta">Note: Tiger's stock Safari/curl can't verify today's HTTPS certificates and may fail to download this directly &mdash; use a modern curl via Tigerbrew/MacPorts instead, or download <a href="https://blackbirdlc.github.io/aquafox/Download.html" target="_blank" rel="noopener noreferrer">Aquafox itself</a> first, which handles this fine.</div>
@@ -48,18 +48,15 @@
 
     <h2>Installation Steps</h2>
     <ol>
-      <li>Download <code>ja-aquafox.xpi</code> from the button above.</li>
-      <li>Open the following folder in Finder (from the menu: Go → Go to Folder..., then paste the path below): <br><code>~/Library/Application Support/Aquafox/Profiles/</code></li>
-      <li>Open the profile folder inside (named something like <code>xxxxxxxx.default</code>) and then open the <code>extensions</code> folder. Create it if it does not exist.</li>
-      <li>Rename the downloaded <code>ja-aquafox.xpi</code> to <code>langpack-ja@firefox.mozilla.org.xpi</code> and place it in that <code>extensions</code> folder.</li>
-      <li>Launch Aquafox, open <code>about:config</code> via the menu: Aquafox → Preferences → Advanced → General, then set <code>general.useragent.locale</code> to <code>ja</code>. Create it if it is missing.</li>
-      <li>Restart Aquafox and the interface will appear in Japanese.</li>
+      <li>Download <code>aquafox-ja.dmg</code> from the button above and double-click it to mount.</li>
+      <li>Quit Aquafox completely (Aquafox menu → Quit Aquafox).</li>
+      <li>Double-click <code>Install.command</code> in the mounted disk. Terminal opens and puts the language pack
+        in place and sets the UI language for you.</li>
+      <li>When it says &ldquo;Done&rdquo;, close the Terminal window and launch Aquafox. The interface will appear in Japanese.</li>
     </ol>
     <p class="meta">
-      Note: place and rename the file with Aquafox completely quit. If you drop it into the
-      <code>extensions</code> folder and rename it while Aquafox is running, it will not be picked up and the
-      UI stays in English. If that happens, download <code>ja-aquafox.xpi</code> again, quit Aquafox, put it
-      back in the same folder with the correct name (overwriting the old one), then launch.
+      Note: if Aquafox is still running, the installer stops without changing anything. Quit Aquafox and run it again.
+      For manual installation, see <code>README.rtf</code> in the dmg (it opens in Tiger's TextEdit).
     </p>
 
     <h2>Acknowledgements / License</h2>
@@ -80,7 +77,7 @@
     </p>
 
     <div class="download-box">
-      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">ja-aquafox.xpi をダウンロード</a>
+      <a class="download-button" href="{{ url_for('download', lang=lang, slug=app.slug) }}">aquafox-ja.dmg をダウンロード</a>
       <div class="meta">これまでのダウンロード数: {{ download_count }}</div>
       {% if updated_at %}<div class="meta">最終更新日: {{ updated_at }}</div>{% endif %}
       <div class="meta">※ Tiger標準のSafari/curlは現代のHTTPS証明書を検証できず、ここから直接ダウンロードできない場合があります。TigerbrewやMacPorts経由の新しいcurl、または<a href="https://blackbirdlc.github.io/aquafox/Download.html" target="_blank" rel="noopener noreferrer">Aquafox本体</a>経由でのダウンロードをお試しください。</div>
@@ -104,31 +101,15 @@
 
     <h2>インストール手順</h2>
     <ol>
-      <li>上のボタンから <code>ja-aquafox.xpi</code> をダウンロードします。</li>
-      <li>
-        Finder で以下のフォルダを開きます（「移動」メニュー →「フォルダへ移動...」で下記パスを貼り付けると早いです）。
-        <br><code>~/Library/Application Support/Aquafox/Profiles/</code>
-      </li>
-      <li>
-        中にあるフォルダ（<code>xxxxxxxx.default</code> のような名前）を開き、<code>extensions</code>
-        フォルダを開きます（無ければ新規作成してください）。
-      </li>
-      <li>
-        ダウンロードした <code>ja-aquafox.xpi</code> を、
-        <code>langpack-ja@firefox.mozilla.org.xpi</code> という名前に変更してから、
-        その <code>extensions</code> フォルダに入れます。
-      </li>
-      <li>Aquafox を起動し、メニューバーの「Aquafox」→「Preferences」→「詳細」→「全般」から
-        <code>about:config</code> を開き、<code>general.useragent.locale</code> を
-        <code>ja</code> に設定します（無ければ新規作成してください）。
-      </li>
-      <li>Aquafox を再起動すると日本語表示になります。</li>
+      <li>上のボタンから <code>aquafox-ja.dmg</code> をダウンロードし、ダブルクリックしてマウントします。</li>
+      <li>Aquafox を完全に終了します（メニューの「Aquafox」→「Quit Aquafox」）。</li>
+      <li>マウントされたディスクの中の <code>Install.command</code> をダブルクリックします。
+        ターミナルが開き、言語パックの配置と日本語表示の設定を自動で行います。</li>
+      <li>「完了しました」と表示されたらターミナルのウインドウを閉じ、Aquafox を起動すると日本語表示になります。</li>
     </ol>
     <p class="meta">
-      ※ ファイルの配置とリネームは、Aquafox を完全に終了した状態で行ってください。起動したまま
-      <code>extensions</code> フォルダにファイルを入れて名前を変えても読み込まれず、日本語になりません。
-      うまくいかなかった場合は、<code>ja-aquafox.xpi</code> をダウンロードし直し、Aquafox を終了してから、
-      同じフォルダに正しい名前で置き直して（上書き）起動してください。
+      ※ Aquafox が起動したままだと、インストーラは何も変更せずに中止します。Aquafox を終了してからもう一度実行してください。
+      手動でインストールしたい場合は、dmg 内の <code>README.rtf</code>（Tiger のテキストエディットで読めます）に手順があります。
     </p>
 
     <h2>謝辞・ライセンス</h2>

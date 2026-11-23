@@ -15,8 +15,15 @@ APPS = [
         "tagline_en": "A language pack for Aquafox that adds Japanese UI support to the PowerPC Mac browser.",
         "platform": "PowerPC Mac (Tiger) 向け",
         "platform_en": "For PowerPC Macs (Tiger)",
-        "filename": "aquafox-ja.xpi",
+        "filename": "aquafox-ja.dmg",
         "category": "app",
+        "changelog": [
+            {
+                "date": "2026-11-23",
+                "note": "dmg での配布に変更し、インストーラ（Install.command）を同梱しました。ダブルクリックするだけで言語パックの配置と日本語表示の設定が終わり、ファイル名の変更や about:config の操作は不要になりました。あわせて、ブックマークメニューの「Recently Bookmarked」「Recent Tags」「Most Visited」が英語のまま残る問題も、インストール時に日本語で作り直すようにして解消。同梱の説明書は Tiger のテキストエディットで文字化けせずに読める形式（RTF）です",
+                "note_en": "Now distributed as a dmg with an installer (Install.command). Double-click it and the language pack is put in place and the UI language set for you — no renaming files or editing about:config. It also fixes the \"Recently Bookmarked\", \"Recent Tags\" and \"Most Visited\" bookmark items staying in English by having them recreated in Japanese. The included README is an RTF that Tiger's TextEdit opens without garbled text",
+            },
+        ],
         "comment": "みなさん英語わかります？読めたとしても直感的に理解できます？私は無理です。一応受験も経験しましたし単語も覚えました。でも単語が繋がった瞬間に暗号に変わりませんか？ そんな私のために作りました。",
         "comment_en": "Can everyone actually read English? Even if you can, does it click intuitively? I can't. I studied for entrance exams, memorized the words — but the moment they string together into a sentence, it might as well be a cipher. Made this for people like me.",
     },
