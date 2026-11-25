@@ -91,7 +91,7 @@ body {
 }
 
 .site-motto {
-  margin: 10px 0 0 0;
+  margin: 22px 0 0 0;
   color: var(--aqua-dark);
   font-size: 17px;
   font-weight: 700;
@@ -107,12 +107,6 @@ body {
 .site-motto + .site-tagline {
   margin-top: 4px;
 }
-
-/* 日本語の一文は短いので中央寄せ。英語は長く、中央だと折り返しが不揃いになるので左寄せのまま */
-html[lang="ja"] .site-motto {
-  text-align: center;
-}
-
 .back-link {
   display: inline-block;
   margin-bottom: 18px;
