@@ -72,6 +72,9 @@
         <a href="{{ url_for('top', lang='en') }}" class="lang-link {% if lang == 'en' %}active{% endif %}">English</a>
       </div>
     </div>
+    <p class="site-motto">
+      {% if lang == 'en' %}Not to make old Macs modern, but to make old Macs useful in the modern world.{% else %}今の時代に古いMacを活かすために{% endif %}
+    </p>
     <p class="site-tagline">
       {% if lang == 'en' %}
         Apps and tools that keep old Macs useful &mdash; from PowerPC to Intel, with a few classic Mac ideas brought to Apple Silicon.
